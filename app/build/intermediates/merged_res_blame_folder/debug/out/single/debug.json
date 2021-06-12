@@ -1,0 +1,110 @@
+[
+    {
+        "merged": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\build\\intermediates\\res\\merged\\debug\\layout_activity_uhf.xml.flat",
+        "source": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\src\\main\\res\\layout\\activity_uhf.xml"
+    },
+    {
+        "merged": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi_ic_launcher.png.flat",
+        "source": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\src\\main\\res\\drawable-hdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\build\\intermediates\\res\\merged\\debug\\font_kanit_mediumitalic.ttf.flat",
+        "source": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\src\\main\\res\\font\\kanit_mediumitalic.ttf"
+    },
+    {
+        "merged": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\build\\intermediates\\res\\merged\\debug\\font_kanit_extrabold.ttf.flat",
+        "source": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\src\\main\\res\\font\\kanit_extrabold.ttf"
+    },
+    {
+        "merged": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\build\\intermediates\\res\\merged\\debug\\font_kanit_semibolditalic.ttf.flat",
+        "source": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\src\\main\\res\\font\\kanit_semibolditalic.ttf"
+    },
+    {
+        "merged": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\build\\intermediates\\res\\merged\\debug\\font_kanit_lightitalic.ttf.flat",
+        "source": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\src\\main\\res\\font\\kanit_lightitalic.ttf"
+    },
+    {
+        "merged": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\build\\intermediates\\res\\merged\\debug\\font_kanit_blackitalic.ttf.flat",
+        "source": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\src\\main\\res\\font\\kanit_blackitalic.ttf"
+    },
+    {
+        "merged": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\build\\intermediates\\res\\merged\\debug\\font_kanit_black.ttf.flat",
+        "source": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\src\\main\\res\\font\\kanit_black.ttf"
+    },
+    {
+        "merged": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\build\\intermediates\\res\\merged\\debug\\font_kanit_medium.ttf.flat",
+        "source": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\src\\main\\res\\font\\kanit_medium.ttf"
+    },
+    {
+        "merged": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\build\\intermediates\\res\\merged\\debug\\layout_listview_item.xml.flat",
+        "source": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\src\\main\\res\\layout\\listview_item.xml"
+    },
+    {
+        "merged": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\build\\intermediates\\res\\merged\\debug\\font_kanit_bolditalic.ttf.flat",
+        "source": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\src\\main\\res\\font\\kanit_bolditalic.ttf"
+    },
+    {
+        "merged": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\build\\intermediates\\res\\merged\\debug\\font_kanit_extralight.ttf.flat",
+        "source": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\src\\main\\res\\font\\kanit_extralight.ttf"
+    },
+    {
+        "merged": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\build\\intermediates\\res\\merged\\debug\\font_kanit_extrabolditalic.ttf.flat",
+        "source": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\src\\main\\res\\font\\kanit_extrabolditalic.ttf"
+    },
+    {
+        "merged": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\build\\intermediates\\res\\merged\\debug\\font_kanit_thinitalic.ttf.flat",
+        "source": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\src\\main\\res\\font\\kanit_thinitalic.ttf"
+    },
+    {
+        "merged": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\build\\intermediates\\res\\merged\\debug\\font_kanit_italic.ttf.flat",
+        "source": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\src\\main\\res\\font\\kanit_italic.ttf"
+    },
+    {
+        "merged": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\build\\intermediates\\res\\merged\\debug\\menu_main.xml.flat",
+        "source": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\src\\main\\res\\menu\\main.xml"
+    },
+    {
+        "merged": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi_ic_launcher.png.flat",
+        "source": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\src\\main\\res\\drawable-xhdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi_ic_launcher.png.flat",
+        "source": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\src\\main\\res\\drawable-mdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\build\\intermediates\\res\\merged\\debug\\raw_msg.mp3.flat",
+        "source": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\src\\main\\res\\raw\\msg.mp3"
+    },
+    {
+        "merged": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\build\\intermediates\\res\\merged\\debug\\font_kanit_light.ttf.flat",
+        "source": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\src\\main\\res\\font\\kanit_light.ttf"
+    },
+    {
+        "merged": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\build\\intermediates\\res\\merged\\debug\\font_kanit_regular.ttf.flat",
+        "source": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\src\\main\\res\\font\\kanit_regular.ttf"
+    },
+    {
+        "merged": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi_corners_background.xml.flat",
+        "source": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\src\\main\\res\\drawable-hdpi\\corners_background.xml"
+    },
+    {
+        "merged": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\build\\intermediates\\res\\merged\\debug\\font_kanit_thin.ttf.flat",
+        "source": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\src\\main\\res\\font\\kanit_thin.ttf"
+    },
+    {
+        "merged": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\build\\intermediates\\res\\merged\\debug\\font_kanit_extralightitalic.ttf.flat",
+        "source": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\src\\main\\res\\font\\kanit_extralightitalic.ttf"
+    },
+    {
+        "merged": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi_ic_launcher.png.flat",
+        "source": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\src\\main\\res\\drawable-xxhdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\build\\intermediates\\res\\merged\\debug\\font_kanit_semibold.ttf.flat",
+        "source": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\src\\main\\res\\font\\kanit_semibold.ttf"
+    },
+    {
+        "merged": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\build\\intermediates\\res\\merged\\debug\\font_kanit_bold.ttf.flat",
+        "source": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\src\\main\\res\\font\\kanit_bold.ttf"
+    }
+]

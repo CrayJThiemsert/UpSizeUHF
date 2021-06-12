@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="false"
+        jar="C:\Users\huang\.gradle\caches\transforms-1\files-1.1\support-v4-20.0.0.aar\58f623b2d784f1e7e6fde8157c5e1bab\jars\libs\internal_impl-20.0.0.jar"
+        jumboMode="false"
+        min-sdk-version="17"
+        optimize="true"
+        revision="26.0.2"
+        sha1="e40b3078e3fbd353c9f44da8df25a8fc0078209d">
+        <dex dex="C:\Workspace\DEMO\UHF\NORMAL\Pang\UHFDemo1_Com13_Studio\app\build\intermediates\transforms\preDex\release\4.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\huang\.gradle\caches\transforms-1\files-1.1\support-v4-20.0.0.aar\58f623b2d784f1e7e6fde8157c5e1bab\jars\classes.jar"
+        jumboMode="false"
+        min-sdk-version="17"
+        optimize="true"
+        revision="26.0.2"
+        sha1="8694693636ab36910c8100ce527c258ff3ebece0">
+        <dex dex="C:\Workspace\DEMO\UHF\NORMAL\Pang\UHFDemo1_Com13_Studio\app\build\intermediates\transforms\preDex\release\3.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Workspace\DEMO\UHF\NORMAL\Pang\UHFDemo1_Com13_Studio\app\libs\uhfcom13_v14.jar"
+        jumboMode="false"
+        min-sdk-version="17"
+        optimize="true"
+        revision="26.0.2"
+        sha1="b137a7642101a359da82aae171ed1abe4239c542">
+        <dex dex="C:\Workspace\DEMO\UHF\NORMAL\Pang\UHFDemo1_Com13_Studio\app\build\intermediates\transforms\preDex\release\1.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Workspace\DEMO\UHF\NORMAL\Pang\UHFDemo1_Com13_Studio\app\libs\SerialPort.jar"
+        jumboMode="false"
+        min-sdk-version="17"
+        optimize="true"
+        revision="26.0.2"
+        sha1="6b8b518d52afc77c94f16cee92fded6b3cbd09d3">
+        <dex dex="C:\Workspace\DEMO\UHF\NORMAL\Pang\UHFDemo1_Com13_Studio\app\build\intermediates\transforms\preDex\release\2.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Workspace\AndroidStudio-sdk\extras\android\m2repository\com\android\support\support-annotations\20.0.0\support-annotations-20.0.0.jar"
+        jumboMode="false"
+        min-sdk-version="17"
+        optimize="true"
+        revision="26.0.2"
+        sha1="9d9013e9ff35fc3756411e62873c363c70c638fa">
+        <dex dex="C:\Workspace\DEMO\UHF\NORMAL\Pang\UHFDemo1_Com13_Studio\app\build\intermediates\transforms\preDex\release\5.jar" />
+    </item>
+
+</items>
