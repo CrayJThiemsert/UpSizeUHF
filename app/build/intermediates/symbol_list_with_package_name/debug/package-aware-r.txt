@@ -61,7 +61,11 @@ id LinearLayout8
 id LinearLayout__acce
 id LinearLayout_lock_mem
 id LinearLayouts1
+id LinearLayouts2
+id LinearLayouts3
 id action_settings
+id back_s2_button
+id back_s3_button
 id button4
 id button_back
 id button_clear
@@ -104,6 +108,10 @@ id linearLayout_readData
 id linearlayout0
 id listView_data
 id ls1searchandcheck
+id ls2selectcondition
+id ls3queryresult
+id next_s2_button
+id next_s3_button
 id receive_txt
 id relativeLayout21
 id spinner1
@@ -116,6 +124,8 @@ id spinner_lock_type
 id spinner_membank
 id tableLayout11
 id tableLayout1s1
+id tableLayout1s2
+id tableLayout1s3
 id textView1
 id textView2
 id textView3
@@ -264,6 +274,7 @@ string auth_success_
 string authentication
 string b
 string back
+string back_label
 string baobiao_shengcheng_android
 string baocun_tuxiang
 string baoguang_shijian_default
@@ -424,6 +435,7 @@ string more
 string more_settings
 string muban_caozuo_text
 string name
+string next_label
 string nfc_ul_card
 string not_find_finger
 string note_the_following_operation_may_lead_to_module_does_not_work_

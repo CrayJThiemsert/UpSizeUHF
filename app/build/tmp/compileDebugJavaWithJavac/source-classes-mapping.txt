@@ -1,11 +1,3 @@
-com/handheld/upsizeuhf/EPC.java
- com.handheld.upsizeuhf.EPC
-com/handheld/upsizeuhf/Util.java
- com.handheld.upsizeuhf.Util
-com/handheld/upsizeuhf/util/UpsizeUhfUtils.java
- com.handheld.upsizeuhf.util.UpsizeUhfUtils
-com/handheld/upsizeuhf/BuildConfig.java
- com.handheld.upsizeuhf.BuildConfig
 com/handheld/upsizeuhf/UHFActivity.java
  com.handheld.upsizeuhf.UHFActivity
  com.handheld.upsizeuhf.UHFActivity$1
@@ -21,8 +13,20 @@ com/handheld/upsizeuhf/UHFActivity.java
  com.handheld.upsizeuhf.UHFActivity$7
  com.handheld.upsizeuhf.UHFActivity$8
  com.handheld.upsizeuhf.UHFActivity$9
+ com.handheld.upsizeuhf.UHFActivity$BackS2ButtonAnimationListener
+ com.handheld.upsizeuhf.UHFActivity$BackS3ButtonAnimationListener
  com.handheld.upsizeuhf.UHFActivity$ByItemCodeButtonAnimationListener
  com.handheld.upsizeuhf.UHFActivity$ByItemSetButtonAnimationListener
  com.handheld.upsizeuhf.UHFActivity$InventoryThread
  com.handheld.upsizeuhf.UHFActivity$KeyReceiver
+ com.handheld.upsizeuhf.UHFActivity$NextS2ButtonAnimationListener
+ com.handheld.upsizeuhf.UHFActivity$NextS3ButtonAnimationListener
  com.handheld.upsizeuhf.UHFActivity$myOnTouch
+com/handheld/upsizeuhf/Util.java
+ com.handheld.upsizeuhf.Util
+com/handheld/upsizeuhf/util/UpsizeUhfUtils.java
+ com.handheld.upsizeuhf.util.UpsizeUhfUtils
+com/handheld/upsizeuhf/BuildConfig.java
+ com.handheld.upsizeuhf.BuildConfig
+com/handheld/upsizeuhf/EPC.java
+ com.handheld.upsizeuhf.EPC

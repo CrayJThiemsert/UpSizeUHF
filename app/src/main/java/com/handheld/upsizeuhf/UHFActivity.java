@@ -74,6 +74,8 @@ public class UHFActivity extends Activity implements OnClickListener {
     private View view3;
     private View view4;
     private LinearLayout ls1searchandcheck;
+    private LinearLayout ls2selectcondition;
+    private LinearLayout ls3queryresult;
     private RelativeLayout l1epc;
     private LinearLayout l2readandwrite;
     private LinearLayout l3lockandkill;
@@ -127,6 +129,12 @@ public class UHFActivity extends Activity implements OnClickListener {
     /******************************************/
     private Button by_item_set_button;//set by item set button
     private Button by_item_code_button;//set by item code button
+
+    private Button back_s2_button;//set by back to item set button
+    private Button next_s2_button;//set by next to query result button
+
+    private Button back_s3_button;//set by back to select condition button
+    private Button next_s3_button;//set by next to search/scan button
 
     private Button button1;//set button1
     private Button button2;//set button2
@@ -302,6 +310,8 @@ public class UHFActivity extends Activity implements OnClickListener {
         view3 = findViewById(R.id.viewUhfLock);
         view4 = findViewById(R.id.viewUhfSet);
         ls1searchandcheck = (LinearLayout) findViewById(R.id.ls1searchandcheck);
+        ls2selectcondition = (LinearLayout) findViewById(R.id.ls2selectcondition);
+        ls3queryresult = (LinearLayout) findViewById(R.id.ls3queryresult);
         l1epc = (RelativeLayout) findViewById(R.id.l1epc);
         l2readandwrite = (LinearLayout) findViewById(R.id.l2read);
         l3lockandkill = (LinearLayout) findViewById(R.id.l3lock);
@@ -694,6 +704,18 @@ public class UHFActivity extends Activity implements OnClickListener {
 
         by_item_code_button = (Button) findViewById(R.id.by_item_code_button);
         by_item_code_button.setOnClickListener(this);
+
+        back_s2_button = (Button) findViewById(R.id.back_s2_button);
+        back_s2_button.setOnClickListener(this);
+
+        next_s2_button = (Button) findViewById(R.id.next_s2_button);
+        next_s2_button.setOnClickListener(this);
+
+        back_s3_button = (Button) findViewById(R.id.back_s3_button);
+        back_s3_button.setOnClickListener(this);
+
+        next_s3_button = (Button) findViewById(R.id.next_s3_button);
+        next_s3_button.setOnClickListener(this);
     }
 
 
@@ -964,6 +986,38 @@ public class UHFActivity extends Activity implements OnClickListener {
                 }
                 break;
 
+            case R.id.back_s2_button: {
+                Util.play(1, 0);
+                Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
+                animate.setAnimationListener(new BackS2ButtonAnimationListener());
+                back_s2_button.startAnimation(animate);
+            }
+            break;
+
+            case R.id.next_s2_button: {
+                Util.play(1, 0);
+                Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
+                animate.setAnimationListener(new NextS2ButtonAnimationListener());
+                next_s2_button.startAnimation(animate);
+            }
+            break;
+
+            case R.id.back_s3_button: {
+                Util.play(1, 0);
+                Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
+                animate.setAnimationListener(new BackS3ButtonAnimationListener());
+                back_s3_button.startAnimation(animate);
+            }
+            break;
+
+            case R.id.next_s3_button: {
+                Util.play(1, 0);
+                Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
+                animate.setAnimationListener(new NextS3ButtonAnimationListener());
+                next_s3_button.startAnimation(animate);
+            }
+            break;
+
             case R.id.button_start:
                 if (!startFlag) {
                     startFlag = true;
@@ -1114,7 +1168,7 @@ public class UHFActivity extends Activity implements OnClickListener {
     private class ByItemSetButtonAnimationListener implements Animation.AnimationListener   {
         @Override
         public void onAnimationStart(Animation animation) {
-            SetVisible(l4settings, textView4, view4);
+            SetVisible(ls2selectcondition, textViewS1, viewS1);
         }
 
         @Override
@@ -1137,6 +1191,78 @@ public class UHFActivity extends Activity implements OnClickListener {
 
         @Override
         public void onAnimationEnd(Animation animation) {
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    }
+
+    private class BackS2ButtonAnimationListener implements Animation.AnimationListener   {
+        @Override
+        public void onAnimationStart(Animation animation) {
+            SetVisible(ls1searchandcheck, textViewS1, viewS1);
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    }
+
+    private class NextS2ButtonAnimationListener implements Animation.AnimationListener   {
+        @Override
+        public void onAnimationStart(Animation animation) {
+            SetVisible(ls3queryresult, textViewS1, viewS1);
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    }
+
+    private class BackS3ButtonAnimationListener implements Animation.AnimationListener   {
+        @Override
+        public void onAnimationStart(Animation animation) {
+            SetVisible(ls2selectcondition, textViewS1, viewS1);
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    }
+
+    private class NextS3ButtonAnimationListener implements Animation.AnimationListener   {
+        @Override
+        public void onAnimationStart(Animation animation) {
+//            SetVisible(ls1searchandcheck, textViewS1, viewS1);
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+
 
         }
 
@@ -1220,6 +1346,8 @@ public class UHFActivity extends Activity implements OnClickListener {
             return;
         }
         ls1searchandcheck.setVisibility(View.GONE);
+        ls2selectcondition.setVisibility(View.GONE);
+        ls3queryresult.setVisibility(View.GONE);
         l1epc.setVisibility(View.GONE);
         l2readandwrite.setVisibility(View.GONE);
         l3lockandkill.setVisibility(View.GONE);
