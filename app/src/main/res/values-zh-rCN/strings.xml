@@ -424,6 +424,7 @@
 	<string name="lf_134_">低频(134.2k)</string>
 	<string name="lf_125_">低频(125K)</string>
 	<string name="search_epc">盘存 EPC</string>
+	<string name="search_and_check">Search &amp; Check</string>
 	<string name="lock_and_kill">锁和灭活</string>
 	<string name="match_charas">对比指纹</string>
 	<string name="fingerprint_1">指纹特征值1</string>
@@ -516,4 +517,6 @@
 	<string name="_tips">信息提示：</string>
 	<string name="lock_mem">锁定区：</string>
 	<string name="sure_kill">此项操作将摧毁标签，是否继续？</string>
+	<string name="by_item_set_label">By Item Set</string>
+	<string name="by_item_code_label">By Item Code</string>
 </resources>

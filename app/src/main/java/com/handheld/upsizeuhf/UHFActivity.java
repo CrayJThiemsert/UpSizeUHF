@@ -49,23 +49,29 @@ import cn.pda.serialport.Tools;
 import com.android.hdhe.uhf.reader.UhfReader;
 
 import com.android.hdhe.uhf.readerInterface.TagModel;
-import com.handheld.upsizeuhf.util.UpsizeUhfUtils;
+import com.handheld.upsizeuhf.util.UhfUtils;
+//import com.handheld.upsizeuhf.util.UhfUtils;
+//import com.handheld.upsizeuhf.util.UpsizeUhfUtils;
 
 public class UHFActivity extends Activity implements OnClickListener {
     private String TAG = this.getClass().getSimpleName();
     /****************** for view:**************************************/
+    private LinearLayout ls1;
     private LinearLayout l1;
     private LinearLayout l2;
     private LinearLayout l3;
     private LinearLayout l4;
+    private TextView textViewS1;
     private TextView textView1;
     private TextView textView2;
     private TextView textView3;
     private TextView textView4;
+    private View viewS1;
     private View view1;
     private View view2;
     private View view3;
     private View view4;
+    private LinearLayout ls1searchandcheck;
     private RelativeLayout l1epc;
     private LinearLayout l2readandwrite;
     private LinearLayout l3lockandkill;
@@ -117,6 +123,9 @@ public class UHFActivity extends Activity implements OnClickListener {
     private int lockType;//
     private Button buttonBack;
     /******************************************/
+    private Button by_item_set_button;//set by item set button
+    private Button by_item_code_button;//set by item code button
+
     private Button button1;//set button1
     private Button button2;//set button2
     private Button button3;//set button3
@@ -258,7 +267,8 @@ public class UHFActivity extends Activity implements OnClickListener {
     private void initView() {
         // get font
         AssetManager assetManager = getAssets();
-        UpsizeUhfUtils.loadFonts(assetManager);
+//        UpsizeUhfUtils.loadFonts(assetManager);
+        UhfUtils.Companion.loadFonts(assetManager);
         Log.d(TAG, "load fonts success.");
 
         buttonStart = (Button) findViewById(R.id.button_start);
@@ -269,6 +279,8 @@ public class UHFActivity extends Activity implements OnClickListener {
         buttonClear.setOnClickListener(this);
         editAccesslock = (EditText) findViewById(R.id.edittext_access_lock);
         listEPC = new ArrayList<EPC>();
+        ls1 = (LinearLayout) findViewById(R.id.linearLayoutSearchAndCheck);
+        ls1.setOnTouchListener(new myOnTouch());
         l1 = (LinearLayout) findViewById(R.id.linearLayoutUhfEpc);
         l1.setOnTouchListener(new myOnTouch());
         l2 = (LinearLayout) findViewById(R.id.linearLayoutUhfRead);
@@ -277,14 +289,17 @@ public class UHFActivity extends Activity implements OnClickListener {
         l3.setOnTouchListener(new myOnTouch());
         l4 = (LinearLayout) findViewById(R.id.linearLayoutUhfSet);
         l4.setOnTouchListener(new myOnTouch());
+        textViewS1 = (TextView) findViewById(R.id.textViewSearchAndCheck);
         textView1 = (TextView) findViewById(R.id.textViewUhfEpc);
         textView2 = (TextView) findViewById(R.id.textViewUhfMore);
         textView3 = (TextView) findViewById(R.id.textViewUhfLock);
         textView4 = (TextView) findViewById(R.id.textViewUhfSet);
+        viewS1 = findViewById(R.id.viewSearchAndCheck);
         view1 = findViewById(R.id.viewUhfEpc);
         view2 = findViewById(R.id.viewUhfMore);
         view3 = findViewById(R.id.viewUhfLock);
         view4 = findViewById(R.id.viewUhfSet);
+        ls1searchandcheck = (LinearLayout) findViewById(R.id.ls1searchandcheck);
         l1epc = (RelativeLayout) findViewById(R.id.l1epc);
         l2readandwrite = (LinearLayout) findViewById(R.id.l2read);
         l3lockandkill = (LinearLayout) findViewById(R.id.l3lock);
@@ -669,7 +684,14 @@ public class UHFActivity extends Activity implements OnClickListener {
         });
 
         // Font setup
-        buttonStart.setTypeface(UpsizeUhfUtils.getFontKanitBold());
+        buttonStart.setTypeface(UhfUtils.Companion.getFontKanitSemiBoldItalic());
+
+        // Search & Check
+        by_item_set_button = (Button) findViewById(R.id.by_item_set_button);
+        by_item_set_button.setOnClickListener(this);
+
+        by_item_code_button = (Button) findViewById(R.id.by_item_code_button);
+        by_item_code_button.setOnClickListener(this);
     }
 
 
@@ -924,6 +946,14 @@ public class UHFActivity extends Activity implements OnClickListener {
         addr = Integer.valueOf(editAddr.getText().toString());
         length = Integer.valueOf(editLength.getText().toString());
         switch (v.getId()) {
+            case R.id.by_item_set_button:
+                Util.play(1, 0);
+                break;
+
+            case R.id.by_item_code_button:
+                Util.play(1, 0);
+                break;
+
             case R.id.button_start:
                 if (!startFlag) {
                     startFlag = true;
@@ -1117,6 +1147,9 @@ public class UHFActivity extends Activity implements OnClickListener {
         @Override
         public boolean onTouch(View view, MotionEvent arg1) {
             switch (view.getId()) {
+                case R.id.linearLayoutSearchAndCheck:
+                    SetVisible(ls1searchandcheck, textViewS1, viewS1);
+                    break;
                 case R.id.linearLayoutUhfEpc:
                     SetVisible(null, textView1, view1);
                     break;
@@ -1141,10 +1174,14 @@ public class UHFActivity extends Activity implements OnClickListener {
             showToast("Please inventory!");
             return;
         }
+        ls1searchandcheck.setVisibility(View.GONE);
         l1epc.setVisibility(View.GONE);
         l2readandwrite.setVisibility(View.GONE);
         l3lockandkill.setVisibility(View.GONE);
         l4settings.setVisibility(View.GONE);
+
+        textViewS1.setTextColor(getResources().getColor(R.color.black));
+        viewS1.setBackgroundColor(getResources().getColor(R.color.white));
 
         textView1.setTextColor(getResources().getColor(R.color.black));
         view1.setBackgroundColor(getResources().getColor(R.color.white));

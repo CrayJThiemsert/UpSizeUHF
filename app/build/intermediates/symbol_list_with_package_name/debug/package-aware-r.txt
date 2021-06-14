@@ -13,11 +13,18 @@ array serialportArray
 color black
 color gray
 color green
+color purple
 color tabSelect
 color title_bg
 color white
 dimen activity_horizontal_margin
 dimen activity_vertical_margin
+drawable baseline_search_black_18
+drawable baseline_search_black_20
+drawable baseline_search_black_24
+drawable baseline_search_black_36
+drawable baseline_search_black_48
+drawable button_radius
 drawable corners_background
 drawable ic_launcher
 font kanit_black
@@ -48,6 +55,7 @@ id LinearLayout7
 id LinearLayout8
 id LinearLayout__acce
 id LinearLayout_lock_mem
+id LinearLayouts1
 id action_settings
 id button4
 id button_back
@@ -63,6 +71,8 @@ id button_set
 id button_start
 id button_uhf_more_settings
 id button_write
+id by_item_code_button
+id by_item_set_button
 id edit4
 id editTextPassword
 id edit_kill_password
@@ -80,6 +90,7 @@ id linearLayout1
 id linearLayout2
 id linearLayout3
 id linearLayout4
+id linearLayoutSearchAndCheck
 id linearLayoutUhfEpc
 id linearLayoutUhfLock
 id linearLayoutUhfRead
@@ -87,6 +98,7 @@ id linearLayoutUhfSet
 id linearLayout_readData
 id linearlayout0
 id listView_data
+id ls1searchandcheck
 id receive_txt
 id relativeLayout21
 id spinner1
@@ -98,10 +110,12 @@ id spinner_lock_mem
 id spinner_lock_type
 id spinner_membank
 id tableLayout11
+id tableLayout1s1
 id textView1
 id textView2
 id textView3
 id textView4
+id textViewSearchAndCheck
 id textViewTips
 id textViewUhfEpc
 id textViewUhfLock
@@ -115,6 +129,7 @@ id textView_list_item_rssi
 id textView_version
 id textViewreaddata
 id textview_title_config
+id viewSearchAndCheck
 id viewUhfEpc
 id viewUhfLock
 id viewUhfMore
@@ -261,6 +276,8 @@ string botelv_shezhi
 string botelv_shezhi_default
 string botelv_shezhi_text
 string buadrate
+string by_item_code_label
+string by_item_set_label
 string call_fail
 string cancel
 string cancel_operation
@@ -468,6 +485,7 @@ string return_success_
 string rfPower
 string scan
 string scan_initial
+string search_and_check
 string search_db
 string search_epc
 string search_fail_

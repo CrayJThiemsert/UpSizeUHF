@@ -408,6 +408,7 @@
 	<string name="lf_134_">LF(134.2K)</string>
 	<string name="lf_125_">LF(125K)</string>
 	<string name="search_epc">Search EPC</string>
+	<string name="search_and_check">Search &amp; Check</string>
 	<string name="lock_and_kill">Lock and kill</string>
 	<string name="match_charas">Match charas</string>
 	<string name="fingerprint_1">Fingerprint 1</string>
@@ -491,4 +492,6 @@
 	<string name="_tips">Tips:</string>
 	<string name="lock_mem">Lock mem:</string>
 	<string name="sure_kill">This operation will destroy the tag, continue?</string>
+	<string name="by_item_set_label">By Item Set</string>
+	<string name="by_item_code_label">By Item Code</string>
 </resources>

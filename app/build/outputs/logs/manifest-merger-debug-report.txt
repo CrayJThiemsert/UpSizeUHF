@@ -4,7 +4,7 @@ ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidMan
 INJECTED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:2:1-24:12
 INJECTED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:2:1-24:12
 INJECTED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:2:1-24:12
-MERGED from [com.android.support:support-v4:20.0.0] C:\Users\Dell\.gradle\caches\transforms-2\files-2.1\62dfb52b85917dd9c0f71b9b6c0d9418\support-v4-20.0.0\AndroidManifest.xml:15:1-18:12
+MERGED from [com.android.support:support-v4:20.0.0] C:\Users\Dell\.gradle\caches\transforms-2\files-2.1\0a823e2cb119cb12c7f45cfe021821d6\support-v4-20.0.0\AndroidManifest.xml:15:1-18:12
 INJECTED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:2:1-24:12
 INJECTED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:2:1-24:12
 INJECTED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:2:1-24:12
@@ -26,8 +26,8 @@ INJECTED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\Android
 		ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:2:11-69
 application
 ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:6:5-22:19
-MERGED from [com.android.support:support-v4:20.0.0] C:\Users\Dell\.gradle\caches\transforms-2\files-2.1\62dfb52b85917dd9c0f71b9b6c0d9418\support-v4-20.0.0\AndroidManifest.xml:17:5-19
-MERGED from [com.android.support:support-v4:20.0.0] C:\Users\Dell\.gradle\caches\transforms-2\files-2.1\62dfb52b85917dd9c0f71b9b6c0d9418\support-v4-20.0.0\AndroidManifest.xml:17:5-19
+MERGED from [com.android.support:support-v4:20.0.0] C:\Users\Dell\.gradle\caches\transforms-2\files-2.1\0a823e2cb119cb12c7f45cfe021821d6\support-v4-20.0.0\AndroidManifest.xml:17:5-19
+MERGED from [com.android.support:support-v4:20.0.0] C:\Users\Dell\.gradle\caches\transforms-2\files-2.1\0a823e2cb119cb12c7f45cfe021821d6\support-v4-20.0.0\AndroidManifest.xml:17:5-19
 	android:label
 		ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:9:9-41
 	tools:ignore
@@ -60,8 +60,8 @@ uses-sdk
 INJECTED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml
 INJECTED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml
-MERGED from [com.android.support:support-v4:20.0.0] C:\Users\Dell\.gradle\caches\transforms-2\files-2.1\62dfb52b85917dd9c0f71b9b6c0d9418\support-v4-20.0.0\AndroidManifest.xml:16:5-42
-MERGED from [com.android.support:support-v4:20.0.0] C:\Users\Dell\.gradle\caches\transforms-2\files-2.1\62dfb52b85917dd9c0f71b9b6c0d9418\support-v4-20.0.0\AndroidManifest.xml:16:5-42
+MERGED from [com.android.support:support-v4:20.0.0] C:\Users\Dell\.gradle\caches\transforms-2\files-2.1\0a823e2cb119cb12c7f45cfe021821d6\support-v4-20.0.0\AndroidManifest.xml:16:5-42
+MERGED from [com.android.support:support-v4:20.0.0] C:\Users\Dell\.gradle\caches\transforms-2\files-2.1\0a823e2cb119cb12c7f45cfe021821d6\support-v4-20.0.0\AndroidManifest.xml:16:5-42
 INJECTED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml
 INJECTED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml
 	android:targetSdkVersion

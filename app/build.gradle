@@ -1,5 +1,9 @@
 apply plugin: 'com.android.application'
 
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+
 android {
     compileSdkVersion 30
 
@@ -37,5 +41,7 @@ dependencies {
     implementation 'com.android.support:support-v4:20.0.0'
     implementation files('libs/SerialPort.jar')
     implementation files('libs/uhfcom13_v15.jar')
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
 }
