@@ -21,6 +21,8 @@ com/handheld/upsizeuhf/UHFActivity.java
  com.handheld.upsizeuhf.UHFActivity$7
  com.handheld.upsizeuhf.UHFActivity$8
  com.handheld.upsizeuhf.UHFActivity$9
+ com.handheld.upsizeuhf.UHFActivity$ByItemCodeButtonAnimationListener
+ com.handheld.upsizeuhf.UHFActivity$ByItemSetButtonAnimationListener
  com.handheld.upsizeuhf.UHFActivity$InventoryThread
  com.handheld.upsizeuhf.UHFActivity$KeyReceiver
  com.handheld.upsizeuhf.UHFActivity$myOnTouch

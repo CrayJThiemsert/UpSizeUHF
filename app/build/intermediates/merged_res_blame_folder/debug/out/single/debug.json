@@ -24,6 +24,10 @@
         "source": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\src\\main\\res\\font\\kanit_medium.ttf"
     },
     {
+        "merged": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\build\\intermediates\\res\\merged\\debug\\anim_slide_out_left.xml.flat",
+        "source": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\src\\main\\res\\anim\\slide_out_left.xml"
+    },
+    {
         "merged": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\build\\intermediates\\res\\merged\\debug\\layout_listview_item.xml.flat",
         "source": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\src\\main\\res\\layout\\listview_item.xml"
     },
@@ -46,6 +50,10 @@
     {
         "merged": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\build\\intermediates\\res\\merged\\debug\\menu_main.xml.flat",
         "source": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\src\\main\\res\\menu\\main.xml"
+    },
+    {
+        "merged": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\build\\intermediates\\res\\merged\\debug\\anim_slide_in_right.xml.flat",
+        "source": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\src\\main\\res\\anim\\slide_in_right.xml"
     },
     {
         "merged": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xxxhdpi_baseline_search_black_18.png.flat",
@@ -78,6 +86,10 @@
     {
         "merged": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xxxhdpi_baseline_search_black_24.png.flat",
         "source": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\src\\main\\res\\drawable-xxxhdpi\\baseline_search_black_24.png"
+    },
+    {
+        "merged": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\build\\intermediates\\res\\merged\\debug\\anim_slide_out_right.xml.flat",
+        "source": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\src\\main\\res\\anim\\slide_out_right.xml"
     },
     {
         "merged": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\build\\intermediates\\res\\merged\\debug\\font_kanit_bold.ttf.flat",
@@ -116,8 +128,16 @@
         "source": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\src\\main\\res\\drawable-mdpi\\baseline_search_black_18.png"
     },
     {
+        "merged": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\build\\intermediates\\res\\merged\\debug\\anim_slide_in_left.xml.flat",
+        "source": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\src\\main\\res\\anim\\slide_in_left.xml"
+    },
+    {
         "merged": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\build\\intermediates\\res\\merged\\debug\\font_kanit_blackitalic.ttf.flat",
         "source": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\src\\main\\res\\font\\kanit_blackitalic.ttf"
+    },
+    {
+        "merged": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\build\\intermediates\\res\\merged\\debug\\anim_bounce.xml.flat",
+        "source": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\src\\main\\res\\anim\\bounce.xml"
     },
     {
         "merged": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\build\\intermediates\\res\\merged\\debug\\font_kanit_black.ttf.flat",

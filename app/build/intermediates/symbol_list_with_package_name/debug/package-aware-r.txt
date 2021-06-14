@@ -1,4 +1,9 @@
 com.handheld.upsizeuhf
+anim bounce
+anim slide_in_left
+anim slide_in_right
+anim slide_out_left
+anim slide_out_right
 array arr_area
 array arr_lockType
 array arr_sensitivity

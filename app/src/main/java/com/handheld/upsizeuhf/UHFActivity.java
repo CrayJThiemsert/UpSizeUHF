@@ -31,6 +31,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewConfiguration;
 import android.view.Window;
+import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -49,6 +50,7 @@ import cn.pda.serialport.Tools;
 import com.android.hdhe.uhf.reader.UhfReader;
 
 import com.android.hdhe.uhf.readerInterface.TagModel;
+import com.handheld.upsizeuhf.util.AnimationUtils;
 import com.handheld.upsizeuhf.util.UhfUtils;
 //import com.handheld.upsizeuhf.util.UhfUtils;
 //import com.handheld.upsizeuhf.util.UpsizeUhfUtils;
@@ -946,12 +948,20 @@ public class UHFActivity extends Activity implements OnClickListener {
         addr = Integer.valueOf(editAddr.getText().toString());
         length = Integer.valueOf(editLength.getText().toString());
         switch (v.getId()) {
-            case R.id.by_item_set_button:
-                Util.play(1, 0);
+            case R.id.by_item_set_button: {
+                    Util.play(1, 0);
+                    Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
+                    animate.setAnimationListener(new ByItemSetButtonAnimationListener());
+                    by_item_set_button.startAnimation(animate);
+                }
                 break;
 
-            case R.id.by_item_code_button:
-                Util.play(1, 0);
+            case R.id.by_item_code_button: {
+                    Util.play(1, 0);
+                    Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
+                    animate.setAnimationListener(new ByItemCodeButtonAnimationListener());
+                    by_item_code_button.startAnimation(animate);
+                }
                 break;
 
             case R.id.button_start:
@@ -1098,6 +1108,41 @@ public class UHFActivity extends Activity implements OnClickListener {
                 break;
             default:
                 break;
+        }
+    }
+
+    private class ByItemSetButtonAnimationListener implements Animation.AnimationListener   {
+        @Override
+        public void onAnimationStart(Animation animation) {
+            SetVisible(l4settings, textView4, view4);
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    }
+
+    private class ByItemCodeButtonAnimationListener implements Animation.AnimationListener   {
+        @Override
+        public void onAnimationStart(Animation animation) {
+
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
         }
     }
 
