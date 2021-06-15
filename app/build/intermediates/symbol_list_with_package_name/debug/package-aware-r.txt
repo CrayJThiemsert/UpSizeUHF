@@ -64,9 +64,12 @@ id LinearLayouts1
 id LinearLayouts2
 id LinearLayouts3
 id action_settings
+id actor_name_list
+id actscene_name_list
 id back_s2_button
 id back_s3_button
 id button4
+id button5
 id button_back
 id button_clear
 id button_connect
@@ -83,6 +86,7 @@ id button_write
 id by_item_code_button
 id by_item_set_button
 id edit4
+id edit5
 id editTextPassword
 id edit_kill_password
 id edittext_access_lock
@@ -99,6 +103,7 @@ id linearLayout1
 id linearLayout2
 id linearLayout3
 id linearLayout4
+id linearLayout5
 id linearLayoutSearchAndCheck
 id linearLayoutUhfEpc
 id linearLayoutUhfLock
@@ -107,6 +112,7 @@ id linearLayoutUhfSet
 id linearLayout_readData
 id linearlayout0
 id listView_data
+id list_item
 id ls1searchandcheck
 id ls2selectcondition
 id ls3queryresult
@@ -151,6 +157,7 @@ id viewUhfMore
 id viewUhfSet
 layout activity_uhf
 layout listview_item
+layout name_listview
 menu main
 raw msg
 string CmosExposeTimer
@@ -259,6 +266,8 @@ string about
 string accesspassword
 string action_settings
 string active_card
+string actor
+string actscene
 string add
 string add_or_redu_ed
 string add_success
@@ -529,6 +538,7 @@ string serialport
 string serialport_debugging_tool
 string serialport_init_fail
 string serialport_init_fail_
+string server_ip
 string set
 string setSuccess
 string settings

@@ -1,5 +1,6 @@
 package com.handheld.upsizeuhf.ui;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,14 +21,16 @@ import java.util.ArrayList;
 public class ActorAdapter extends ArrayAdapter<Actor> {
     private String TAG = this.getClass().getSimpleName();
     private Context mContext;
+    private Activity mActivity;
     // View lookup cache
     private static class ViewHolder {
         TextView name;
     }
 
-    public ActorAdapter(Context context, ArrayList<Actor> actors) {
+    public ActorAdapter(Context context, Activity activity, ArrayList<Actor> actors) {
         super(context, R.layout.name_listview, actors);
         mContext = context;
+        mActivity = activity;
     }
 
     @Override
@@ -82,6 +85,8 @@ public class ActorAdapter extends ArrayAdapter<Actor> {
         @Override
         public void onAnimationStart(Animation animation) {
             Log.d(TAG, "animation selected name=" + actor.name);
+            UHFActivity uhfActivity = (UHFActivity)mActivity;
+            uhfActivity.refreshActScene(actor.name);
         }
 
         @Override

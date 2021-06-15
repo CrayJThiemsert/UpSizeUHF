@@ -55,6 +55,7 @@ import com.android.hdhe.uhf.readerInterface.TagModel;
 import com.handheld.upsizeuhf.model.Actor;
 import com.handheld.upsizeuhf.model.Costume;
 import com.handheld.upsizeuhf.model.QueryService;
+import com.handheld.upsizeuhf.ui.ActSceneAdapter;
 import com.handheld.upsizeuhf.ui.ActorAdapter;
 import com.handheld.upsizeuhf.util.AnimationUtils;
 import com.handheld.upsizeuhf.util.Constants;
@@ -184,10 +185,12 @@ public class UHFActivity extends Activity implements OnClickListener {
     private String actorAllPath = "http://192.168.1.101/costume/costume/actors/";
     private String costumeAllPath = "http://192.168.1.101/costume/costume/list/";
     private ListView actor_listView;
+    private ListView actscene_listView;
 
     private Context mContext;
     private Activity mActivity;
     ArrayList<Costume> mCostumeArrayList = new ArrayList<Costume>();
+    ArrayList<Costume> mActSceneArrayList = new ArrayList<Costume>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -758,6 +761,43 @@ public class UHFActivity extends Activity implements OnClickListener {
         next_s3_button.setOnClickListener(this);
 
         actor_listView = (ListView) findViewById(R.id.actor_name_list);
+        actscene_listView = (ListView) findViewById(R.id.actscene_name_list);
+    }
+
+    private boolean isActSceneExistingInActSceneArray(String actScene) {
+        boolean result = false;
+
+        for(int i = 0; i < mActSceneArrayList.size(); i++) {
+            Costume costume = mActSceneArrayList.get(i);
+            if(costume.actScence.equals(actScene)) {
+                result = true;
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    public void refreshActScene(String actor) {
+        Log.d(TAG, "refreshActScene actor name=" + actor);
+
+        processDialog = new ProgressDialog(mContext);
+        processDialog.setMessage("Please  Wait ...");
+        processDialog.setCancelable(false);
+        processDialog.show();
+
+        mActSceneArrayList = new ArrayList<Costume>();
+        for(int i = 0; i < mCostumeArrayList.size(); i++) {
+            Costume costume = mCostumeArrayList.get(i);
+            if(costume.actor.equals(actor) && !isActSceneExistingInActSceneArray(costume.actScence)) {
+                mActSceneArrayList.add(costume);
+            }
+        }
+
+        ActSceneAdapter actSceneAdapter = new ActSceneAdapter(mContext, mActivity, mActSceneArrayList);
+
+        actscene_listView.setAdapter(actSceneAdapter);
+        processDialog.dismiss();
     }
 
 
@@ -1222,6 +1262,12 @@ public class UHFActivity extends Activity implements OnClickListener {
         public void onAnimationStart(Animation animation) {
             SetVisible(ls2selectcondition, textViewS1, viewS1);
             new ServiceQueryAsyncTask(mContext, mActivity, Constants.Companion.getActorAllQuery()).execute();
+
+            mActSceneArrayList = new ArrayList<Costume>();
+            ActSceneAdapter actSceneAdapter = new ActSceneAdapter(mContext, mActivity, mActSceneArrayList);
+            actscene_listView.setAdapter(actSceneAdapter);
+            actSceneAdapter.clear();
+
         }
 
         @Override
@@ -1517,6 +1563,8 @@ public class UHFActivity extends Activity implements OnClickListener {
         return pattern.matcher(str).matches();
     }
 
+
+
     private class ServiceQueryAsyncTask extends AsyncTask<Void, Void, Void> {
 
         private Context mContext;
@@ -1583,7 +1631,7 @@ public class UHFActivity extends Activity implements OnClickListener {
                                     e.printStackTrace();
                                 }
                             }
-                            ActorAdapter actorAdapter = new ActorAdapter(mContext, actorArrayList);
+                            ActorAdapter actorAdapter = new ActorAdapter(mContext, mActivity, actorArrayList);
 
                             actor_listView.setAdapter(actorAdapter);
                             processDialog.dismiss();
