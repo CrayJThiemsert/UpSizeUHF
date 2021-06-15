@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -20,6 +21,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -50,10 +52,19 @@ import cn.pda.serialport.Tools;
 import com.android.hdhe.uhf.reader.UhfReader;
 
 import com.android.hdhe.uhf.readerInterface.TagModel;
+import com.handheld.upsizeuhf.model.Actor;
+import com.handheld.upsizeuhf.model.Costume;
+import com.handheld.upsizeuhf.model.QueryService;
+import com.handheld.upsizeuhf.ui.ActorAdapter;
 import com.handheld.upsizeuhf.util.AnimationUtils;
+import com.handheld.upsizeuhf.util.Constants;
+import com.handheld.upsizeuhf.util.HttpConnectionService;
+import com.handheld.upsizeuhf.util.MySQLUtils;
 import com.handheld.upsizeuhf.util.UhfUtils;
-//import com.handheld.upsizeuhf.util.UhfUtils;
-//import com.handheld.upsizeuhf.util.UpsizeUhfUtils;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class UHFActivity extends Activity implements OnClickListener {
     private String TAG = this.getClass().getSimpleName();
@@ -140,10 +151,12 @@ public class UHFActivity extends Activity implements OnClickListener {
     private Button button2;//set button2
     private Button button3;//set button3
     private Button button4;//set button4
+    private Button button5;//set button5
     private Spinner spinnerSensitive;//The sensitivity
     private Spinner spinnerPower;//RF power
     private Spinner spinnerWorkArea;//work area
     private EditText editFrequency;// frequency
+    private EditText editServerIp;// server ip
     private String[] powers = {"26dbm", "24dbm", "20dbm", "18dbm", "17dbm", "16dbm"};
     //private String[] powers = {"26dbm","25dm","24dbm","23dbm","22dbm","21dbm","20dbm","19dbm","18dbm","17dbm","16dbm"};
     private String[] sensitives = null;
@@ -160,9 +173,21 @@ public class UHFActivity extends Activity implements OnClickListener {
     private int power = 0;//rate of work
     private int area = 0;
     private int frequency = 0;
+    private String serverIp = "192.168.1.101"; // Dev server
 
     private String what = "uhf";
     private String selectEpc = "";
+
+    private ProgressDialog processDialog;
+    private JSONArray restulJsonArray;
+    private int success = 0;
+    private String actorAllPath = "http://192.168.1.101/costume/costume/actors/";
+    private String costumeAllPath = "http://192.168.1.101/costume/costume/list/";
+    private ListView actor_listView;
+
+    private Context mContext;
+    private Activity mActivity;
+    ArrayList<Costume> mCostumeArrayList = new ArrayList<Costume>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -191,8 +216,11 @@ public class UHFActivity extends Activity implements OnClickListener {
         editor = shared.edit();
         power = shared.getInt("power", 26);
         area = shared.getInt("area", 2);
+        serverIp = shared.getString("serverIp", "192.168.1.101");
         //init view
         initView();
+        // load database once
+        loadData();
         //start inventory thread
         Thread thread = new InventoryThread();
         thread.start();
@@ -274,7 +302,14 @@ public class UHFActivity extends Activity implements OnClickListener {
         super.onDestroy();
     }
 
+    private void loadData() {
+        new ServiceQueryAsyncTask(mContext, mActivity, Constants.Companion.getCostumeAllQuery()).execute();
+    }
+
     private void initView() {
+        mContext = this;
+        mActivity = this;
+
         // get font
         AssetManager assetManager = getAssets();
 //        UpsizeUhfUtils.loadFonts(assetManager);
@@ -476,11 +511,13 @@ public class UHFActivity extends Activity implements OnClickListener {
         button2 = (Button) findViewById(R.id.button_plus);
         button3 = (Button) findViewById(R.id.button_set);
         button4 = (Button) findViewById(R.id.button4);
+        button5 = (Button) findViewById(R.id.button5);
 
         spinnerSensitive = (Spinner) findViewById(R.id.spinner1);
         spinnerPower = (Spinner) findViewById(R.id.spinner2);
         spinnerWorkArea = (Spinner) findViewById(R.id.spinner3);
         editFrequency = (EditText) findViewById(R.id.edit4);
+        editServerIp = (EditText) findViewById(R.id.edit5);
         sensitives = getResources().getStringArray(R.array.arr_sensitivity);
         areas = getResources().getStringArray(R.array.arr_area);
 
@@ -562,6 +599,7 @@ public class UHFActivity extends Activity implements OnClickListener {
         button2.setOnClickListener(this);
         button3.setOnClickListener(this);
         button4.setOnClickListener(this);
+        button5.setOnClickListener(this);
         spinnerWorkArea.setOnItemSelectedListener(new OnItemSelectedListener() {
 
             @Override
@@ -695,6 +733,8 @@ public class UHFActivity extends Activity implements OnClickListener {
             }
         });
 
+        editServerIp.setText(serverIp);
+
         // Font setup
         buttonStart.setTypeface(UhfUtils.Companion.getFontKanitSemiBoldItalic());
 
@@ -716,6 +756,8 @@ public class UHFActivity extends Activity implements OnClickListener {
 
         next_s3_button = (Button) findViewById(R.id.next_s3_button);
         next_s3_button.setOnClickListener(this);
+
+        actor_listView = (ListView) findViewById(R.id.actor_name_list);
     }
 
 
@@ -1142,6 +1184,16 @@ public class UHFActivity extends Activity implements OnClickListener {
 //			manager.setFrequency(frequency, 0, 0);
                 showToast(getString(R.string.setSuccess));
                 break;
+            case R.id.button5:
+                String serverIpStr = editServerIp.getText().toString();
+                if (serverIpStr == null || "".equals(serverIpStr)) {
+                    showToast(getString(R.string.server_ip));
+                    return;
+                }
+                editor.putString("serverIp", serverIpStr);
+                editor.commit();
+                showToast(getString(R.string.setSuccess));
+                break;
             case R.id.button_uhf_more_settings:
                 l5moresettings.setVisibility(View.GONE);
                 AlertDialog dlg2 = new AlertDialog.Builder(UHFActivity.this)
@@ -1169,6 +1221,7 @@ public class UHFActivity extends Activity implements OnClickListener {
         @Override
         public void onAnimationStart(Animation animation) {
             SetVisible(ls2selectcondition, textViewS1, viewS1);
+            new ServiceQueryAsyncTask(mContext, mActivity, Constants.Companion.getActorAllQuery()).execute();
         }
 
         @Override
@@ -1258,6 +1311,12 @@ public class UHFActivity extends Activity implements OnClickListener {
         @Override
         public void onAnimationStart(Animation animation) {
 //            SetVisible(ls1searchandcheck, textViewS1, viewS1);
+            if(MySQLUtils.Companion.getConnection()) {
+                Log.d(TAG, "DB connected success!!....");
+                MySQLUtils.Companion.executeMySQLQuery("SHOW DATABASES;");
+            } else {
+                Log.d(TAG, "DB connected failed!!....");
+            }
         }
 
         @Override
@@ -1457,5 +1516,112 @@ public class UHFActivity extends Activity implements OnClickListener {
         Pattern pattern = Pattern.compile("[0-9A-Fa-f]*");
         return pattern.matcher(str).matches();
     }
+
+    private class ServiceQueryAsyncTask extends AsyncTask<Void, Void, Void> {
+
+        private Context mContext;
+        private Activity mActivity;
+        String response = "";
+        QueryService servicePath = new QueryService();
+        HashMap<String, String> postDataParams;
+
+        public ServiceQueryAsyncTask(Context context, Activity activity, QueryService servicePath) {
+            this.mContext = context;
+            this.mActivity = activity;
+            this.servicePath = servicePath;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            processDialog = new ProgressDialog(mContext);
+            processDialog.setMessage("Please  Wait ...");
+            processDialog.setCancelable(false);
+            processDialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(Void... arg0) {
+
+            postDataParams = new HashMap<String, String>();
+            postDataParams.put("HTTP_ACCEPT", "application/json");
+
+            HttpConnectionService service = new HttpConnectionService();
+            response = service.sendRequest(servicePath.path, postDataParams);
+            try {
+                success = 1;
+                JSONObject resultJsonObject = new JSONObject(response);
+                restulJsonArray = resultJsonObject.getJSONArray("output");
+            } catch (JSONException e) {
+                success = 0;
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+
+            if (processDialog.isShowing()) {
+                processDialog.dismiss();
+            }
+
+            if (success == 1) {
+                if (null != restulJsonArray) {
+                    switch (servicePath.uid) {
+                        case Constants.ACTOR_All:
+                            ArrayList<Actor> actorArrayList = new ArrayList<Actor>();
+
+                            for (int i = 0; i < restulJsonArray.length(); i++) {
+                                try {
+                                    JSONObject jsonObject = restulJsonArray.getJSONObject(i);
+                                    Actor actor = new Actor();
+                                    actor.name = jsonObject.getString("actor");
+                                    actorArrayList.add(actor);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            ActorAdapter actorAdapter = new ActorAdapter(mContext, actorArrayList);
+
+                            actor_listView.setAdapter(actorAdapter);
+                            processDialog.dismiss();
+                            break;
+                        case Constants.COSTUME_All:
+                            mCostumeArrayList = new ArrayList<Costume>();
+
+                            for (int i = 0; i < restulJsonArray.length(); i++) {
+                                try {
+                                    JSONObject jsonObject = restulJsonArray.getJSONObject(i);
+                                    Costume costume = new Costume();
+                                    costume.runningNo = jsonObject.getString("runningNo");
+                                    costume.actor = jsonObject.getString("actor");
+                                    costume.actScence = jsonObject.getString("actScence");
+                                    costume.code = jsonObject.getString("code");
+                                    costume.type = jsonObject.getString("type");
+                                    costume.size = jsonObject.getString("size");
+                                    costume.codeNo = jsonObject.getString("codeNo");
+                                    costume.epcHeader = jsonObject.getString("epcHeader");
+                                    costume.epcRun = jsonObject.getString("epcRun");
+                                    costume.shipBox = jsonObject.getString("shipBox");
+                                    costume.storageBox = jsonObject.getString("storageBox");
+                                    costume.playBox = jsonObject.getString("playBox");
+                                    mCostumeArrayList.add(costume);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            Log.d(TAG, "mCostumeArrayList.size()=" + mCostumeArrayList.size());
+                            processDialog.dismiss();
+                            break;
+                    }
+
+
+                }
+            }
+        }
+
+    }//end of async task
 
 }

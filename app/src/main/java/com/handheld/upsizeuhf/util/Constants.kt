@@ -1,5 +1,7 @@
 package com.handheld.upsizeuhf.util
 
+import com.handheld.upsizeuhf.model.QueryService
+
 class Constants {
     companion object {
         val SYSTEM_EMAIL_EXTENSION = "@siam-royal-view.com"
@@ -84,5 +86,17 @@ class Constants {
 
         public val IMAGE_DIRECTORY = "/palmrescue"
 
+        const val COSTUME_All = 1
+        const val ACTOR_All = 2
+        val COSTUME_All_QUERY : QueryService = QueryService(COSTUME_All, "http://192.168.1.101/costume/costume/list/")
+        val ACTOR_All_QUERY : QueryService = QueryService(ACTOR_All, "http://192.168.1.101/costume/costume/actors/")
+
+        fun getCostumeAllQuery() : QueryService {
+            return COSTUME_All_QUERY
+        }
+
+        fun getActorAllQuery() : QueryService {
+            return ACTOR_All_QUERY
+        }
     }
 }

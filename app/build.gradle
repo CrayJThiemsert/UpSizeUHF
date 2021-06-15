@@ -7,6 +7,11 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 30
 
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
+
     defaultConfig {
         applicationId "com.handheld.upsizeuhf"
         minSdkVersion 17
@@ -41,6 +46,7 @@ dependencies {
     implementation 'com.android.support:support-v4:20.0.0'
     implementation files('libs/SerialPort.jar')
     implementation files('libs/uhfcom13_v15.jar')
+//    implementation files('libs/mysql-connector-java-8.0.25.jar')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 

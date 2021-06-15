@@ -496,4 +496,7 @@
 	<string name="by_item_code_label">By Item Code</string>
 	<string name="next_label">Next</string>
 	<string name="back_label">Back</string>
+    <string name="server_ip">Server IP</string>
+	<string name="actor">Actor</string>
+	<string name="actscene">Act, Scene</string>
 </resources>
