@@ -58,9 +58,7 @@ import com.android.hdhe.uhf.readerInterface.TagModel;
 import com.handheld.upsizeuhf.model.Actor;
 import com.handheld.upsizeuhf.model.Costume;
 import com.handheld.upsizeuhf.model.QueryService;
-import com.handheld.upsizeuhf.ui.ActSceneAdapter;
 import com.handheld.upsizeuhf.ui.ActSceneRVAdapter;
-import com.handheld.upsizeuhf.ui.ActorAdapter;
 import com.handheld.upsizeuhf.ui.ActorRVAdapter;
 import com.handheld.upsizeuhf.util.AnimationUtils;
 import com.handheld.upsizeuhf.util.Constants;
@@ -189,14 +187,11 @@ public class UHFActivity extends Activity implements OnClickListener {
     private int success = 0;
     private String actorAllPath = "http://192.168.1.101/costume/costume/actors/";
     private String costumeAllPath = "http://192.168.1.101/costume/costume/list/";
-    private ListView actor_listView;
-    private ListView actscene_listView;
 
     private Context mContext;
     private Activity mActivity;
     ArrayList<Costume> mCostumeArrayList = new ArrayList<Costume>();
     ArrayList<Costume> mActSceneArrayList = new ArrayList<Costume>();
-    private int current_index_actor = 0;
 
     private RecyclerView actor_name_rvlist;
     private ActorRVAdapter actorRVAdapter;
@@ -772,9 +767,6 @@ public class UHFActivity extends Activity implements OnClickListener {
         next_s3_button = (Button) findViewById(R.id.next_s3_button);
         next_s3_button.setOnClickListener(this);
 
-        actor_listView = (ListView) findViewById(R.id.actor_name_list);
-        actscene_listView = (ListView) findViewById(R.id.actscene_name_list);
-
         actor_name_rvlist = (RecyclerView)findViewById(R.id.actor_name_rvlist);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,RecyclerView.VERTICAL,false);
         actor_name_rvlist.setLayoutManager(linearLayoutManager);
@@ -814,13 +806,9 @@ public class UHFActivity extends Activity implements OnClickListener {
             }
         }
 
-//        ActSceneAdapter actSceneAdapter = new ActSceneAdapter(mContext, mActivity, mActSceneArrayList);
-//
-//        actscene_listView.setAdapter(actSceneAdapter);
-
         actsceneRVAdapter = new ActSceneRVAdapter(mContext, mActivity, mActSceneArrayList);
         actscene_name_rvlist.setAdapter(actsceneRVAdapter);
-
+        actsceneRVAdapter.notifyDataSetChanged();
 
         processDialog.dismiss();
     }
@@ -1288,11 +1276,11 @@ public class UHFActivity extends Activity implements OnClickListener {
             SetVisible(ls2selectcondition, textViewS1, viewS1);
             new ServiceQueryAsyncTask(mContext, mActivity, Constants.Companion.getActorAllQuery()).execute();
 
+            // Clear act scene list
             mActSceneArrayList = new ArrayList<Costume>();
-            ActSceneAdapter actSceneAdapter = new ActSceneAdapter(mContext, mActivity, mActSceneArrayList);
-            actscene_listView.setAdapter(actSceneAdapter);
-            actSceneAdapter.clear();
-
+            actsceneRVAdapter = new ActSceneRVAdapter(mContext, mActivity, mActSceneArrayList);
+            actscene_name_rvlist.setAdapter(actsceneRVAdapter);
+            actsceneRVAdapter.notifyDataSetChanged();
         }
 
         @Override
@@ -1659,6 +1647,7 @@ public class UHFActivity extends Activity implements OnClickListener {
 
                             actorRVAdapter = new ActorRVAdapter(mContext, mActivity,actorArrayList);
                             actor_name_rvlist.setAdapter(actorRVAdapter);
+                            actorRVAdapter.notifyDataSetChanged();
 
 
 //                            ActorAdapter actorAdapter = new ActorAdapter(mContext, mActivity, actorArrayList);
