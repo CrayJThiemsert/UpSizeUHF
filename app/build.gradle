@@ -43,11 +43,13 @@ android {
 
 dependencies {
     //noinspection GradleCompatible
-    implementation 'com.android.support:support-v4:20.0.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation files('libs/SerialPort.jar')
     implementation files('libs/uhfcom13_v15.jar')
 //    implementation files('libs/mysql-connector-java-8.0.25.jar')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+
 
 }

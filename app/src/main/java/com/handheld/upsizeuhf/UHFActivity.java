@@ -47,6 +47,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import cn.pda.serialport.Tools;
 
 import com.android.hdhe.uhf.reader.UhfReader;
@@ -56,7 +59,9 @@ import com.handheld.upsizeuhf.model.Actor;
 import com.handheld.upsizeuhf.model.Costume;
 import com.handheld.upsizeuhf.model.QueryService;
 import com.handheld.upsizeuhf.ui.ActSceneAdapter;
+import com.handheld.upsizeuhf.ui.ActSceneRVAdapter;
 import com.handheld.upsizeuhf.ui.ActorAdapter;
+import com.handheld.upsizeuhf.ui.ActorRVAdapter;
 import com.handheld.upsizeuhf.util.AnimationUtils;
 import com.handheld.upsizeuhf.util.Constants;
 import com.handheld.upsizeuhf.util.HttpConnectionService;
@@ -191,6 +196,13 @@ public class UHFActivity extends Activity implements OnClickListener {
     private Activity mActivity;
     ArrayList<Costume> mCostumeArrayList = new ArrayList<Costume>();
     ArrayList<Costume> mActSceneArrayList = new ArrayList<Costume>();
+    private int current_index_actor = 0;
+
+    private RecyclerView actor_name_rvlist;
+    private ActorRVAdapter actorRVAdapter;
+
+    private RecyclerView actscene_name_rvlist;
+    private ActSceneRVAdapter actsceneRVAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -762,6 +774,14 @@ public class UHFActivity extends Activity implements OnClickListener {
 
         actor_listView = (ListView) findViewById(R.id.actor_name_list);
         actscene_listView = (ListView) findViewById(R.id.actscene_name_list);
+
+        actor_name_rvlist = (RecyclerView)findViewById(R.id.actor_name_rvlist);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,RecyclerView.VERTICAL,false);
+        actor_name_rvlist.setLayoutManager(linearLayoutManager);
+
+        actscene_name_rvlist = (RecyclerView)findViewById(R.id.actscene_name_rvlist);
+        LinearLayoutManager actscenelinearLayoutManager = new LinearLayoutManager(this,RecyclerView.VERTICAL,false);
+        actscene_name_rvlist.setLayoutManager(actscenelinearLayoutManager);
     }
 
     private boolean isActSceneExistingInActSceneArray(String actScene) {
@@ -794,9 +814,14 @@ public class UHFActivity extends Activity implements OnClickListener {
             }
         }
 
-        ActSceneAdapter actSceneAdapter = new ActSceneAdapter(mContext, mActivity, mActSceneArrayList);
+//        ActSceneAdapter actSceneAdapter = new ActSceneAdapter(mContext, mActivity, mActSceneArrayList);
+//
+//        actscene_listView.setAdapter(actSceneAdapter);
 
-        actscene_listView.setAdapter(actSceneAdapter);
+        actsceneRVAdapter = new ActSceneRVAdapter(mContext, mActivity, mActSceneArrayList);
+        actscene_name_rvlist.setAdapter(actsceneRVAdapter);
+
+
         processDialog.dismiss();
     }
 
@@ -1631,9 +1656,52 @@ public class UHFActivity extends Activity implements OnClickListener {
                                     e.printStackTrace();
                                 }
                             }
-                            ActorAdapter actorAdapter = new ActorAdapter(mContext, mActivity, actorArrayList);
 
-                            actor_listView.setAdapter(actorAdapter);
+                            actorRVAdapter = new ActorRVAdapter(mContext, mActivity,actorArrayList);
+                            actor_name_rvlist.setAdapter(actorRVAdapter);
+
+
+//                            ActorAdapter actorAdapter = new ActorAdapter(mContext, mActivity, actorArrayList);
+//
+//                            actor_listView.setAdapter(actorAdapter);
+
+
+
+
+//                            actor_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                                @Override
+//                                public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+//
+//                                    Log.d(TAG, "list position=" + position);
+//                                    current_index_actor = position;
+//
+////                                    for (int i = 0; i < actor_listView.getChildCount(); i++) {
+////                                        if(position == i ){
+////                                            actor_listView.getChildAt(i).setBackgroundColor(Color.BLUE);
+////                                        }else{
+////                                            actor_listView.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
+////                                        }
+////                                    }
+//
+//////                                    Actor actor = (Actor)actorArrayList.get(i);
+//////                                    actor.selected = true;
+//////                                    actorAdapter.setCurrentItem(i);
+//////                                    view.setSelected(true);
+//                                    actorAdapter.notifyDataSetChanged();
+////                                    actorAdapter.setCurrentItem(current_index_actor);
+//                                }
+//                            });
+//                            actor_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                                @Override
+//                                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                                    view.setBackgroundColor(mContext.getResources().getColor(R.color.colorOrangeRed));
+//                                    actorAdapter.setCurrentItem(i);
+//                                    actorAdapter.setClick(true);
+//                                    actorAdapter.notifyDataSetChanged();
+//                                    current_index_actor = i;
+//                                    actorAdapter.notifyDataSetInvalidated();
+//                                }
+//                            });
                             processDialog.dismiss();
                             break;
                         case Constants.COSTUME_All:
