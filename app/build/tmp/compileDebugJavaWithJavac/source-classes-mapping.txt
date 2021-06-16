@@ -1,29 +1,9 @@
-com/handheld/upsizeuhf/model/QueryService.java
- com.handheld.upsizeuhf.model.QueryService
-com/handheld/upsizeuhf/EPC.java
- com.handheld.upsizeuhf.EPC
-com/handheld/upsizeuhf/Util.java
- com.handheld.upsizeuhf.Util
-com/handheld/upsizeuhf/util/UpsizeUhfUtils.java
- com.handheld.upsizeuhf.util.UpsizeUhfUtils
-com/handheld/upsizeuhf/BuildConfig.java
- com.handheld.upsizeuhf.BuildConfig
-com/handheld/upsizeuhf/model/Actor.java
- com.handheld.upsizeuhf.model.Actor
 com/handheld/upsizeuhf/util/HttpConnectionService.java
  com.handheld.upsizeuhf.util.HttpConnectionService
 com/handheld/upsizeuhf/model/Costume.java
  com.handheld.upsizeuhf.model.Costume
-com/handheld/upsizeuhf/ui/ActSceneAdapter.java
- com.handheld.upsizeuhf.ui.ActSceneAdapter
- com.handheld.upsizeuhf.ui.ActSceneAdapter$1
- com.handheld.upsizeuhf.ui.ActSceneAdapter$NameAnimationListener
- com.handheld.upsizeuhf.ui.ActSceneAdapter$ViewHolder
-com/handheld/upsizeuhf/ui/ActorAdapter.java
- com.handheld.upsizeuhf.ui.ActorAdapter
- com.handheld.upsizeuhf.ui.ActorAdapter$1
- com.handheld.upsizeuhf.ui.ActorAdapter$NameAnimationListener
- com.handheld.upsizeuhf.ui.ActorAdapter$ViewHolder
+com/handheld/upsizeuhf/model/Actor.java
+ com.handheld.upsizeuhf.model.Actor
 com/handheld/upsizeuhf/UHFActivity.java
  com.handheld.upsizeuhf.UHFActivity
  com.handheld.upsizeuhf.UHFActivity$1
@@ -49,3 +29,25 @@ com/handheld/upsizeuhf/UHFActivity.java
  com.handheld.upsizeuhf.UHFActivity$NextS3ButtonAnimationListener
  com.handheld.upsizeuhf.UHFActivity$ServiceQueryAsyncTask
  com.handheld.upsizeuhf.UHFActivity$myOnTouch
+com/handheld/upsizeuhf/model/QueryService.java
+ com.handheld.upsizeuhf.model.QueryService
+com/handheld/upsizeuhf/ui/ActSceneRVAdapter.java
+ com.handheld.upsizeuhf.ui.ActSceneRVAdapter
+ com.handheld.upsizeuhf.ui.ActSceneRVAdapter$1
+ com.handheld.upsizeuhf.ui.ActSceneRVAdapter$2
+ com.handheld.upsizeuhf.ui.ActSceneRVAdapter$ActorViewHolder
+ com.handheld.upsizeuhf.ui.ActSceneRVAdapter$NameAnimationListener
+com/handheld/upsizeuhf/Util.java
+ com.handheld.upsizeuhf.Util
+com/handheld/upsizeuhf/util/UpsizeUhfUtils.java
+ com.handheld.upsizeuhf.util.UpsizeUhfUtils
+com/handheld/upsizeuhf/BuildConfig.java
+ com.handheld.upsizeuhf.BuildConfig
+com/handheld/upsizeuhf/EPC.java
+ com.handheld.upsizeuhf.EPC
+com/handheld/upsizeuhf/ui/ActorRVAdapter.java
+ com.handheld.upsizeuhf.ui.ActorRVAdapter
+ com.handheld.upsizeuhf.ui.ActorRVAdapter$1
+ com.handheld.upsizeuhf.ui.ActorRVAdapter$2
+ com.handheld.upsizeuhf.ui.ActorRVAdapter$ActorViewHolder
+ com.handheld.upsizeuhf.ui.ActorRVAdapter$NameAnimationListener
