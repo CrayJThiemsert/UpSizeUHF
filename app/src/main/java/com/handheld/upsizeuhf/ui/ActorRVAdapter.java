@@ -55,20 +55,13 @@ public class ActorRVAdapter extends RecyclerView.Adapter<ActorRVAdapter.ActorVie
         holder.name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Actor actorSelected = (Actor)((TextView) view).getTag();
-
                 Log.d(TAG, "selected actor name=" + actor.name + " position=" + position);
-
-
-
                 Util.play(1, 0);
                 row_index=position;
                 notifyDataSetChanged();
 
-
-
-
-
+                UHFActivity uhfActivity = (UHFActivity)mActivity;
+                uhfActivity.addSelectedActor(actor.name);
             }
         });
 
@@ -130,61 +123,6 @@ public class ActorRVAdapter extends RecyclerView.Adapter<ActorRVAdapter.ActorVie
         mActorArrayList = actors;
     }
 
-//    @Override
-//    public View getView(int position, View convertView, ViewGroup parent) {
-//        // Get the data item for this position
-//        Actor actor = getItem(position);
-//        // Check if an existing view is being reused, otherwise inflate the view
-//        ViewHolder viewHolder; // view lookup cache stored in tag
-//        if (convertView == null) {
-//            // If there's no view to re-use, inflate a brand new view for row
-//            viewHolder = new ViewHolder();
-//            LayoutInflater inflater = LayoutInflater.from(getContext());
-//            convertView = inflater.inflate(R.layout.name_listview, parent, false);
-//            viewHolder.name = (TextView) convertView.findViewById(R.id.list_item);
-//            viewHolder.list_item_layout = (LinearLayout) convertView.findViewById(R.id.list_item_layout);
-//
-//            viewHolder.name.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    Actor actorSelected = (Actor)((TextView) view).getTag();
-//
-//                    Log.d(TAG, "selected actor name=" + actorSelected.name + " id=" + getPosition(actor) + " position=" + position);
-//
-//                    Util.play(1, 0);
-//                    Animation animate = AnimationUtils.Companion.getBounceAnimation(mContext);
-//                    animate.setAnimationListener(new NameAnimationListener(actorSelected));
-//                    ((TextView) view).startAnimation(animate);
-//
-//                }
-//            });
-//
-//            // Cache the viewHolder object inside the fresh view
-//            convertView.setTag(viewHolder);
-//        } else {
-//            // View is being recycled, retrieve the viewHolder object from tag
-//            viewHolder = (ViewHolder) convertView.getTag();
-//        }
-//
-//        // Populate the data from the data object via the viewHolder object
-//        // into the template view.
-//        viewHolder.name.setText(actor.name);
-//        viewHolder.name.setTag(actor);
-//
-//        Log.d(TAG, "currentItem position=" + position + " : mCurrentItem=" + mCurrentItem);
-//
-//        // Return the completed view to render on screen
-//        return convertView;
-//    }
-//
-//    public void setCurrentItem(int currentItem) {
-//        Log.d(TAG, "currentItem position=" + currentItem);
-//        this.mCurrentItem = currentItem;
-//    }
-//
-//    public void setClick(boolean click) {
-//        this.isClick = click;
-//    }
 
 
     private class NameAnimationListener implements Animation.AnimationListener   {
@@ -214,16 +152,12 @@ public class ActorRVAdapter extends RecyclerView.Adapter<ActorRVAdapter.ActorVie
 
     public class ActorViewHolder extends RecyclerView.ViewHolder{
 
-//            TextView movieTitle, movieType, movieYear;
-//            LinearLayout linearLayout;
         TextView name;
         LinearLayout list_item_layout;
 
         public ActorViewHolder(@NonNull View itemView) {
                 super(itemView);
                 name = (TextView)itemView.findViewById(R.id.list_item);
-
-
                 list_item_layout = (LinearLayout)itemView.findViewById(R.id.list_item_layout);
             }
     }

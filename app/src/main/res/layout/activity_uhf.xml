@@ -402,14 +402,11 @@
                         android:layout_height="250dp"
                         android:id="@+id/actscene_name_rvlist"/>
 
-
-
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:layout_alignParentBottom="true"
-                        android:paddingBottom="16dp"
                         android:gravity="center" >
 
                         <Button android:text="@string/back_label"
@@ -484,24 +481,48 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:textColor="@color/colorPurpleLight"
+                            android:fontFamily="@font/kanit_medium"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:text="@string/itemset"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorWhite"
+                            android:fontFamily="@font/kanit_light"
                             android:text="@string/actor"/>
                         <TextView
                             android:id="@+id/selected_actor_textview"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:textSize="22sp"
+                            android:textFontWeight="300"
+                            android:textColor="@color/colorWhite"
                             android:text="@string/actor"/>
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:textColor="@color/colorWhite"
+                            android:paddingTop="8dp"
+                            android:fontFamily="@font/kanit_light"
                             android:text="@string/actscene"/>
                         <TextView
                             android:id="@+id/selected_actscene_textview"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:textSize="22sp"
+                            android:textFontWeight="300"
+                            android:textColor="@color/colorWhite"
                             android:text="@string/actscene"/>
 
                     </LinearLayout>
+
+                    <Space
+                        android:layout_width="match_parent"
+                        android:layout_height="4dp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -514,13 +535,65 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:textColor="@color/colorPurpleLight"
+                            android:fontFamily="@font/kanit_medium"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:text="@string/itemcodes"/>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <Space
+                                android:layout_width="80dp"
+                                android:layout_height="15dp" />
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/code_textview"
+                                    android:layout_weight="0.25"
+                                    android:textColor="@color/colorOrangeGrey"
+                                    android:fontFamily="@font/kanit_light"
+                                    android:textSize="16sp"
+                                    android:text="code"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/type_textview"
+                                    android:layout_weight="0.25"
+                                    android:textColor="@color/colorOrangeGrey"
+                                    android:fontFamily="@font/kanit_light"
+                                    android:textSize="16sp"
+                                    android:text="type"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/size_textview"
+                                    android:layout_weight="0.25"
+                                    android:textColor="@color/colorOrangeGrey"
+                                    android:fontFamily="@font/kanit_light"
+                                    android:textSize="16sp"
+                                    android:text="size"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/number_textview"
+                                    android:layout_weight="0.25"
+                                    android:textColor="@color/colorOrangeGrey"
+                                    android:fontFamily="@font/kanit_light"
+                                    android:textSize="16sp"
+                                    android:text="number"/>
 
-                            android:text="Query Result"/>
+                            </LinearLayout>
+                        </LinearLayout>
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:layout_width="match_parent"
-                            android:layout_height="250dp"
-                            android:id="@+id/query_result_rvlist"/>
+                            android:layout_height="350dp"
+                            android:id="@+id/item_code_rvlist"/>
                     </LinearLayout>
 
                 </LinearLayout>
@@ -530,7 +603,6 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:layout_alignParentBottom="true"
-                    android:paddingBottom="16dp"
                     android:gravity="center" >
 
                     <Button android:text="@string/back_label"
@@ -548,8 +620,8 @@
                         android:singleLine="true"
                         android:gravity="center" />
 
-                    <Button android:text="@string/next_label"
-                        android:id="@+id/next_s3_button"
+                    <Button android:text="@string/scan_label"
+                        android:id="@+id/scan_button"
                         android:layout_width="160dp"
                         android:layout_height="100dp"
                         android:layout_gravity="center"

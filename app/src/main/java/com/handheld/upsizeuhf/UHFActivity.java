@@ -60,6 +60,7 @@ import com.handheld.upsizeuhf.model.Costume;
 import com.handheld.upsizeuhf.model.QueryService;
 import com.handheld.upsizeuhf.ui.ActSceneRVAdapter;
 import com.handheld.upsizeuhf.ui.ActorRVAdapter;
+import com.handheld.upsizeuhf.ui.ItemCodeRVAdapter;
 import com.handheld.upsizeuhf.util.AnimationUtils;
 import com.handheld.upsizeuhf.util.Constants;
 import com.handheld.upsizeuhf.util.HttpConnectionService;
@@ -107,6 +108,7 @@ public class UHFActivity extends Activity implements OnClickListener {
     private Spinner spinnerEPCLock;
     private Button buttonClear;
     private Button buttonStart;
+
     private TextView textVersion;
     private ListView listViewData;
     private ArrayList<EPC> listEPC;
@@ -115,6 +117,7 @@ public class UHFActivity extends Activity implements OnClickListener {
     private ArrayList<Map<String, Object>> listMap;
     private boolean runFlag = true;
     private boolean startFlag = false;
+    private boolean scanFlag = false;
     private UhfReader manager; // UHF manager,UHF Operating handle
 //	private ScreenStateReceiver screenReceiver;
     /******************************************/
@@ -149,7 +152,7 @@ public class UHFActivity extends Activity implements OnClickListener {
     private Button next_s2_button;//set by next to query result button
 
     private Button back_s3_button;//set by back to select condition button
-    private Button next_s3_button;//set by next to search/scan button
+    private Button scan_button;//set by next to search/scan button
 
     private Button button1;//set button1
     private Button button2;//set button2
@@ -192,12 +195,22 @@ public class UHFActivity extends Activity implements OnClickListener {
     private Activity mActivity;
     ArrayList<Costume> mCostumeArrayList = new ArrayList<Costume>();
     ArrayList<Costume> mActSceneArrayList = new ArrayList<Costume>();
+    ArrayList<Costume> mItemCodeArrayList = new ArrayList<Costume>();
 
     private RecyclerView actor_name_rvlist;
     private ActorRVAdapter actorRVAdapter;
 
     private RecyclerView actscene_name_rvlist;
     private ActSceneRVAdapter actsceneRVAdapter;
+
+    private RecyclerView item_code_rvlist;
+    private ItemCodeRVAdapter itemCodeRVAdapter;
+
+    public ArrayList<String> mSelectedActorArray = new ArrayList<String>();
+    public ArrayList<String> mSelectedActSceneArray = new ArrayList<String>();
+
+    private TextView selected_actor_textview;
+    private TextView selected_actscene_textview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -297,6 +310,9 @@ public class UHFActivity extends Activity implements OnClickListener {
     protected void onPause() {
         startFlag = false;
         buttonStart.setText(R.string.inventory);
+
+        scanFlag = false;
+
         manager.close();
         super.onPause();
         unregisterReceiver();
@@ -327,10 +343,12 @@ public class UHFActivity extends Activity implements OnClickListener {
         Log.d(TAG, "load fonts success.");
 
         buttonStart = (Button) findViewById(R.id.button_start);
+        scan_button = (Button) findViewById(R.id.scan_button);
         buttonClear = (Button) findViewById(R.id.button_clear);
         listViewData = (ListView) findViewById(R.id.listView_data);
         textVersion = (TextView) findViewById(R.id.textView_version);
         buttonStart.setOnClickListener(this);
+        scan_button.setOnClickListener(this);
         buttonClear.setOnClickListener(this);
         editAccesslock = (EditText) findViewById(R.id.edittext_access_lock);
         listEPC = new ArrayList<EPC>();
@@ -764,8 +782,8 @@ public class UHFActivity extends Activity implements OnClickListener {
         back_s3_button = (Button) findViewById(R.id.back_s3_button);
         back_s3_button.setOnClickListener(this);
 
-        next_s3_button = (Button) findViewById(R.id.next_s3_button);
-        next_s3_button.setOnClickListener(this);
+        scan_button = (Button) findViewById(R.id.scan_button);
+        scan_button.setOnClickListener(this);
 
         actor_name_rvlist = (RecyclerView)findViewById(R.id.actor_name_rvlist);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,RecyclerView.VERTICAL,false);
@@ -774,6 +792,17 @@ public class UHFActivity extends Activity implements OnClickListener {
         actscene_name_rvlist = (RecyclerView)findViewById(R.id.actscene_name_rvlist);
         LinearLayoutManager actscenelinearLayoutManager = new LinearLayoutManager(this,RecyclerView.VERTICAL,false);
         actscene_name_rvlist.setLayoutManager(actscenelinearLayoutManager);
+
+        // Query Result Layout
+        selected_actor_textview = (TextView)findViewById(R.id.selected_actor_textview);
+        selected_actscene_textview = (TextView)findViewById(R.id.selected_actscene_textview);
+
+        selected_actor_textview.setTypeface(UhfUtils.Companion.getFontKanitLightItalic());
+        selected_actscene_textview.setTypeface(UhfUtils.Companion.getFontKanitLightItalic());
+
+        item_code_rvlist = (RecyclerView)findViewById(R.id.item_code_rvlist);
+        LinearLayoutManager itemCodelinearLayoutManager = new LinearLayoutManager(this,RecyclerView.VERTICAL,false);
+        item_code_rvlist.setLayoutManager(itemCodelinearLayoutManager);
     }
 
     private boolean isActSceneExistingInActSceneArray(String actScene) {
@@ -793,6 +822,9 @@ public class UHFActivity extends Activity implements OnClickListener {
     public void refreshActScene(String actor) {
         Log.d(TAG, "refreshActScene actor name=" + actor);
 
+        // clear search and check data[selected actor, selected act scene]
+        clearSearchandCheckData();
+
         processDialog = new ProgressDialog(mContext);
         processDialog.setMessage("Please  Wait ...");
         processDialog.setCancelable(false);
@@ -810,7 +842,70 @@ public class UHFActivity extends Activity implements OnClickListener {
         actscene_name_rvlist.setAdapter(actsceneRVAdapter);
         actsceneRVAdapter.notifyDataSetChanged();
 
+        if(mActSceneArrayList.size() == 1) {
+            Costume costume = (Costume) mActSceneArrayList.get(0);
+            addSelectedActScene(costume.actScence);
+            selected_actscene_textview.setText(costume.actScence);
+        } else {
+            selected_actscene_textview.setText("");
+        }
+
         processDialog.dismiss();
+    }
+
+    /**
+     * Query Item Codes list by use selected actor and act, scene.
+     */
+    public void queryItemCodes() {
+        String actor = selected_actor_textview.getText().toString(); //mSelectedActorArray.get(0).toString();
+        String actScene = selected_actscene_textview.getText().toString(); //mSelectedActSceneArray.get(0).toString();
+        Log.d(TAG, "queryItemCodes by actor=" + actor + " : act, scene=" + actScene);
+
+        // clear item codes result data
+//        clearQueryItemCodesResult();
+
+        processDialog = new ProgressDialog(mContext);
+        processDialog.setMessage("Please  Wait ...");
+        processDialog.setCancelable(false);
+        processDialog.show();
+
+        mItemCodeArrayList = new ArrayList<Costume>();
+        for(int i = 0; i < mCostumeArrayList.size(); i++) {
+            Costume costume = mCostumeArrayList.get(i);
+            if(costume.actor.equals(actor) && costume.actScence.equals(actScene)) {
+                mItemCodeArrayList.add(costume);
+            }
+        }
+
+        itemCodeRVAdapter = new ItemCodeRVAdapter(mContext, mActivity, mItemCodeArrayList);
+        item_code_rvlist.setAdapter(itemCodeRVAdapter);
+        itemCodeRVAdapter.notifyDataSetChanged();
+
+        processDialog.dismiss();
+    }
+
+    /**
+     * add only one name in this time, but open for the future more than one name
+     * @param actorName
+     */
+    public void addSelectedActor(String actorName) {
+        mSelectedActorArray.clear();
+        mSelectedActorArray.add(actorName);
+        selected_actor_textview.setText(mSelectedActorArray.get(0).toString());
+
+        mSelectedActSceneArray.clear();
+        selected_actscene_textview.setText("");
+
+    }
+
+    /**
+     * add only one name in this time, but open for the future more than one name
+     * @param actSceneName
+     */
+    public void addSelectedActScene(String actSceneName) {
+        mSelectedActSceneArray.clear();
+        mSelectedActSceneArray.add(actSceneName);
+        selected_actscene_textview.setText(mSelectedActSceneArray.get(0).toString());
     }
 
 
@@ -1058,6 +1153,16 @@ public class UHFActivity extends Activity implements OnClickListener {
         listepc.removeAll(listepc);
     }
 
+    private void clearSearchandCheckData() {
+        mSelectedActorArray = new ArrayList<String>();
+        mSelectedActSceneArray = new ArrayList<String>();
+        mSelectedActorArray.clear();
+        mSelectedActSceneArray.clear();
+
+//        selected_actor_textview.setText("");
+//        selected_actscene_textview.setText("");
+    }
+
     @Override
     public void onClick(View v) {
         byte[] accessPassword = Tools.HexString2Bytes(editPassword.getText()
@@ -1105,11 +1210,19 @@ public class UHFActivity extends Activity implements OnClickListener {
             }
             break;
 
-            case R.id.next_s3_button: {
+            case R.id.scan_button: {
                 Util.play(1, 0);
                 Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
                 animate.setAnimationListener(new NextS3ButtonAnimationListener());
-                next_s3_button.startAnimation(animate);
+                scan_button.startAnimation(animate);
+
+                if (!scanFlag) {
+                    scanFlag = true;
+                    scan_button.setText(R.string.stop);
+                } else {
+                    scanFlag = false;
+                    scan_button.setText(R.string.scan);
+                }
             }
             break;
 
@@ -1334,6 +1447,8 @@ public class UHFActivity extends Activity implements OnClickListener {
         @Override
         public void onAnimationStart(Animation animation) {
             SetVisible(ls3queryresult, textViewS1, viewS1);
+//            initQueryResultLayout();
+            queryItemCodes();
         }
 
         @Override
@@ -1346,6 +1461,12 @@ public class UHFActivity extends Activity implements OnClickListener {
         public void onAnimationRepeat(Animation animation) {
 
         }
+    }
+
+    private void initQueryResultLayout() {
+        // init actor and act scene text view
+//        selected_actor_textview.setText(mSelectedActorArray.get(0).toString());
+//        selected_actscene_textview.setText(mSelectedActSceneArray.get(0).toString());
     }
 
     private class BackS3ButtonAnimationListener implements Animation.AnimationListener   {

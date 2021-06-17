@@ -54,6 +54,9 @@ public class ActSceneRVAdapter extends RecyclerView.Adapter<ActSceneRVAdapter.Ac
                 Util.play(1, 0);
                 row_index=position;
                 notifyDataSetChanged();
+
+                UHFActivity uhfActivity = (UHFActivity)mActivity;
+                uhfActivity.addSelectedActScene(costume.actScence);
             }
         });
 

@@ -499,4 +499,7 @@
     <string name="server_ip">Server IP</string>
 	<string name="actor">Actor</string>
 	<string name="actscene">Act, Scene</string>
+    <string name="itemcodes">Item Codes</string>
+    <string name="itemset">Item Set</string>
+    <string name="scan_label">Scan</string>
 </resources>
