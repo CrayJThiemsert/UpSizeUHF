@@ -502,4 +502,7 @@
     <string name="itemcodes">Item Codes</string>
     <string name="itemset">Item Set</string>
     <string name="scan_label">Scan</string>
+    <string name="clear_label">Clear</string>
+    <string name="total_items">Total Items</string>
+	<string name="items_scanned">Items Scanned</string>
 </resources>

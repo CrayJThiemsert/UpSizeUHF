@@ -13,6 +13,7 @@ public class Costume {
     public String shipBox;
     public String storageBox;
     public String playBox;
+    public boolean isFound = false;
 
     public Costume(String runningNo, String actor, String actScence, String code, String type, String size, String codeNo, String epcHeader, String epcRun, String shipBox, String storageBox, String playBox) {
         this.runningNo = runningNo;

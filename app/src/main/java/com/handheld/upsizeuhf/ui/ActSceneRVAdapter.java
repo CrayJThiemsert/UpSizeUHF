@@ -69,16 +69,18 @@ public class ActSceneRVAdapter extends RecyclerView.Adapter<ActSceneRVAdapter.Ac
         });
 
         if (row_index==position) {
-            holder.name.setBackgroundColor(mContext.getResources().getColor(R.color.colorOrangeRed));
-            holder.list_item_layout.setBackgroundColor(mContext.getResources().getColor(R.color.colorOrangeRed));
+//            holder.name.setBackgroundColor(mContext.getResources().getColor(R.color.colorOrangeRed));
+//            holder.list_item_layout.setBackgroundColor(mContext.getResources().getColor(R.color.colorOrangeRed));
+            holder.list_item_layout.setBackground(mContext.getResources().getDrawable(R.drawable.layout_border_radius_selected));
 
             Animation animate = AnimationUtils.Companion.getBounceAnimation(mContext);
             animate.setAnimationListener(new NameAnimationListener(costume));
             holder.name.startAnimation(animate);
 
         } else {
-            holder.name.setBackgroundColor(mContext.getResources().getColor(R.color.colorBlack));
-            holder.list_item_layout.setBackgroundColor(mContext.getResources().getColor(R.color.colorBlack));
+//            holder.name.setBackgroundColor(mContext.getResources().getColor(R.color.colorBlack));
+//            holder.list_item_layout.setBackgroundColor(mContext.getResources().getColor(R.color.colorBlack));
+            holder.list_item_layout.setBackground(mContext.getResources().getDrawable(R.drawable.layout_border_radius));
         }
 
 

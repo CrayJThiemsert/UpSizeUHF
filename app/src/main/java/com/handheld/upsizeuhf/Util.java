@@ -32,6 +32,6 @@ public class Util {
         //return AlarmManager The largest volume at present
         float audioCurrentVolume = am.getStreamVolume(AudioManager.STREAM_MUSIC);
         float volumnRatio = audioCurrentVolume / audioMaxVolume;
-        sp.play(1, 1, 1, 0, 0, 1);//0.5-2.0 speed
+        sp.play(sound, 1, 1, 0, 0, 1);//0.5-2.0 speed
     }
 }

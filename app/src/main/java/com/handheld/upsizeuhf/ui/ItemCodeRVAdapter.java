@@ -87,17 +87,14 @@ public class ItemCodeRVAdapter extends RecyclerView.Adapter<ItemCodeRVAdapter.It
             }
         });
 
-        if (row_index==position) {
-            holder.item_code_layout.setBackground(mContext.getResources().getDrawable(R.drawable.layout_border_radius_selected));
-//            holder.epc_textview.setBackgroundColor(mContext.getResources().getColor(R.color.colorOrangeRed));
-//
-////            Animation animate = AnimationUtils.Companion.getBounceAnimation(mContext);
-////            animate.setAnimationListener(new NameAnimationListener(costume));
-////            holder.code_textview.startAnimation(animate);
-//
+        if(costume.isFound) {
+            holder.item_code_layout.setBackground(mContext.getResources().getDrawable(R.drawable.layout_border_radius_found));
         } else {
-            holder.item_code_layout.setBackground(mContext.getResources().getDrawable(R.drawable.layout_border_radius));
-//            holder.epc_textview.setBackgroundColor(mContext.getResources().getColor(R.color.colorWhite));
+            if (row_index == position) {
+                holder.item_code_layout.setBackground(mContext.getResources().getDrawable(R.drawable.layout_border_radius_selected));
+            } else {
+                holder.item_code_layout.setBackground(mContext.getResources().getDrawable(R.drawable.layout_border_radius));
+            }
         }
 
 //        setAnimation(holder.itemView, position);

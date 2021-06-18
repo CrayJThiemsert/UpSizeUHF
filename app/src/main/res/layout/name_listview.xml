@@ -2,23 +2,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-
     android:id="@+id/list_item_layout">
 <!--    android:background="@color/colorBlack"-->
-    <TextView  xmlns:android="http://schemas.android.com/apk/res/android"
+    <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="New Text"
             android:id="@+id/list_item"
 
         android:textColor="@color/colorWhite"
-        android:background="@color/colorBlack"
-        android:textSize="18dp"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
-        android:paddingLeft="20dp"
-        android:padding="20dp" />
 
+        android:textSize="18dp"
+
+        android:padding="10dp" />
+    <!--        android:background="@color/colorBlack"-->
+<!--    android:paddingTop="10dp"-->
+<!--    android:paddingBottom="10dp"-->
+<!--    android:paddingStart="10dp"-->
 
 
 </LinearLayout>

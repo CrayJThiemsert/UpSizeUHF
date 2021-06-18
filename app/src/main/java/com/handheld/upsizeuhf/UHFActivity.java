@@ -4,8 +4,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import android.app.Activity;
@@ -22,8 +24,10 @@ import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -47,6 +51,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.core.widget.AutoSizeableTextView;
+import androidx.core.widget.TextViewCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -153,6 +160,7 @@ public class UHFActivity extends Activity implements OnClickListener {
 
     private Button back_s3_button;//set by back to select condition button
     private Button scan_button;//set by next to search/scan button
+    private Button clear_s3_button; // Clear query result list
 
     private Button button1;//set button1
     private Button button2;//set button2
@@ -212,6 +220,11 @@ public class UHFActivity extends Activity implements OnClickListener {
     private TextView selected_actor_textview;
     private TextView selected_actscene_textview;
 
+    private TextView total_items_textview;
+    private TextView items_scanned_textview;
+
+    Thread thread = new InventoryThread();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -245,7 +258,8 @@ public class UHFActivity extends Activity implements OnClickListener {
         // load database once
         loadData();
         //start inventory thread
-        Thread thread = new InventoryThread();
+        thread = new InventoryThread();
+
         thread.start();
         // init sound pool
         Util.initSoundPool(this);
@@ -312,6 +326,7 @@ public class UHFActivity extends Activity implements OnClickListener {
         buttonStart.setText(R.string.inventory);
 
         scanFlag = false;
+        scan_button.setText(R.string.scan);
 
         manager.close();
         super.onPause();
@@ -321,6 +336,7 @@ public class UHFActivity extends Activity implements OnClickListener {
     @Override
     protected void onDestroy() {
         startFlag = false;
+        scanFlag = false;
         runFlag = false;
         if (manager != null) {
             manager.close();
@@ -343,12 +359,13 @@ public class UHFActivity extends Activity implements OnClickListener {
         Log.d(TAG, "load fonts success.");
 
         buttonStart = (Button) findViewById(R.id.button_start);
-        scan_button = (Button) findViewById(R.id.scan_button);
+
+
         buttonClear = (Button) findViewById(R.id.button_clear);
         listViewData = (ListView) findViewById(R.id.listView_data);
         textVersion = (TextView) findViewById(R.id.textView_version);
         buttonStart.setOnClickListener(this);
-        scan_button.setOnClickListener(this);
+
         buttonClear.setOnClickListener(this);
         editAccesslock = (EditText) findViewById(R.id.edittext_access_lock);
         listEPC = new ArrayList<EPC>();
@@ -785,6 +802,9 @@ public class UHFActivity extends Activity implements OnClickListener {
         scan_button = (Button) findViewById(R.id.scan_button);
         scan_button.setOnClickListener(this);
 
+        clear_s3_button = (Button) findViewById(R.id.clear_s3_button);
+        clear_s3_button.setOnClickListener(this);
+
         actor_name_rvlist = (RecyclerView)findViewById(R.id.actor_name_rvlist);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,RecyclerView.VERTICAL,false);
         actor_name_rvlist.setLayoutManager(linearLayoutManager);
@@ -803,6 +823,9 @@ public class UHFActivity extends Activity implements OnClickListener {
         item_code_rvlist = (RecyclerView)findViewById(R.id.item_code_rvlist);
         LinearLayoutManager itemCodelinearLayoutManager = new LinearLayoutManager(this,RecyclerView.VERTICAL,false);
         item_code_rvlist.setLayoutManager(itemCodelinearLayoutManager);
+
+        total_items_textview = (TextView)findViewById(R.id.total_items_textview);
+        items_scanned_textview = (TextView)findViewById(R.id.items_scanned_textview);
     }
 
     private boolean isActSceneExistingInActSceneArray(String actScene) {
@@ -870,8 +893,10 @@ public class UHFActivity extends Activity implements OnClickListener {
         processDialog.show();
 
         mItemCodeArrayList = new ArrayList<Costume>();
+        mItemCodeArrayList.clear();
         for(int i = 0; i < mCostumeArrayList.size(); i++) {
             Costume costume = mCostumeArrayList.get(i);
+            costume.isFound = false;
             if(costume.actor.equals(actor) && costume.actScence.equals(actScene)) {
                 mItemCodeArrayList.add(costume);
             }
@@ -880,6 +905,9 @@ public class UHFActivity extends Activity implements OnClickListener {
         itemCodeRVAdapter = new ItemCodeRVAdapter(mContext, mActivity, mItemCodeArrayList);
         item_code_rvlist.setAdapter(itemCodeRVAdapter);
         itemCodeRVAdapter.notifyDataSetChanged();
+
+        items_scanned_textview.setText(Integer.toString(0));
+        total_items_textview.setText(Integer.toString(mItemCodeArrayList.size()));
 
         processDialog.dismiss();
     }
@@ -893,9 +921,41 @@ public class UHFActivity extends Activity implements OnClickListener {
         mSelectedActorArray.add(actorName);
         selected_actor_textview.setText(mSelectedActorArray.get(0).toString());
 
+        if(selected_actor_textview.getText().toString().length() > 76) {
+            selected_actor_textview.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+        } else {
+            if (selected_actor_textview.getText().toString().length() > 55) {
+                selected_actor_textview.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+            } else {
+                if (selected_actor_textview.getText().toString().length() > 28) {
+                    selected_actor_textview.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                } else {
+                    selected_actor_textview.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
+                }
+            }
+        }
+
+//        setAutoSizeTextTypeUniformWithConfiguration(selected_actor_textview, 12, 24, 2, TypedValue.COMPLEX_UNIT_SP);
+
+
         mSelectedActSceneArray.clear();
         selected_actscene_textview.setText("");
 
+    }
+
+    public static void setAutoSizeTextTypeUniformWithConfiguration(
+            @NonNull TextView textView,
+            int autoSizeMinTextSize,
+            int autoSizeMaxTextSize,
+            int autoSizeStepGranularity,
+            int unit) throws IllegalArgumentException {
+        if (Build.VERSION.SDK_INT >= 27) {
+            textView.setAutoSizeTextTypeUniformWithConfiguration(
+                    autoSizeMinTextSize, autoSizeMaxTextSize, autoSizeStepGranularity, unit);
+        } else if (textView instanceof AutoSizeableTextView) {
+            TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(textView,
+                    autoSizeMinTextSize, autoSizeMaxTextSize, autoSizeStepGranularity, unit);
+        }
     }
 
     /**
@@ -920,11 +980,11 @@ public class UHFActivity extends Activity implements OnClickListener {
         public void run() {
             super.run();
             while (runFlag) {
-                if (startFlag) {
+                if (startFlag || scanFlag) {
                     tagList = manager.inventoryRealTime(); //实时盘存
                     if (tagList != null && !tagList.isEmpty()) {
                         //播放提示音
-                        Util.play(1, 0);
+//                        Util.play(1, 0);
                         for (TagModel tag : tagList) {
                             if (tag == null) {
                                 String epcStr = "";
@@ -993,6 +1053,7 @@ public class UHFActivity extends Activity implements OnClickListener {
 //                    map.put("EPC", epcdata.getEpc());
 //                    map.put("EPC", getTwoLineEPC(epcdata.getEpc()));
                     // Type A
+                    map.put("EPCRaw", epcdata.getEpc());
                     map.put("EPC", separateEPCString(epcdata.getEpc(), " ", 4, 16));
 
                     map.put("EPCTop", separateEPCTopString(epcdata.getEpc(), " ", 4, 16));
@@ -1006,19 +1067,58 @@ public class UHFActivity extends Activity implements OnClickListener {
                     idcount++;
                     listMap.add(map);
                 }
-                listViewData.setAdapter(new SimpleAdapter(UHFActivity.this,
-                        listMap, R.layout.listview_item, new String[]{"ID",
-                        "EPCTop", "EPCBottom", "COUNT", "RSSI"}, new int[]{
-                        R.id.textView_list_item_id,
+                if(startFlag) {
+                    listViewData.setAdapter(new SimpleAdapter(UHFActivity.this,
+                            listMap, R.layout.listview_item, new String[]{"ID",
+                            "EPCTop", "EPCBottom", "COUNT", "RSSI"}, new int[]{
+                            R.id.textView_list_item_id,
 //                        R.id.textView_list_item_barcode,
-                        R.id.textView_list_item_barcode_top,
-                        R.id.textView_list_item_barcode_bottom,
-                        R.id.textView_list_item_count,
-                        R.id.textView_list_item_rssi}));
-                spinnerEPCRead.setAdapter(arr_adapter);
-                spinnerEPCLock.setAdapter(arr_adapter);
-                // play sound
-                Util.play(1, 0);
+                            R.id.textView_list_item_barcode_top,
+                            R.id.textView_list_item_barcode_bottom,
+                            R.id.textView_list_item_count,
+                            R.id.textView_list_item_rssi}));
+                    spinnerEPCRead.setAdapter(arr_adapter);
+                    spinnerEPCLock.setAdapter(arr_adapter);
+
+                    // play sound
+                    Util.play(1, 0);
+                } else if(scanFlag) {
+                    Log.d(TAG, "listMap.size()=" + listMap.size());
+
+                    int scannedCount = 0;
+                    for(int i = 0; i < mItemCodeArrayList.size(); i++) {
+                        Costume costume = mItemCodeArrayList.get(i);
+                        String epcBase = costume.epcHeader + costume.epcRun;
+                        Log.d(TAG, "epcBase=" + epcBase);
+
+//                        if(!costume.isFound) {
+                            for (int m = 0; m < listMap.size(); m++) {
+                                Map map = listMap.get(m);
+
+                                for (Object entry : map.entrySet()) {
+                                    String key = ((Map.Entry<String, Object>) entry).getKey();
+                                    Object value = ((Map.Entry<String, Object>) entry).getValue();
+                                    // do something with key and/or tab
+                                    Log.d(TAG, "key=" + key + " : value=" + value);
+                                    if (key.equals("EPCRaw") && value.equals(epcBase)) {
+                                        costume.isFound = true;
+                                        mItemCodeArrayList.set(i, costume);
+                                        scannedCount++;
+
+                                    }
+                                }
+                            }
+//                        }
+                    }
+
+                    itemCodeRVAdapter.notifyDataSetChanged();
+                    items_scanned_textview.setText(Integer.toString(scannedCount));
+
+                    Util.play(1, 0);
+
+                }
+
+
             }
         });
     }
@@ -1153,14 +1253,16 @@ public class UHFActivity extends Activity implements OnClickListener {
         listepc.removeAll(listepc);
     }
 
+    private void clearItemCodeList() {
+
+    }
+
     private void clearSearchandCheckData() {
         mSelectedActorArray = new ArrayList<String>();
         mSelectedActSceneArray = new ArrayList<String>();
         mSelectedActorArray.clear();
         mSelectedActSceneArray.clear();
 
-//        selected_actor_textview.setText("");
-//        selected_actscene_textview.setText("");
     }
 
     @Override
@@ -1217,14 +1319,20 @@ public class UHFActivity extends Activity implements OnClickListener {
                 scan_button.startAnimation(animate);
 
                 if (!scanFlag) {
+                    thread.start();
                     scanFlag = true;
                     scan_button.setText(R.string.stop);
                 } else {
+                    thread.interrupt();
                     scanFlag = false;
                     scan_button.setText(R.string.scan);
                 }
             }
             break;
+
+            case R.id.clear_s3_button:
+                queryItemCodes();
+                break;
 
             case R.id.button_start:
                 if (!startFlag) {
@@ -1465,8 +1573,6 @@ public class UHFActivity extends Activity implements OnClickListener {
 
     private void initQueryResultLayout() {
         // init actor and act scene text view
-//        selected_actor_textview.setText(mSelectedActorArray.get(0).toString());
-//        selected_actscene_textview.setText(mSelectedActSceneArray.get(0).toString());
     }
 
     private class BackS3ButtonAnimationListener implements Animation.AnimationListener   {
@@ -1491,12 +1597,12 @@ public class UHFActivity extends Activity implements OnClickListener {
         @Override
         public void onAnimationStart(Animation animation) {
 //            SetVisible(ls1searchandcheck, textViewS1, viewS1);
-            if(MySQLUtils.Companion.getConnection()) {
-                Log.d(TAG, "DB connected success!!....");
-                MySQLUtils.Companion.executeMySQLQuery("SHOW DATABASES;");
-            } else {
-                Log.d(TAG, "DB connected failed!!....");
-            }
+//            if(MySQLUtils.Companion.getConnection()) {
+//                Log.d(TAG, "DB connected success!!....");
+//                MySQLUtils.Companion.executeMySQLQuery("SHOW DATABASES;");
+//            } else {
+//                Log.d(TAG, "DB connected failed!!....");
+//            }
         }
 
         @Override
@@ -1610,6 +1716,11 @@ public class UHFActivity extends Activity implements OnClickListener {
             startFlag = false;
             buttonStart.setText(R.string.inventory);
         } else {
+
+            if(layout == ls3queryresult) {
+                scanFlag = false;
+                scan_button.setText(R.string.scan);
+            }
 
             layout.setVisibility(View.VISIBLE);
         }

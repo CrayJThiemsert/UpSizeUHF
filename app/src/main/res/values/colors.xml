@@ -5,4 +5,6 @@
     <color name="colorBlack">#383737</color>
     <color name="colorOrangeGrey">#DDCCBE</color>
     <color name="colorPurpleLight">#D280F8</color>
+    <color name="colorLightGreen">#C0FF0B</color>
+    <color name="colorGold">#EFF374</color>
 </resources>
