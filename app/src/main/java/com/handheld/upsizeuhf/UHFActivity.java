@@ -1840,7 +1840,7 @@ public class UHFActivity extends Activity implements OnClickListener {
             postDataParams.put("HTTP_ACCEPT", "application/json");
 
             HttpConnectionService service = new HttpConnectionService();
-            response = service.sendRequest(servicePath.path, postDataParams);
+            response = service.sendRequest("http://" + serverIp + servicePath.path, postDataParams);
             try {
                 success = 1;
                 JSONObject resultJsonObject = new JSONObject(response);

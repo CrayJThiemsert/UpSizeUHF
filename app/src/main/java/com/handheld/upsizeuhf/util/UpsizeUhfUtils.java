@@ -24,7 +24,7 @@ public class UpsizeUhfUtils {
     private static Typeface fontKanitThinItalic;
 
     public static void loadFonts(AssetManager assetManager) {
-        fontKanitBlack = Typeface.createFromAsset(assetManager, "fonts/Kanit-Black.ttf");
+        fontKanitBlack = Typeface.createFromAsset(assetManager, "fonts/kanit_black.ttf");
         fontKanitBlackItalic = Typeface.createFromAsset(assetManager, "fonts/Kanit-BlackItalic.ttf");
         fontKanitBold = Typeface.createFromAsset(assetManager, "fonts/Kanit-Bold.ttf");
         fontKanitBoldItalic = Typeface.createFromAsset(assetManager, "fonts/Kanit-BoldItalic.ttf");

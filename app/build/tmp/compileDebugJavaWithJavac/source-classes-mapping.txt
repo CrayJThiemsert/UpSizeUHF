@@ -1,3 +1,10 @@
+com/handheld/upsizeuhf/ui/ItemCodeRVAdapter.java
+ com.handheld.upsizeuhf.ui.ItemCodeRVAdapter
+ com.handheld.upsizeuhf.ui.ItemCodeRVAdapter$1
+ com.handheld.upsizeuhf.ui.ItemCodeRVAdapter$2
+ com.handheld.upsizeuhf.ui.ItemCodeRVAdapter$3
+ com.handheld.upsizeuhf.ui.ItemCodeRVAdapter$ItemCodeViewHolder
+ com.handheld.upsizeuhf.ui.ItemCodeRVAdapter$NameAnimationListener
 com/handheld/upsizeuhf/util/HttpConnectionService.java
  com.handheld.upsizeuhf.util.HttpConnectionService
 com/handheld/upsizeuhf/model/Costume.java

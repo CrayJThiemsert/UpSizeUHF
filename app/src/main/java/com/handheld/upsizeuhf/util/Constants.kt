@@ -88,8 +88,8 @@ class Constants {
 
         const val COSTUME_All = 1
         const val ACTOR_All = 2
-        val COSTUME_All_QUERY : QueryService = QueryService(COSTUME_All, "http://192.168.1.101/costume/costume/list/")
-        val ACTOR_All_QUERY : QueryService = QueryService(ACTOR_All, "http://192.168.1.101/costume/costume/actors/")
+        val COSTUME_All_QUERY : QueryService = QueryService(COSTUME_All, "/costume/costume/list/")
+        val ACTOR_All_QUERY : QueryService = QueryService(ACTOR_All, "/costume/costume/actors/")
 
         fun getCostumeAllQuery() : QueryService {
             return COSTUME_All_QUERY

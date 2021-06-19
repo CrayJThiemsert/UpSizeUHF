@@ -1,0 +1,7 @@
+# Turn rewrite engine on
+Options +FollowSymlinks
+RewriteEngine on
+
+# map neat URL to internal URL
+RewriteRule ^costume/list/$   RestController.php?view=all [nc,qsa]
+RewriteRule ^costume/actors/$   RestController.php?view=actors [nc,qsa]

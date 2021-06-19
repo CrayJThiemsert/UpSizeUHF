@@ -46,7 +46,7 @@ abstract class UhfUtils {
             private set
 
         fun loadFonts(assetManager: AssetManager?) {
-            fontKanitBlack = Typeface.createFromAsset(assetManager, "fonts/Kanit-Black.ttf")
+            fontKanitBlack = Typeface.createFromAsset(assetManager, "fonts/kanit_black.ttf")
             fontKanitBlackItalic = Typeface.createFromAsset(assetManager, "fonts/Kanit-BlackItalic.ttf")
             fontKanitBold = Typeface.createFromAsset(assetManager, "fonts/Kanit-Bold.ttf")
             fontKanitBoldItalic = Typeface.createFromAsset(assetManager, "fonts/Kanit-BoldItalic.ttf")
@@ -66,27 +66,6 @@ abstract class UhfUtils {
             fontKanitThinItalic = Typeface.createFromAsset(assetManager, "fonts/Kanit-ThinItalic.ttf")
         }
 
-
-//        fun loadFonts(assetManager: AssetManager) {
-//            fontKanitBlack = Typeface.createFromAsset(assetManager, "fonts/Kanit-Black.ttf")
-//            fontKanitBlackItalic = Typeface.createFromAsset(assetManager, "fonts/Kanit-BlackItalic.ttf")
-//            fontKanitBold = Typeface.createFromAsset(assetManager, "fonts/Kanit-Bold.ttf")
-//            fontKanitBoldItalic = Typeface.createFromAsset(assetManager, "fonts/Kanit-BoldItalic.ttf")
-//            fontKanitExtraBold = Typeface.createFromAsset(assetManager, "fonts/Kanit-ExtraBold.ttf")
-//            fontKanitExtraBoldItalic = Typeface.createFromAsset(assetManager, "fonts/Kanit-ExtraBoldItalic.ttf")
-//            fontKanitExtraLight = Typeface.createFromAsset(assetManager, "fonts/Kanit-ExtraLight.ttf")
-//            fontKanitExtraLightItalic = Typeface.createFromAsset(assetManager, "fonts/Kanit-ExtraLightItalic.ttf")
-//            fontKanitItalic = Typeface.createFromAsset(assetManager, "fonts/Kanit-Italic.ttf")
-//            fontKanitLight = Typeface.createFromAsset(assetManager, "fonts/Kanit-Light.ttf")
-//            fontKanitLightItalic = Typeface.createFromAsset(assetManager, "fonts/Kanit-LightItalic.ttf")
-//            fontKanitMedium = Typeface.createFromAsset(assetManager, "fonts/Kanit-Medium.ttf")
-//            fontKanitMediumItalic = Typeface.createFromAsset(assetManager, "fonts/Kanit-MediumItalic.ttf")
-//            fontKanitRegular = Typeface.createFromAsset(assetManager, "fonts/Kanit-Regular.ttf")
-//            fontKanitSemiBold = Typeface.createFromAsset(assetManager, "fonts/Kanit-SemiBold.ttf")
-//            fontKanitSemiBoldItalic = Typeface.createFromAsset(assetManager, "fonts/Kanit-SemiBoldItalic.ttf")
-//            fontKanitThin = Typeface.createFromAsset(assetManager, "fonts/Kanit-Thin.ttf")
-//            fontKanitThinItalic = Typeface.createFromAsset(assetManager, "fonts/Kanit-ThinItalic.ttf")
-//        }
 
         fun separateEPCString(data: String?, separator: String, separateLen: Int, numPerLine: Int): String? {
             var resultStr = ""
