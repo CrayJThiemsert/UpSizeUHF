@@ -25,27 +25,28 @@
 17-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:10:9-45
 18        android:label="@string/app_name"
 18-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:11:9-41
-19        android:theme="@style/AppTheme" >
-19-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:12:9-40
-20        <activity
-20-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:14:9-23:20
-21            android:name="com.handheld.upsizeuhf.UHFActivity"
-21-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:16:13-62
-22            android:configChanges="keyboardHidden|orientation|screenSize"
-22-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:15:13-74
-23            android:label="@string/app_name" >
-23-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:17:13-45
-24            <intent-filter>
-24-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:18:13-22:29
-25                <action android:name="android.intent.action.MAIN" />
-25-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:19:17-69
-25-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:19:25-66
-26
-27                <category android:name="android.intent.category.LAUNCHER" />
-27-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:21:17-77
-27-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:21:27-74
-28            </intent-filter>
-29        </activity>
-30    </application>
-31
-32</manifest>
+19        android:testOnly="true"
+20        android:theme="@style/AppTheme" >
+20-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:12:9-40
+21        <activity
+21-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:14:9-23:20
+22            android:name="com.handheld.upsizeuhf.UHFActivity"
+22-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:16:13-62
+23            android:configChanges="keyboardHidden|orientation|screenSize"
+23-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:15:13-74
+24            android:label="@string/app_name" >
+24-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:17:13-45
+25            <intent-filter>
+25-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:18:13-22:29
+26                <action android:name="android.intent.action.MAIN" />
+26-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:19:17-69
+26-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:19:25-66
+27
+28                <category android:name="android.intent.category.LAUNCHER" />
+28-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:21:17-77
+28-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:21:27-74
+29            </intent-filter>
+30        </activity>
+31    </application>
+32
+33</manifest>

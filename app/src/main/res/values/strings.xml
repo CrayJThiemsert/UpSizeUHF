@@ -505,4 +505,7 @@
     <string name="clear_label">Clear</string>
     <string name="total_items">Total Items</string>
 	<string name="items_scanned">Items Scanned</string>
+    <string name="item_info">Item Info</string>
+    <string name="itemcode">Item Code</string>
+    <string name="select_filter">Select Filter</string>
 </resources>

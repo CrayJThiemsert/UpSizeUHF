@@ -44,10 +44,6 @@
         "source": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\src\\main\\res\\drawable-xxxhdpi\\baseline_search_black_36.png"
     },
     {
-        "merged": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\build\\intermediates\\res\\merged\\debug\\layout-v26_activity_uhf.xml.flat",
-        "source": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\src\\main\\res\\layout-v26\\activity_uhf.xml"
-    },
-    {
         "merged": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi_baseline_search_black_18.png.flat",
         "source": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\src\\main\\res\\drawable-xhdpi\\baseline_search_black_18.png"
     },
@@ -210,6 +206,10 @@
     {
         "merged": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi_baseline_search_black_20.png.flat",
         "source": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\src\\main\\res\\drawable-xxhdpi\\baseline_search_black_20.png"
+    },
+    {
+        "merged": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\build\\intermediates\\res\\merged\\debug\\layout_itemcode_filter_listview.xml.flat",
+        "source": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\src\\main\\res\\layout\\itemcode_filter_listview.xml"
     },
     {
         "merged": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\build\\intermediates\\res\\merged\\debug\\drawable_layout_border_radius_selected.xml.flat",

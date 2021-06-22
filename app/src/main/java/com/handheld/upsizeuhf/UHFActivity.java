@@ -4,10 +4,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 import android.app.Activity;
@@ -67,11 +65,11 @@ import com.handheld.upsizeuhf.model.Costume;
 import com.handheld.upsizeuhf.model.QueryService;
 import com.handheld.upsizeuhf.ui.ActSceneRVAdapter;
 import com.handheld.upsizeuhf.ui.ActorRVAdapter;
+import com.handheld.upsizeuhf.ui.ItemCodeFilterRVAdapter;
 import com.handheld.upsizeuhf.ui.ItemCodeRVAdapter;
 import com.handheld.upsizeuhf.util.AnimationUtils;
 import com.handheld.upsizeuhf.util.Constants;
 import com.handheld.upsizeuhf.util.HttpConnectionService;
-import com.handheld.upsizeuhf.util.MySQLUtils;
 import com.handheld.upsizeuhf.util.UhfUtils;
 
 import org.json.JSONArray;
@@ -96,9 +94,13 @@ public class UHFActivity extends Activity implements OnClickListener {
     private View view2;
     private View view3;
     private View view4;
-    private LinearLayout ls1searchandcheck;
-    private LinearLayout ls2selectcondition;
-    private LinearLayout ls3queryresult;
+    private LinearLayout searchandcheck_layout;
+    private LinearLayout byitemset_select_filter_layout;
+    private LinearLayout byitemcode_select_filter_layout;
+    private LinearLayout byitemset_queryresult_layout;
+
+    private LinearLayout byitemcode_queryresult_layout;
+    
     private RelativeLayout l1epc;
     private LinearLayout l2readandwrite;
     private LinearLayout l3lockandkill;
@@ -155,12 +157,19 @@ public class UHFActivity extends Activity implements OnClickListener {
     private Button by_item_set_button;//set by item set button
     private Button by_item_code_button;//set by item code button
 
-    private Button back_s2_button;//set by back to item set button
-    private Button next_s2_button;//set by next to query result button
+    private Button back_byitemset_button;//set by back to item set button
+    private Button next_byitemset_button;//set by next to query result button
 
-    private Button back_s3_button;//set by back to select condition button
-    private Button scan_button;//set by next to search/scan button
-    private Button clear_s3_button; // Clear query result list
+    private Button back_byitemcode_button;//set by back to item code button
+    private Button next_byitemcode_button;//set by next to query result button
+
+    private Button back_itemset_info_result_button;//set by back to select condition button
+    private Button scan_itemset_info_result_button;//set by next to search/scan button
+    private Button clear_itemset_info_result_button; // Clear query result list
+
+    private Button back_itemcode_info_result_button;//set by back to select condition button
+    private Button scan_itemcode_info_result_button;//set by next to search/scan button
+    private Button clear_itemcode_info_result_button; // Clear query result list
 
     private Button button1;//set button1
     private Button button2;//set button2
@@ -205,17 +214,26 @@ public class UHFActivity extends Activity implements OnClickListener {
     ArrayList<Costume> mActSceneArrayList = new ArrayList<Costume>();
     ArrayList<Costume> mItemCodeArrayList = new ArrayList<Costume>();
 
+    ArrayList<Costume> mItemInfoFilterArrayList = new ArrayList<Costume>();
+
     private RecyclerView actor_name_rvlist;
     private ActorRVAdapter actorRVAdapter;
 
     private RecyclerView actscene_name_rvlist;
     private ActSceneRVAdapter actsceneRVAdapter;
 
-    private RecyclerView item_code_rvlist;
-    private ItemCodeRVAdapter itemCodeRVAdapter;
+    private RecyclerView byitemset_item_code_rvlist;
+    private ItemCodeRVAdapter byitemset_itemCodeRVAdapter;
 
     public ArrayList<String> mSelectedActorArray = new ArrayList<String>();
     public ArrayList<String> mSelectedActSceneArray = new ArrayList<String>();
+
+    // By Item Codes
+    private RecyclerView byitemcode_filter_rvlist;
+    private ItemCodeFilterRVAdapter itemCodeFilterRVAdapter;
+
+    public ArrayList<Costume> mSelectedItemCodeFilterArray = new ArrayList<Costume>();
+    public ArrayList<Costume> mSelectedItemCodeInfoArray = new ArrayList<Costume>();
 
     private TextView selected_actor_textview;
     private TextView selected_actscene_textview;
@@ -326,7 +344,9 @@ public class UHFActivity extends Activity implements OnClickListener {
         buttonStart.setText(R.string.inventory);
 
         scanFlag = false;
-        scan_button.setText(R.string.scan);
+        scan_itemset_info_result_button.setText(R.string.scan);
+
+        scan_itemcode_info_result_button.setText(R.string.scan);
 
         manager.close();
         super.onPause();
@@ -389,9 +409,13 @@ public class UHFActivity extends Activity implements OnClickListener {
         view2 = findViewById(R.id.viewUhfMore);
         view3 = findViewById(R.id.viewUhfLock);
         view4 = findViewById(R.id.viewUhfSet);
-        ls1searchandcheck = (LinearLayout) findViewById(R.id.ls1searchandcheck);
-        ls2selectcondition = (LinearLayout) findViewById(R.id.ls2selectcondition);
-        ls3queryresult = (LinearLayout) findViewById(R.id.ls3queryresult);
+        searchandcheck_layout = (LinearLayout) findViewById(R.id.searchandcheck_layout);
+        byitemset_select_filter_layout = (LinearLayout) findViewById(R.id.byitemset_select_filter_layout);
+        byitemcode_select_filter_layout = (LinearLayout) findViewById(R.id.byitemcode_select_filter_layout);
+        byitemset_queryresult_layout = (LinearLayout) findViewById(R.id.byitemset_queryresult_layout);
+
+        byitemcode_queryresult_layout = (LinearLayout) findViewById(R.id.byitemcode_queryresult_layout);
+        
         l1epc = (RelativeLayout) findViewById(R.id.l1epc);
         l2readandwrite = (LinearLayout) findViewById(R.id.l2read);
         l3lockandkill = (LinearLayout) findViewById(R.id.l3lock);
@@ -790,20 +814,35 @@ public class UHFActivity extends Activity implements OnClickListener {
         by_item_code_button = (Button) findViewById(R.id.by_item_code_button);
         by_item_code_button.setOnClickListener(this);
 
-        back_s2_button = (Button) findViewById(R.id.back_s2_button);
-        back_s2_button.setOnClickListener(this);
+        back_byitemset_button = (Button) findViewById(R.id.back_byitemset_button);
+        back_byitemset_button.setOnClickListener(this);
 
-        next_s2_button = (Button) findViewById(R.id.next_s2_button);
-        next_s2_button.setOnClickListener(this);
+        next_byitemset_button = (Button) findViewById(R.id.next_byitemset_button);
+        next_byitemset_button.setOnClickListener(this);
 
-        back_s3_button = (Button) findViewById(R.id.back_s3_button);
-        back_s3_button.setOnClickListener(this);
+        back_byitemcode_button = (Button) findViewById(R.id.back_byitemcode_button);
+        back_byitemcode_button.setOnClickListener(this);
 
-        scan_button = (Button) findViewById(R.id.scan_button);
-        scan_button.setOnClickListener(this);
+        next_byitemcode_button = (Button) findViewById(R.id.next_byitemcode_button);
+        next_byitemcode_button.setOnClickListener(this);
 
-        clear_s3_button = (Button) findViewById(R.id.clear_s3_button);
-        clear_s3_button.setOnClickListener(this);
+        back_itemset_info_result_button = (Button) findViewById(R.id.back_itemset_info_result_button);
+        back_itemset_info_result_button.setOnClickListener(this);
+
+        scan_itemset_info_result_button = (Button) findViewById(R.id.scan_itemset_info_result_button);
+        scan_itemset_info_result_button.setOnClickListener(this);
+
+        clear_itemset_info_result_button = (Button) findViewById(R.id.clear_itemset_info_result_button);
+        clear_itemset_info_result_button.setOnClickListener(this);
+
+        back_itemcode_info_result_button = (Button) findViewById(R.id.back_itemcode_info_result_button);
+        back_itemcode_info_result_button.setOnClickListener(this);
+
+        scan_itemcode_info_result_button = (Button) findViewById(R.id.scan_itemcode_info_result_button);
+        scan_itemcode_info_result_button.setOnClickListener(this);
+
+        clear_itemcode_info_result_button = (Button) findViewById(R.id.clear_itemcode_info_result_button);
+        clear_itemcode_info_result_button.setOnClickListener(this);
 
         actor_name_rvlist = (RecyclerView)findViewById(R.id.actor_name_rvlist);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,RecyclerView.VERTICAL,false);
@@ -820,12 +859,17 @@ public class UHFActivity extends Activity implements OnClickListener {
         selected_actor_textview.setTypeface(UhfUtils.Companion.getFontKanitLightItalic());
         selected_actscene_textview.setTypeface(UhfUtils.Companion.getFontKanitLightItalic());
 
-        item_code_rvlist = (RecyclerView)findViewById(R.id.item_code_rvlist);
+        byitemset_item_code_rvlist = (RecyclerView)findViewById(R.id.byitemset_item_code_rvlist);
         LinearLayoutManager itemCodelinearLayoutManager = new LinearLayoutManager(this,RecyclerView.VERTICAL,false);
-        item_code_rvlist.setLayoutManager(itemCodelinearLayoutManager);
+        byitemset_item_code_rvlist.setLayoutManager(itemCodelinearLayoutManager);
 
         total_items_textview = (TextView)findViewById(R.id.total_items_textview);
         items_scanned_textview = (TextView)findViewById(R.id.items_scanned_textview);
+
+        // By Item Code Filter
+        byitemcode_filter_rvlist = (RecyclerView)findViewById(R.id.byitemcode_filter_rvlist);
+        LinearLayoutManager itemCodeFilterlinearLayoutManager = new LinearLayoutManager(this,RecyclerView.VERTICAL,false);
+        byitemcode_filter_rvlist.setLayoutManager(itemCodeFilterlinearLayoutManager);
     }
 
     private boolean isActSceneExistingInActSceneArray(String actScene) {
@@ -834,6 +878,23 @@ public class UHFActivity extends Activity implements OnClickListener {
         for(int i = 0; i < mActSceneArrayList.size(); i++) {
             Costume costume = mActSceneArrayList.get(i);
             if(costume.actScence.equals(actScene)) {
+                result = true;
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    private boolean isItemCodeExistingInItemCodeInfoArray(Costume itemCode) {
+        boolean result = false;
+
+        for(int i = 0; i < mItemInfoFilterArrayList.size(); i++) {
+            Costume costume = mItemInfoFilterArrayList.get(i);
+            if(costume.code.equals(itemCode.code) &&
+                    costume.type.equals(itemCode.type) &&
+                    costume.size.equals(itemCode.size) &&
+                    costume.codeNo.equals(itemCode.codeNo)) {
                 result = true;
                 break;
             }
@@ -876,13 +937,51 @@ public class UHFActivity extends Activity implements OnClickListener {
         processDialog.dismiss();
     }
 
+    public void refreshItemCodeInfo(Costume itemCode) {
+        Log.d(TAG, "refreshItemCodeInfo selected itemCode=" + itemCode);
+
+        // clear item code info data[selected item code]
+        clearItemCodeData();
+
+        processDialog = new ProgressDialog(mContext);
+        processDialog.setMessage("Please  Wait ...");
+        processDialog.setCancelable(false);
+        processDialog.show();
+
+        mItemInfoFilterArrayList = new ArrayList<Costume>();
+        for(int i = 0; i < mCostumeArrayList.size(); i++) {
+            Costume costume = mCostumeArrayList.get(i);
+            if(costume.code.equals(itemCode.code) &&
+                    costume.type.equals(itemCode.type) &&
+                    costume.size.equals(itemCode.size) &&
+                    costume.codeNo.equals(itemCode.codeNo) &&
+                    !isItemCodeExistingInItemCodeInfoArray(costume)) {
+                mItemInfoFilterArrayList.add(costume);
+            }
+        }
+
+        actsceneRVAdapter = new ActSceneRVAdapter(mContext, mActivity, mItemInfoFilterArrayList);
+        actscene_name_rvlist.setAdapter(actsceneRVAdapter);
+        actsceneRVAdapter.notifyDataSetChanged();
+
+        if(mActSceneArrayList.size() == 1) {
+            Costume costume = (Costume) mActSceneArrayList.get(0);
+            addSelectedActScene(costume.actScence);
+            selected_actscene_textview.setText(costume.actScence);
+        } else {
+            selected_actscene_textview.setText("");
+        }
+
+        processDialog.dismiss();
+    }
+
     /**
      * Query Item Codes list by use selected actor and act, scene.
      */
-    public void queryItemCodes() {
+    public void queryItemCodesBySelectedActorActScene() {
         String actor = selected_actor_textview.getText().toString(); //mSelectedActorArray.get(0).toString();
         String actScene = selected_actscene_textview.getText().toString(); //mSelectedActSceneArray.get(0).toString();
-        Log.d(TAG, "queryItemCodes by actor=" + actor + " : act, scene=" + actScene);
+        Log.d(TAG, "query ItemCodes by actor=" + actor + " : act, scene=" + actScene);
 
         // clear item codes result data
 //        clearQueryItemCodesResult();
@@ -902,9 +1001,9 @@ public class UHFActivity extends Activity implements OnClickListener {
             }
         }
 
-        itemCodeRVAdapter = new ItemCodeRVAdapter(mContext, mActivity, mItemCodeArrayList);
-        item_code_rvlist.setAdapter(itemCodeRVAdapter);
-        itemCodeRVAdapter.notifyDataSetChanged();
+        byitemset_itemCodeRVAdapter = new ItemCodeRVAdapter(mContext, mActivity, mItemCodeArrayList);
+        byitemset_item_code_rvlist.setAdapter(byitemset_itemCodeRVAdapter);
+        byitemset_itemCodeRVAdapter.notifyDataSetChanged();
 
         items_scanned_textview.setText(Integer.toString(0));
         total_items_textview.setText(Integer.toString(mItemCodeArrayList.size()));
@@ -1111,7 +1210,7 @@ public class UHFActivity extends Activity implements OnClickListener {
 //                        }
                     }
 
-                    itemCodeRVAdapter.notifyDataSetChanged();
+                    byitemset_itemCodeRVAdapter.notifyDataSetChanged();
                     items_scanned_textview.setText(Integer.toString(scannedCount));
 
                     Util.play(1, 0);
@@ -1253,15 +1352,19 @@ public class UHFActivity extends Activity implements OnClickListener {
         listepc.removeAll(listepc);
     }
 
-    private void clearItemCodeList() {
-
-    }
-
     private void clearSearchandCheckData() {
         mSelectedActorArray = new ArrayList<String>();
         mSelectedActSceneArray = new ArrayList<String>();
         mSelectedActorArray.clear();
         mSelectedActSceneArray.clear();
+
+    }
+
+    private void clearItemCodeData() {
+        mSelectedItemCodeFilterArray = new ArrayList<Costume>();
+        mSelectedItemCodeInfoArray = new ArrayList<Costume>();
+        mSelectedItemCodeFilterArray.clear();
+        mSelectedItemCodeInfoArray.clear();
 
     }
 
@@ -1288,52 +1391,81 @@ public class UHFActivity extends Activity implements OnClickListener {
                 }
                 break;
 
-            case R.id.back_s2_button: {
+            // Item Set Filter =================
+            case R.id.back_byitemset_button: {
                 Util.play(1, 0);
                 Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
-                animate.setAnimationListener(new BackS2ButtonAnimationListener());
-                back_s2_button.startAnimation(animate);
+                animate.setAnimationListener(new BackByItemSetFilterButtonAnimationListener());
+                back_byitemset_button.startAnimation(animate);
             }
             break;
 
-            case R.id.next_s2_button: {
+            case R.id.next_byitemset_button: {
                 Util.play(1, 0);
                 Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
-                animate.setAnimationListener(new NextS2ButtonAnimationListener());
-                next_s2_button.startAnimation(animate);
+                animate.setAnimationListener(new NextByItemSetFilterButtonAnimationListener());
+                next_byitemset_button.startAnimation(animate);
             }
             break;
 
-            case R.id.back_s3_button: {
+            case R.id.back_itemset_info_result_button: {
                 Util.play(1, 0);
                 Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
-                animate.setAnimationListener(new BackS3ButtonAnimationListener());
-                back_s3_button.startAnimation(animate);
+                animate.setAnimationListener(new BackByItemSetInfoResultButtonAnimationListener());
+                back_itemset_info_result_button.startAnimation(animate);
             }
             break;
 
-            case R.id.scan_button: {
+            case R.id.scan_itemset_info_result_button: {
                 Util.play(1, 0);
                 Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
-                animate.setAnimationListener(new NextS3ButtonAnimationListener());
-                scan_button.startAnimation(animate);
-
-                if (!scanFlag) {
-                    thread.start();
-                    scanFlag = true;
-                    scan_button.setText(R.string.stop);
-                } else {
-                    thread.interrupt();
-                    scanFlag = false;
-                    scan_button.setText(R.string.scan);
-                }
+                animate.setAnimationListener(new ScanItemSetButtonAnimationListener());
+                scan_itemset_info_result_button.startAnimation(animate);
             }
             break;
 
-            case R.id.clear_s3_button:
-                queryItemCodes();
+            case R.id.clear_itemset_info_result_button:
+                queryItemCodesBySelectedActorActScene();
                 break;
 
+            // Item Codes Filter =================
+            case R.id.back_byitemcode_button: {
+                Util.play(1, 0);
+                Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
+                animate.setAnimationListener(new BackByItemCodeFilterButtonAnimationListener());
+                back_byitemcode_button.startAnimation(animate);
+            }
+            break;
+
+            case R.id.next_byitemcode_button: {
+                Util.play(1, 0);
+                Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
+                animate.setAnimationListener(new NextByItemCodeFilterButtonAnimationListener());
+                next_byitemcode_button.startAnimation(animate);
+            }
+            break;
+
+            case R.id.back_itemcode_info_result_button: {
+                Util.play(1, 0);
+                Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
+                animate.setAnimationListener(new BackByItemCodeInfoResultButtonAnimationListener());
+                back_itemcode_info_result_button.startAnimation(animate);
+            }
+            break;
+
+            case R.id.scan_itemcode_info_result_button: {
+                Util.play(1, 0);
+                Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
+                animate.setAnimationListener(new ScanItemCodeButtonAnimationListener());
+                scan_itemcode_info_result_button.startAnimation(animate);
+            }
+            break;
+
+            case R.id.clear_itemcode_info_result_button:
+                queryItemCodesBySelectedActorActScene();
+                break;
+            
+            // Original inventory
             case R.id.button_start:
                 if (!startFlag) {
                     startFlag = true;
@@ -1494,14 +1626,14 @@ public class UHFActivity extends Activity implements OnClickListener {
     private class ByItemSetButtonAnimationListener implements Animation.AnimationListener   {
         @Override
         public void onAnimationStart(Animation animation) {
-            SetVisible(ls2selectcondition, textViewS1, viewS1);
+            SetVisible(byitemset_select_filter_layout, textViewS1, viewS1);
             new ServiceQueryAsyncTask(mContext, mActivity, Constants.Companion.getActorAllQuery()).execute();
 
-            // Clear act scene list
-            mActSceneArrayList = new ArrayList<Costume>();
-            actsceneRVAdapter = new ActSceneRVAdapter(mContext, mActivity, mActSceneArrayList);
-            actscene_name_rvlist.setAdapter(actsceneRVAdapter);
-            actsceneRVAdapter.notifyDataSetChanged();
+//            // Clear act scene list
+//            mActSceneArrayList = new ArrayList<Costume>();
+//            actsceneRVAdapter = new ActSceneRVAdapter(mContext, mActivity, mActSceneArrayList);
+//            actscene_name_rvlist.setAdapter(actsceneRVAdapter);
+//            actsceneRVAdapter.notifyDataSetChanged();
         }
 
         @Override
@@ -1519,7 +1651,8 @@ public class UHFActivity extends Activity implements OnClickListener {
     private class ByItemCodeButtonAnimationListener implements Animation.AnimationListener   {
         @Override
         public void onAnimationStart(Animation animation) {
-
+            SetVisible(byitemcode_select_filter_layout, textViewS1, viewS1);
+            new ServiceQueryAsyncTask(mContext, mActivity, Constants.Companion.getItemCodeAllQuery()).execute();
         }
 
         @Override
@@ -1533,10 +1666,10 @@ public class UHFActivity extends Activity implements OnClickListener {
         }
     }
 
-    private class BackS2ButtonAnimationListener implements Animation.AnimationListener   {
+    private class BackByItemSetFilterButtonAnimationListener implements Animation.AnimationListener   {
         @Override
         public void onAnimationStart(Animation animation) {
-            SetVisible(ls1searchandcheck, textViewS1, viewS1);
+            SetVisible(searchandcheck_layout, textViewS1, viewS1);
         }
 
         @Override
@@ -1551,12 +1684,50 @@ public class UHFActivity extends Activity implements OnClickListener {
         }
     }
 
-    private class NextS2ButtonAnimationListener implements Animation.AnimationListener   {
+    private class BackByItemCodeFilterButtonAnimationListener implements Animation.AnimationListener   {
         @Override
         public void onAnimationStart(Animation animation) {
-            SetVisible(ls3queryresult, textViewS1, viewS1);
+            SetVisible(searchandcheck_layout, textViewS1, viewS1);
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    }
+
+    private class NextByItemSetFilterButtonAnimationListener implements Animation.AnimationListener   {
+        @Override
+        public void onAnimationStart(Animation animation) {
+            SetVisible(byitemset_queryresult_layout, textViewS1, viewS1);
 //            initQueryResultLayout();
-            queryItemCodes();
+            queryItemCodesBySelectedActorActScene();
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    }
+
+    private class NextByItemCodeFilterButtonAnimationListener implements Animation.AnimationListener   {
+        @Override
+        public void onAnimationStart(Animation animation) {
+            SetVisible(byitemcode_queryresult_layout, textViewS1, viewS1);
+//            initQueryResultLayout();
+            queryItemCodesBySelectedActorActScene();
         }
 
         @Override
@@ -1575,10 +1746,10 @@ public class UHFActivity extends Activity implements OnClickListener {
         // init actor and act scene text view
     }
 
-    private class BackS3ButtonAnimationListener implements Animation.AnimationListener   {
+    private class BackByItemSetInfoResultButtonAnimationListener implements Animation.AnimationListener   {
         @Override
         public void onAnimationStart(Animation animation) {
-            SetVisible(ls2selectcondition, textViewS1, viewS1);
+            SetVisible(byitemset_select_filter_layout, textViewS1, viewS1);
         }
 
         @Override
@@ -1593,9 +1764,36 @@ public class UHFActivity extends Activity implements OnClickListener {
         }
     }
 
-    private class NextS3ButtonAnimationListener implements Animation.AnimationListener   {
+    private class BackByItemCodeInfoResultButtonAnimationListener implements Animation.AnimationListener   {
         @Override
         public void onAnimationStart(Animation animation) {
+            SetVisible(byitemcode_select_filter_layout, textViewS1, viewS1);
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    }
+
+    private class ScanItemSetButtonAnimationListener implements Animation.AnimationListener   {
+        @Override
+        public void onAnimationStart(Animation animation) {
+            if (!scanFlag) {
+                thread.start();
+                scanFlag = true;
+                scan_itemset_info_result_button.setText(R.string.stop);
+            } else {
+                thread.interrupt();
+                scanFlag = false;
+                scan_itemset_info_result_button.setText(R.string.scan);
+            }
 //            SetVisible(ls1searchandcheck, textViewS1, viewS1);
 //            if(MySQLUtils.Companion.getConnection()) {
 //                Log.d(TAG, "DB connected success!!....");
@@ -1603,6 +1801,32 @@ public class UHFActivity extends Activity implements OnClickListener {
 //            } else {
 //                Log.d(TAG, "DB connected failed!!....");
 //            }
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    }
+
+    private class ScanItemCodeButtonAnimationListener implements Animation.AnimationListener   {
+        @Override
+        public void onAnimationStart(Animation animation) {
+            if (!scanFlag) {
+                thread.start();
+                scanFlag = true;
+                scan_itemcode_info_result_button.setText(R.string.stop);
+            } else {
+                thread.interrupt();
+                scanFlag = false;
+                scan_itemcode_info_result_button.setText(R.string.scan);
+            }
         }
 
         @Override
@@ -1664,7 +1888,7 @@ public class UHFActivity extends Activity implements OnClickListener {
         public boolean onTouch(View view, MotionEvent arg1) {
             switch (view.getId()) {
                 case R.id.linearLayoutSearchAndCheck:
-                    SetVisible(ls1searchandcheck, textViewS1, viewS1);
+                    SetVisible(searchandcheck_layout, textViewS1, viewS1);
                     break;
                 case R.id.linearLayoutUhfEpc:
                     SetVisible(null, textView1, view1);
@@ -1690,9 +1914,13 @@ public class UHFActivity extends Activity implements OnClickListener {
             showToast("Please inventory!");
             return;
         }
-        ls1searchandcheck.setVisibility(View.GONE);
-        ls2selectcondition.setVisibility(View.GONE);
-        ls3queryresult.setVisibility(View.GONE);
+        searchandcheck_layout.setVisibility(View.GONE);
+        byitemset_select_filter_layout.setVisibility(View.GONE);
+        byitemset_queryresult_layout.setVisibility(View.GONE);
+
+        byitemcode_select_filter_layout.setVisibility(View.GONE);
+        byitemcode_queryresult_layout.setVisibility(View.GONE);
+        
         l1epc.setVisibility(View.GONE);
         l2readandwrite.setVisibility(View.GONE);
         l3lockandkill.setVisibility(View.GONE);
@@ -1717,9 +1945,14 @@ public class UHFActivity extends Activity implements OnClickListener {
             buttonStart.setText(R.string.inventory);
         } else {
 
-            if(layout == ls3queryresult) {
+            if(layout == byitemset_queryresult_layout) {
                 scanFlag = false;
-                scan_button.setText(R.string.scan);
+                scan_itemset_info_result_button.setText(R.string.scan);
+            }
+
+            if(layout == byitemcode_queryresult_layout) {
+                scanFlag = false;
+                scan_itemcode_info_result_button.setText(R.string.scan);
             }
 
             layout.setVisibility(View.VISIBLE);
@@ -1863,67 +2096,51 @@ public class UHFActivity extends Activity implements OnClickListener {
             if (success == 1) {
                 if (null != restulJsonArray) {
                     switch (servicePath.uid) {
-                        case Constants.ACTOR_All:
-                            ArrayList<Actor> actorArrayList = new ArrayList<Actor>();
+                        case Constants.ITEM_CODE_All: {
+                                ArrayList<Costume> itemCodeArrayList = new ArrayList<Costume>();
 
-                            for (int i = 0; i < restulJsonArray.length(); i++) {
-                                try {
-                                    JSONObject jsonObject = restulJsonArray.getJSONObject(i);
-                                    Actor actor = new Actor();
-                                    actor.name = jsonObject.getString("actor");
-                                    actorArrayList.add(actor);
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
+                                for (int i = 0; i < restulJsonArray.length(); i++) {
+                                    try {
+                                        JSONObject jsonObject = restulJsonArray.getJSONObject(i);
+                                        Costume itemCode = new Costume();
+
+                                        itemCode.code = jsonObject.getString("code");
+                                        itemCode.type = jsonObject.getString("type");
+                                        itemCode.size = jsonObject.getString("size");
+                                        itemCode.codeNo = jsonObject.getString("codeNo");
+
+                                        itemCodeArrayList.add(itemCode);
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
                                 }
+
+                                itemCodeFilterRVAdapter = new ItemCodeFilterRVAdapter(mContext, mActivity, itemCodeArrayList);
+                                byitemcode_filter_rvlist.setAdapter(itemCodeFilterRVAdapter);
+                                itemCodeFilterRVAdapter.notifyDataSetChanged();
+                                processDialog.dismiss();
                             }
+                            break;
+                        case Constants.ACTOR_All: {
+                                ArrayList<Actor> actorArrayList = new ArrayList<Actor>();
 
-                            actorRVAdapter = new ActorRVAdapter(mContext, mActivity,actorArrayList);
-                            actor_name_rvlist.setAdapter(actorRVAdapter);
-                            actorRVAdapter.notifyDataSetChanged();
+                                for (int i = 0; i < restulJsonArray.length(); i++) {
+                                    try {
+                                        JSONObject jsonObject = restulJsonArray.getJSONObject(i);
+                                        Actor actor = new Actor();
+                                        actor.name = jsonObject.getString("actor");
+                                        actorArrayList.add(actor);
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
 
+                                actorRVAdapter = new ActorRVAdapter(mContext, mActivity, actorArrayList);
+                                actor_name_rvlist.setAdapter(actorRVAdapter);
+                                actorRVAdapter.notifyDataSetChanged();
 
-//                            ActorAdapter actorAdapter = new ActorAdapter(mContext, mActivity, actorArrayList);
-//
-//                            actor_listView.setAdapter(actorAdapter);
-
-
-
-
-//                            actor_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                                @Override
-//                                public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-//
-//                                    Log.d(TAG, "list position=" + position);
-//                                    current_index_actor = position;
-//
-////                                    for (int i = 0; i < actor_listView.getChildCount(); i++) {
-////                                        if(position == i ){
-////                                            actor_listView.getChildAt(i).setBackgroundColor(Color.BLUE);
-////                                        }else{
-////                                            actor_listView.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
-////                                        }
-////                                    }
-//
-//////                                    Actor actor = (Actor)actorArrayList.get(i);
-//////                                    actor.selected = true;
-//////                                    actorAdapter.setCurrentItem(i);
-//////                                    view.setSelected(true);
-//                                    actorAdapter.notifyDataSetChanged();
-////                                    actorAdapter.setCurrentItem(current_index_actor);
-//                                }
-//                            });
-//                            actor_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                                @Override
-//                                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                                    view.setBackgroundColor(mContext.getResources().getColor(R.color.colorOrangeRed));
-//                                    actorAdapter.setCurrentItem(i);
-//                                    actorAdapter.setClick(true);
-//                                    actorAdapter.notifyDataSetChanged();
-//                                    current_index_actor = i;
-//                                    actorAdapter.notifyDataSetInvalidated();
-//                                }
-//                            });
-                            processDialog.dismiss();
+                                processDialog.dismiss();
+                            }
                             break;
                         case Constants.COSTUME_All:
                             mCostumeArrayList = new ArrayList<Costume>();

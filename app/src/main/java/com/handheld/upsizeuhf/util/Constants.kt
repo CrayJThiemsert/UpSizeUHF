@@ -88,8 +88,10 @@ class Constants {
 
         const val COSTUME_All = 1
         const val ACTOR_All = 2
+        const val ITEM_CODE_All = 3
         val COSTUME_All_QUERY : QueryService = QueryService(COSTUME_All, "/costume/costume/list/")
         val ACTOR_All_QUERY : QueryService = QueryService(ACTOR_All, "/costume/costume/actors/")
+        val ITEM_CODE_All_QUERY : QueryService = QueryService(ITEM_CODE_All, "/costume/costume/itemcodes/")
 
         fun getCostumeAllQuery() : QueryService {
             return COSTUME_All_QUERY
@@ -97,6 +99,10 @@ class Constants {
 
         fun getActorAllQuery() : QueryService {
             return ACTOR_All_QUERY
+        }
+
+        fun getItemCodeAllQuery() : QueryService {
+            return ITEM_CODE_All_QUERY
         }
     }
 }
