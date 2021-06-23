@@ -67,6 +67,7 @@ import com.handheld.upsizeuhf.ui.ActSceneRVAdapter;
 import com.handheld.upsizeuhf.ui.ActorRVAdapter;
 import com.handheld.upsizeuhf.ui.ItemCodeFilterRVAdapter;
 import com.handheld.upsizeuhf.ui.ItemCodeRVAdapter;
+import com.handheld.upsizeuhf.ui.ItemInfoRVAdapter;
 import com.handheld.upsizeuhf.util.AnimationUtils;
 import com.handheld.upsizeuhf.util.Constants;
 import com.handheld.upsizeuhf.util.HttpConnectionService;
@@ -126,7 +127,8 @@ public class UHFActivity extends Activity implements OnClickListener {
     private ArrayList<Map<String, Object>> listMap;
     private boolean runFlag = true;
     private boolean startFlag = false;
-    private boolean scanFlag = false;
+    private boolean scanItemSetFlag = false;
+    private boolean scanItemCodeFlag = false;
     private UhfReader manager; // UHF manager,UHF Operating handle
 //	private ScreenStateReceiver screenReceiver;
     /******************************************/
@@ -213,6 +215,7 @@ public class UHFActivity extends Activity implements OnClickListener {
     ArrayList<Costume> mCostumeArrayList = new ArrayList<Costume>();
     ArrayList<Costume> mActSceneArrayList = new ArrayList<Costume>();
     ArrayList<Costume> mItemCodeArrayList = new ArrayList<Costume>();
+    ArrayList<Costume> mItemInfoArrayList = new ArrayList<Costume>();
 
     ArrayList<Costume> mItemInfoFilterArrayList = new ArrayList<Costume>();
 
@@ -228,18 +231,32 @@ public class UHFActivity extends Activity implements OnClickListener {
     public ArrayList<String> mSelectedActorArray = new ArrayList<String>();
     public ArrayList<String> mSelectedActSceneArray = new ArrayList<String>();
 
-    // By Item Codes
-    private RecyclerView byitemcode_filter_rvlist;
-    private ItemCodeFilterRVAdapter itemCodeFilterRVAdapter;
-
-    public ArrayList<Costume> mSelectedItemCodeFilterArray = new ArrayList<Costume>();
-    public ArrayList<Costume> mSelectedItemCodeInfoArray = new ArrayList<Costume>();
-
     private TextView selected_actor_textview;
     private TextView selected_actscene_textview;
 
     private TextView total_items_textview;
     private TextView items_scanned_textview;
+
+    // By Item Codes
+    private RecyclerView byitemcode_filter_rvlist;
+    private ItemCodeFilterRVAdapter itemCodeFilterRVAdapter;
+
+    private RecyclerView byitemcode_item_info_rvlist;
+    private ItemInfoRVAdapter itemInfoFilterRVAdapter;
+
+    public ArrayList<Costume> mSelectedItemCodeFilterArray = new ArrayList<Costume>();
+    public ArrayList<Costume> mSelectedItemCodeInfoArray = new ArrayList<Costume>();
+
+    private TextView byitemcode_selected_code_textview;
+    private TextView byitemcode_selected_type_textview;
+    private TextView byitemcode_selected_size_textview;
+    private TextView byitemcode_selected_number_textview;
+
+    private RecyclerView item_info_result_rvlist;
+    private ItemInfoRVAdapter itemInfoResultRVAdapter;
+
+    private TextView total_item_info_textview;
+    private TextView item_info_scanned_textview;
 
     Thread thread = new InventoryThread();
 
@@ -343,9 +360,10 @@ public class UHFActivity extends Activity implements OnClickListener {
         startFlag = false;
         buttonStart.setText(R.string.inventory);
 
-        scanFlag = false;
+        scanItemSetFlag = false;
         scan_itemset_info_result_button.setText(R.string.scan);
 
+        scanItemCodeFlag = false;
         scan_itemcode_info_result_button.setText(R.string.scan);
 
         manager.close();
@@ -356,7 +374,8 @@ public class UHFActivity extends Activity implements OnClickListener {
     @Override
     protected void onDestroy() {
         startFlag = false;
-        scanFlag = false;
+        scanItemSetFlag = false;
+        scanItemCodeFlag = false;
         runFlag = false;
         if (manager != null) {
             manager.close();
@@ -852,7 +871,7 @@ public class UHFActivity extends Activity implements OnClickListener {
         LinearLayoutManager actscenelinearLayoutManager = new LinearLayoutManager(this,RecyclerView.VERTICAL,false);
         actscene_name_rvlist.setLayoutManager(actscenelinearLayoutManager);
 
-        // Query Result Layout
+        // Item Set Query Result Layout or Scan
         selected_actor_textview = (TextView)findViewById(R.id.selected_actor_textview);
         selected_actscene_textview = (TextView)findViewById(R.id.selected_actscene_textview);
 
@@ -870,6 +889,24 @@ public class UHFActivity extends Activity implements OnClickListener {
         byitemcode_filter_rvlist = (RecyclerView)findViewById(R.id.byitemcode_filter_rvlist);
         LinearLayoutManager itemCodeFilterlinearLayoutManager = new LinearLayoutManager(this,RecyclerView.VERTICAL,false);
         byitemcode_filter_rvlist.setLayoutManager(itemCodeFilterlinearLayoutManager);
+
+        // By Item Code Query Result or Scan
+        byitemcode_selected_code_textview = (TextView)findViewById(R.id.byitemcode_selected_code_textview);
+        byitemcode_selected_type_textview = (TextView)findViewById(R.id.byitemcode_selected_type_textview);
+        byitemcode_selected_size_textview = (TextView)findViewById(R.id.byitemcode_selected_size_textview);
+        byitemcode_selected_number_textview = (TextView)findViewById(R.id.byitemcode_selected_number_textview);
+
+        byitemcode_item_info_rvlist = (RecyclerView)findViewById(R.id.byitemcode_item_info_rvlist);
+        LinearLayoutManager itemInfoFilterlinearLayoutManager = new LinearLayoutManager(this,RecyclerView.VERTICAL,false);
+        byitemcode_item_info_rvlist.setLayoutManager(itemInfoFilterlinearLayoutManager);
+
+        item_info_result_rvlist = (RecyclerView)findViewById(R.id.item_info_result_rvlist);
+        LinearLayoutManager itemInfoResultlinearLayoutManager = new LinearLayoutManager(this,RecyclerView.VERTICAL,false);
+        item_info_result_rvlist.setLayoutManager(itemInfoResultlinearLayoutManager);
+
+        total_item_info_textview = (TextView)findViewById(R.id.total_item_info_textview);
+        item_info_scanned_textview = (TextView)findViewById(R.id.item_info_scanned_textview);
+
     }
 
     private boolean isActSceneExistingInActSceneArray(String actScene) {
@@ -891,10 +928,10 @@ public class UHFActivity extends Activity implements OnClickListener {
 
         for(int i = 0; i < mItemInfoFilterArrayList.size(); i++) {
             Costume costume = mItemInfoFilterArrayList.get(i);
-            if(costume.code.equals(itemCode.code) &&
-                    costume.type.equals(itemCode.type) &&
-                    costume.size.equals(itemCode.size) &&
-                    costume.codeNo.equals(itemCode.codeNo)) {
+            if(costume.code.trim().equals(itemCode.code.trim()) &&
+                    costume.type.trim().equals(itemCode.type.trim()) &&
+                    costume.size.trim().equals(itemCode.size.trim()) &&
+                    costume.codeNo.trim().equals(itemCode.codeNo.trim())) {
                 result = true;
                 break;
             }
@@ -951,26 +988,71 @@ public class UHFActivity extends Activity implements OnClickListener {
         mItemInfoFilterArrayList = new ArrayList<Costume>();
         for(int i = 0; i < mCostumeArrayList.size(); i++) {
             Costume costume = mCostumeArrayList.get(i);
-            if(costume.code.equals(itemCode.code) &&
-                    costume.type.equals(itemCode.type) &&
-                    costume.size.equals(itemCode.size) &&
-                    costume.codeNo.equals(itemCode.codeNo) &&
+            costume.isFound = false;
+            if(costume.code.trim().equals(itemCode.code.trim()) &&
+                    costume.type.trim().equals(itemCode.type.trim()) &&
+                    costume.size.trim().equals(itemCode.size.trim()) &&
+                    costume.codeNo.trim().equals(itemCode.codeNo.trim()) &&
                     !isItemCodeExistingInItemCodeInfoArray(costume)) {
                 mItemInfoFilterArrayList.add(costume);
             }
         }
 
-        actsceneRVAdapter = new ActSceneRVAdapter(mContext, mActivity, mItemInfoFilterArrayList);
-        actscene_name_rvlist.setAdapter(actsceneRVAdapter);
-        actsceneRVAdapter.notifyDataSetChanged();
+        itemInfoFilterRVAdapter = new ItemInfoRVAdapter(mContext, mActivity, mItemInfoFilterArrayList);
+        byitemcode_item_info_rvlist.setAdapter(itemInfoFilterRVAdapter);
+        itemInfoFilterRVAdapter.notifyDataSetChanged();
 
-        if(mActSceneArrayList.size() == 1) {
-            Costume costume = (Costume) mActSceneArrayList.get(0);
+        if(mItemInfoFilterArrayList.size() == 1) {
+            Costume costume = (Costume) mItemInfoFilterArrayList.get(0);
             addSelectedActScene(costume.actScence);
-            selected_actscene_textview.setText(costume.actScence);
+            byitemcode_selected_code_textview.setText(costume.code);
+            byitemcode_selected_type_textview.setText(costume.type);
+            byitemcode_selected_size_textview.setText(costume.size);
+            byitemcode_selected_number_textview.setText(costume.codeNo);
+
         } else {
-            selected_actscene_textview.setText("");
+            byitemcode_selected_code_textview.setText("");
+            byitemcode_selected_type_textview.setText("");
+            byitemcode_selected_size_textview.setText("");
+            byitemcode_selected_number_textview.setText("");
         }
+
+        processDialog.dismiss();
+    }
+
+
+    /**
+     * Query Item Info list by use selected Item Code.
+     */
+    public void queryItemInfoBySelectedItemCode() {
+        String code = byitemcode_selected_code_textview.getText().toString();
+        String type = byitemcode_selected_type_textview.getText().toString();
+        String size = byitemcode_selected_size_textview.getText().toString();
+        String number = byitemcode_selected_number_textview.getText().toString();
+
+        Log.d(TAG, "query Item Info by code=" + code + " : type=" + type + " : size=" + size + " : number=" + number);
+
+        processDialog = new ProgressDialog(mContext);
+        processDialog.setMessage("Please  Wait ...");
+        processDialog.setCancelable(false);
+        processDialog.show();
+
+        mItemInfoArrayList = new ArrayList<Costume>();
+        mItemInfoArrayList.clear();
+        for(int i = 0; i < mCostumeArrayList.size(); i++) {
+            Costume costume = mCostumeArrayList.get(i);
+            costume.isFound = false;
+            if(costume.code.trim().equals(code.trim()) && costume.type.trim().equals(type.trim()) && costume.size.trim().equals(size.trim()) && costume.codeNo.trim().equals(number.trim())) {
+                mItemInfoArrayList.add(costume);
+            }
+        }
+
+        itemInfoResultRVAdapter = new ItemInfoRVAdapter(mContext, mActivity, mItemInfoArrayList);
+        item_info_result_rvlist.setAdapter(itemInfoResultRVAdapter);
+        itemInfoResultRVAdapter.notifyDataSetChanged();
+
+        item_info_scanned_textview.setText(Integer.toString(0));
+        total_item_info_textview.setText(Integer.toString(mItemInfoArrayList.size()));
 
         processDialog.dismiss();
     }
@@ -979,12 +1061,9 @@ public class UHFActivity extends Activity implements OnClickListener {
      * Query Item Codes list by use selected actor and act, scene.
      */
     public void queryItemCodesBySelectedActorActScene() {
-        String actor = selected_actor_textview.getText().toString(); //mSelectedActorArray.get(0).toString();
-        String actScene = selected_actscene_textview.getText().toString(); //mSelectedActSceneArray.get(0).toString();
+        String actor = selected_actor_textview.getText().toString();
+        String actScene = selected_actscene_textview.getText().toString();
         Log.d(TAG, "query ItemCodes by actor=" + actor + " : act, scene=" + actScene);
-
-        // clear item codes result data
-//        clearQueryItemCodesResult();
 
         processDialog = new ProgressDialog(mContext);
         processDialog.setMessage("Please  Wait ...");
@@ -1067,6 +1146,15 @@ public class UHFActivity extends Activity implements OnClickListener {
         selected_actscene_textview.setText(mSelectedActSceneArray.get(0).toString());
     }
 
+    /**
+     * add only one name in this time, but open for the future more than one name
+     * @param itemInfo
+     */
+    public void addSelectedItemInfo(Costume itemInfo) {
+        mSelectedItemCodeInfoArray.clear();
+        mSelectedItemCodeInfoArray.add(itemInfo);
+    }
+
 
     /**
      * Inventory EPC Thread
@@ -1079,7 +1167,7 @@ public class UHFActivity extends Activity implements OnClickListener {
         public void run() {
             super.run();
             while (runFlag) {
-                if (startFlag || scanFlag) {
+                if (startFlag || scanItemSetFlag || scanItemCodeFlag) {
                     tagList = manager.inventoryRealTime(); //实时盘存
                     if (tagList != null && !tagList.isEmpty()) {
                         //播放提示音
@@ -1181,7 +1269,7 @@ public class UHFActivity extends Activity implements OnClickListener {
 
                     // play sound
                     Util.play(1, 0);
-                } else if(scanFlag) {
+                } else if(scanItemSetFlag) {
                     Log.d(TAG, "listMap.size()=" + listMap.size());
 
                     int scannedCount = 0;
@@ -1189,29 +1277,63 @@ public class UHFActivity extends Activity implements OnClickListener {
                         Costume costume = mItemCodeArrayList.get(i);
                         String epcBase = costume.epcHeader + costume.epcRun;
                         Log.d(TAG, "epcBase=" + epcBase);
+                        for (int m = 0; m < listMap.size(); m++) {
+                            Map map = listMap.get(m);
 
-//                        if(!costume.isFound) {
-                            for (int m = 0; m < listMap.size(); m++) {
-                                Map map = listMap.get(m);
+                            for (Object entry : map.entrySet()) {
+                                String key = ((Map.Entry<String, Object>) entry).getKey();
+                                Object value = ((Map.Entry<String, Object>) entry).getValue();
+                                // do something with key and/or tab
+                                Log.d(TAG, "key=" + key + " : value=" + value);
+                                if (key.equals("EPCRaw") && value.equals(epcBase)) {
+                                    costume.isFound = true;
+                                    mItemCodeArrayList.set(i, costume);
+                                    scannedCount++;
 
-                                for (Object entry : map.entrySet()) {
-                                    String key = ((Map.Entry<String, Object>) entry).getKey();
-                                    Object value = ((Map.Entry<String, Object>) entry).getValue();
-                                    // do something with key and/or tab
-                                    Log.d(TAG, "key=" + key + " : value=" + value);
-                                    if (key.equals("EPCRaw") && value.equals(epcBase)) {
-                                        costume.isFound = true;
-                                        mItemCodeArrayList.set(i, costume);
-                                        scannedCount++;
-
-                                    }
                                 }
                             }
-//                        }
+                        }
+
                     }
 
+                    byitemset_itemCodeRVAdapter = new ItemCodeRVAdapter(mContext, mActivity, mItemCodeArrayList);
+                    byitemset_item_code_rvlist.setAdapter(byitemset_itemCodeRVAdapter);
                     byitemset_itemCodeRVAdapter.notifyDataSetChanged();
                     items_scanned_textview.setText(Integer.toString(scannedCount));
+
+                    Util.play(1, 0);
+
+                } else if(scanItemCodeFlag) {
+                    Log.d(TAG, "listMap.size()=" + listMap.size());
+
+                    int scannedCount = 0;
+                    for(int i = 0; i < mItemInfoArrayList.size(); i++) {
+                        Costume costume = mItemInfoArrayList.get(i);
+                        String epcBase = costume.epcHeader + costume.epcRun;
+                        Log.d(TAG, "epcBase=" + epcBase);
+                        for (int m = 0; m < listMap.size(); m++) {
+                            Map map = listMap.get(m);
+
+                            for (Object entry : map.entrySet()) {
+                                String key = ((Map.Entry<String, Object>) entry).getKey();
+                                Object value = ((Map.Entry<String, Object>) entry).getValue();
+                                // do something with key and/or tab
+                                Log.d(TAG, "key=" + key + " : value=" + value);
+                                if (key.equals("EPCRaw") && value.equals(epcBase)) {
+                                    costume.isFound = true;
+                                    mItemInfoArrayList.set(i, costume);
+                                    scannedCount++;
+
+                                }
+                            }
+                        }
+
+                    }
+
+                    itemInfoResultRVAdapter = new ItemInfoRVAdapter(mContext, mActivity, mItemInfoArrayList);
+                    item_info_result_rvlist.setAdapter(itemInfoResultRVAdapter);
+                    itemInfoResultRVAdapter.notifyDataSetChanged();
+                    item_info_scanned_textview.setText(Integer.toString(scannedCount));
 
                     Util.play(1, 0);
 
@@ -1462,7 +1584,7 @@ public class UHFActivity extends Activity implements OnClickListener {
             break;
 
             case R.id.clear_itemcode_info_result_button:
-                queryItemCodesBySelectedActorActScene();
+                queryItemInfoBySelectedItemCode();
                 break;
             
             // Original inventory
@@ -1706,7 +1828,6 @@ public class UHFActivity extends Activity implements OnClickListener {
         @Override
         public void onAnimationStart(Animation animation) {
             SetVisible(byitemset_queryresult_layout, textViewS1, viewS1);
-//            initQueryResultLayout();
             queryItemCodesBySelectedActorActScene();
         }
 
@@ -1726,8 +1847,7 @@ public class UHFActivity extends Activity implements OnClickListener {
         @Override
         public void onAnimationStart(Animation animation) {
             SetVisible(byitemcode_queryresult_layout, textViewS1, viewS1);
-//            initQueryResultLayout();
-            queryItemCodesBySelectedActorActScene();
+            queryItemInfoBySelectedItemCode();
         }
 
         @Override
@@ -1785,13 +1905,13 @@ public class UHFActivity extends Activity implements OnClickListener {
     private class ScanItemSetButtonAnimationListener implements Animation.AnimationListener   {
         @Override
         public void onAnimationStart(Animation animation) {
-            if (!scanFlag) {
+            if (!scanItemSetFlag) {
                 thread.start();
-                scanFlag = true;
+                scanItemSetFlag = true;
                 scan_itemset_info_result_button.setText(R.string.stop);
             } else {
                 thread.interrupt();
-                scanFlag = false;
+                scanItemSetFlag = false;
                 scan_itemset_info_result_button.setText(R.string.scan);
             }
 //            SetVisible(ls1searchandcheck, textViewS1, viewS1);
@@ -1818,13 +1938,13 @@ public class UHFActivity extends Activity implements OnClickListener {
     private class ScanItemCodeButtonAnimationListener implements Animation.AnimationListener   {
         @Override
         public void onAnimationStart(Animation animation) {
-            if (!scanFlag) {
+            if (!scanItemCodeFlag) {
                 thread.start();
-                scanFlag = true;
+                scanItemCodeFlag = true;
                 scan_itemcode_info_result_button.setText(R.string.stop);
             } else {
                 thread.interrupt();
-                scanFlag = false;
+                scanItemCodeFlag = false;
                 scan_itemcode_info_result_button.setText(R.string.scan);
             }
         }
@@ -1946,12 +2066,12 @@ public class UHFActivity extends Activity implements OnClickListener {
         } else {
 
             if(layout == byitemset_queryresult_layout) {
-                scanFlag = false;
+                scanItemSetFlag = false;
                 scan_itemset_info_result_button.setText(R.string.scan);
             }
 
             if(layout == byitemcode_queryresult_layout) {
-                scanFlag = false;
+                scanItemSetFlag = false;
                 scan_itemcode_info_result_button.setText(R.string.scan);
             }
 

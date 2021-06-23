@@ -979,7 +979,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_weight="0.25"
                                     android:textColor="@color/colorWhite"
-                                    android:fontFamily="@font/kanit_light"
+                                    android:fontFamily="@font/kanit_lightitalic"
                                     android:textSize="22sp"
                                     android:textFontWeight="300"
                                     android:text="code"/>
@@ -989,7 +989,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_weight="0.25"
                                     android:textColor="@color/colorWhite"
-                                    android:fontFamily="@font/kanit_light"
+                                    android:fontFamily="@font/kanit_lightitalic"
                                     android:textSize="22sp"
                                     android:textFontWeight="300"
                                     android:text="type"/>
@@ -999,7 +999,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_weight="0.25"
                                     android:textColor="@color/colorWhite"
-                                    android:fontFamily="@font/kanit_light"
+                                    android:fontFamily="@font/kanit_lightitalic"
                                     android:textSize="22sp"
                                     android:textFontWeight="300"
                                     android:text="size"/>
@@ -1009,7 +1009,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_weight="0.25"
                                     android:textColor="@color/colorWhite"
-                                    android:fontFamily="@font/kanit_light"
+                                    android:fontFamily="@font/kanit_lightitalic"
                                     android:textSize="22sp"
                                     android:textFontWeight="300"
                                     android:text="number"/>
