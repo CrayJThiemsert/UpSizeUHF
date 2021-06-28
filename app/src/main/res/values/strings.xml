@@ -508,4 +508,7 @@
     <string name="item_info">Item Info</string>
     <string name="itemcode">Item Code</string>
     <string name="select_filter">Select Filter</string>
+    <string name="enter_username_here">Enter user name here</string>
+	<string name="username">User name</string>
+	<string name="please_identify_yourself">Please identify yourself</string>
 </resources>

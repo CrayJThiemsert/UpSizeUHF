@@ -110,6 +110,7 @@ drawable button_radius
 drawable corners_background
 drawable ic_launcher
 drawable layout_border_radius
+drawable layout_border_radius_bright
 drawable layout_border_radius_found
 drawable layout_border_radius_selected
 drawable notification_action_background
@@ -194,7 +195,10 @@ id action_settings
 id action_text
 id actions
 id actor_name_rvlist
+id actor_textview
 id actscene_name_rvlist
+id actscene_textview
+id alertDialog
 id all
 id async
 id back_byitemcode_button
@@ -241,6 +245,7 @@ id clear_itemset_info_result_button
 id clip_horizontal
 id clip_vertical
 id code_textview
+id contentPanel
 id dialog_button
 id edit4
 id edit5
@@ -263,6 +268,7 @@ id icon_group
 id info
 id italic
 id item_code_layout
+id item_info_layout
 id item_info_result_rvlist
 id item_info_scanned_label
 id item_info_scanned_textview
@@ -307,6 +313,7 @@ id relativeLayout21
 id right
 id right_icon
 id right_side
+id save_org_member_button
 id scan_itemcode_info_result_button
 id scan_itemset_info_result_button
 id searchandcheck_layout
@@ -356,11 +363,14 @@ id textview_title_config
 id time
 id title
 id top
+id topPanel
 id total_item_info_label
 id total_item_info_textview
 id total_items_label
 id total_items_textview
+id trap_group_title
 id type_textview
+id username_edittext
 id viewSearchAndCheck
 id viewUhfEpc
 id viewUhfLock
@@ -370,8 +380,10 @@ integer cancel_button_image_alpha
 integer status_bar_notification_info_maxnum
 layout activity_uhf
 layout custom_dialog
+layout dialog_user_signin
 layout itemcode_filter_listview
 layout itemcode_listview
+layout iteminfo_listview
 layout listview_item
 layout name_listview
 layout notification_action
@@ -588,6 +600,7 @@ string du_jishiben
 string edittext_sector_hint
 string edittext_wallet_add
 string edittext_wallet_redu
+string enter_username_here
 string epc
 string error_info
 string euFreq
@@ -704,6 +717,7 @@ string password_b
 string password_is_4_bytes
 string password_type
 string please_get_fingerprint_characteristic_first_
+string please_identify_yourself
 string please_input_hexadecimal_number
 string please_move_finger
 string please_open_serialport_first_
@@ -824,6 +838,7 @@ string usaFreq
 string usb_communication_type
 string usb_shuchu_text
 string user
+string username
 string wallet_initval_success
 string wallet_mode
 string workArea

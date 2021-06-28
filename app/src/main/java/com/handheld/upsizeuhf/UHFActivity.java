@@ -50,8 +50,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+//import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.AutoSizeableTextView;
 import androidx.core.widget.TextViewCompat;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -68,6 +70,7 @@ import com.handheld.upsizeuhf.ui.ActorRVAdapter;
 import com.handheld.upsizeuhf.ui.ItemCodeFilterRVAdapter;
 import com.handheld.upsizeuhf.ui.ItemCodeRVAdapter;
 import com.handheld.upsizeuhf.ui.ItemInfoRVAdapter;
+import com.handheld.upsizeuhf.ui.dialog.UserSignInDialogFragment;
 import com.handheld.upsizeuhf.util.AnimationUtils;
 import com.handheld.upsizeuhf.util.Constants;
 import com.handheld.upsizeuhf.util.HttpConnectionService;
@@ -200,6 +203,7 @@ public class UHFActivity extends Activity implements OnClickListener {
     private int area = 0;
     private int frequency = 0;
     private String serverIp = "192.168.1.101"; // Dev server
+    private String currentUserName = ""; // The current user
 
     private String what = "uhf";
     private String selectEpc = "";
@@ -260,6 +264,9 @@ public class UHFActivity extends Activity implements OnClickListener {
 
     Thread thread = new InventoryThread();
 
+    private SharedPreferences shared;
+    private SharedPreferences.Editor editor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -278,7 +285,8 @@ public class UHFActivity extends Activity implements OnClickListener {
         try {
             PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             String versionName = packageInfo.versionName;
-            setTitle(getString(R.string.app_name) + "-v" + versionName + ".1");
+            int versionCode = packageInfo.versionCode;
+            setTitle(getString(R.string.app_name) + "-v" + versionName + " build " + versionCode + " by [" + currentUserName + "]");
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -288,6 +296,7 @@ public class UHFActivity extends Activity implements OnClickListener {
         power = shared.getInt("power", 26);
         area = shared.getInt("area", 2);
         serverIp = shared.getString("serverIp", "192.168.1.101");
+        currentUserName = shared.getString("currentUserName", "");
         //init view
         initView();
         // load database once
@@ -298,10 +307,21 @@ public class UHFActivity extends Activity implements OnClickListener {
         thread.start();
         // init sound pool
         Util.initSoundPool(this);
+
+        loadUser();
+
     }
 
-    private SharedPreferences shared;
-    private SharedPreferences.Editor editor;
+    private void loadUser() {
+        UserSignInDialogFragment userSignInDialogFragment = new UserSignInDialogFragment();
+        userSignInDialogFragment = UserSignInDialogFragment.Companion.newInstance("", "");
+//        userSignInDialogFragment.setTargetFragment(this.getFragmentManager().getBackStackEntryAt(this.getFragmentManager().getBackStackEntryCount()-1), 300);
+//        userSignInDialogFragment.setTargetFragment(this, 300);
+
+
+        userSignInDialogFragment.show(getFragmentManager(), "user_signin_fragment");
+    }
+
 
     @Override
     protected void onResume() {
@@ -1961,10 +1981,10 @@ public class UHFActivity extends Activity implements OnClickListener {
         }
     }
 
-    @Override
-    public boolean onMenuItemSelected(int featureId, MenuItem item) {
-        return super.onMenuItemSelected(featureId, item);
-    }
+//    @Override
+//    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+//        return super.onMenuItemSelected(featureId, item);
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -2193,7 +2213,10 @@ public class UHFActivity extends Activity implements OnClickListener {
             postDataParams.put("HTTP_ACCEPT", "application/json");
 
             HttpConnectionService service = new HttpConnectionService();
-            response = service.sendRequest("http://" + serverIp + servicePath.path, postDataParams);
+            String path = "http://" + serverIp + servicePath.path;
+            Log.d(TAG, "path=" + path);
+
+            response = service.sendRequest(path, postDataParams);
             try {
                 success = 1;
                 JSONObject resultJsonObject = new JSONObject(response);

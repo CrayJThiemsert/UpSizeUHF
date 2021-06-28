@@ -1,3 +1,8 @@
+com/handheld/upsizeuhf/ui/ItemInfoRVAdapter.java
+ com.handheld.upsizeuhf.ui.ItemInfoRVAdapter
+ com.handheld.upsizeuhf.ui.ItemInfoRVAdapter$ItemInfoOnClickListener
+ com.handheld.upsizeuhf.ui.ItemInfoRVAdapter$ItemInfoViewHolder
+ com.handheld.upsizeuhf.ui.ItemInfoRVAdapter$NameAnimationListener
 com/handheld/upsizeuhf/model/Costume.java
  com.handheld.upsizeuhf.model.Costume
 com/handheld/upsizeuhf/util/UpsizeUhfUtils.java
@@ -10,8 +15,11 @@ com/handheld/upsizeuhf/ui/ActorRVAdapter.java
  com.handheld.upsizeuhf.ui.ActorRVAdapter$2
  com.handheld.upsizeuhf.ui.ActorRVAdapter$ActorViewHolder
  com.handheld.upsizeuhf.ui.ActorRVAdapter$NameAnimationListener
-com/handheld/upsizeuhf/BuildConfig.java
- com.handheld.upsizeuhf.BuildConfig
+com/handheld/upsizeuhf/ui/ItemCodeFilterRVAdapter.java
+ com.handheld.upsizeuhf.ui.ItemCodeFilterRVAdapter
+ com.handheld.upsizeuhf.ui.ItemCodeFilterRVAdapter$ItemCodeFilterOnClickListener
+ com.handheld.upsizeuhf.ui.ItemCodeFilterRVAdapter$ItemCodeFilterViewHolder
+ com.handheld.upsizeuhf.ui.ItemCodeFilterRVAdapter$NameAnimationListener
 com/handheld/upsizeuhf/ui/ItemCodeRVAdapter.java
  com.handheld.upsizeuhf.ui.ItemCodeRVAdapter
  com.handheld.upsizeuhf.ui.ItemCodeRVAdapter$1
@@ -23,21 +31,6 @@ com/handheld/upsizeuhf/util/HttpConnectionService.java
  com.handheld.upsizeuhf.util.HttpConnectionService
 com/handheld/upsizeuhf/model/Actor.java
  com.handheld.upsizeuhf.model.Actor
-com/handheld/upsizeuhf/Util.java
- com.handheld.upsizeuhf.Util
-com/handheld/upsizeuhf/model/QueryService.java
- com.handheld.upsizeuhf.model.QueryService
-com/handheld/upsizeuhf/ui/ActSceneRVAdapter.java
- com.handheld.upsizeuhf.ui.ActSceneRVAdapter
- com.handheld.upsizeuhf.ui.ActSceneRVAdapter$1
- com.handheld.upsizeuhf.ui.ActSceneRVAdapter$2
- com.handheld.upsizeuhf.ui.ActSceneRVAdapter$ActorViewHolder
- com.handheld.upsizeuhf.ui.ActSceneRVAdapter$NameAnimationListener
-com/handheld/upsizeuhf/ui/ItemCodeFilterRVAdapter.java
- com.handheld.upsizeuhf.ui.ItemCodeFilterRVAdapter
- com.handheld.upsizeuhf.ui.ItemCodeFilterRVAdapter$ItemCodeFilterOnClickListener
- com.handheld.upsizeuhf.ui.ItemCodeFilterRVAdapter$ItemCodeFilterViewHolder
- com.handheld.upsizeuhf.ui.ItemCodeFilterRVAdapter$NameAnimationListener
 com/handheld/upsizeuhf/UHFActivity.java
  com.handheld.upsizeuhf.UHFActivity
  com.handheld.upsizeuhf.UHFActivity$1
@@ -67,3 +60,15 @@ com/handheld/upsizeuhf/UHFActivity.java
  com.handheld.upsizeuhf.UHFActivity$ScanItemSetButtonAnimationListener
  com.handheld.upsizeuhf.UHFActivity$ServiceQueryAsyncTask
  com.handheld.upsizeuhf.UHFActivity$myOnTouch
+com/handheld/upsizeuhf/model/QueryService.java
+ com.handheld.upsizeuhf.model.QueryService
+com/handheld/upsizeuhf/ui/ActSceneRVAdapter.java
+ com.handheld.upsizeuhf.ui.ActSceneRVAdapter
+ com.handheld.upsizeuhf.ui.ActSceneRVAdapter$1
+ com.handheld.upsizeuhf.ui.ActSceneRVAdapter$2
+ com.handheld.upsizeuhf.ui.ActSceneRVAdapter$ActorViewHolder
+ com.handheld.upsizeuhf.ui.ActSceneRVAdapter$NameAnimationListener
+com/handheld/upsizeuhf/Util.java
+ com.handheld.upsizeuhf.Util
+com/handheld/upsizeuhf/BuildConfig.java
+ com.handheld.upsizeuhf.BuildConfig
