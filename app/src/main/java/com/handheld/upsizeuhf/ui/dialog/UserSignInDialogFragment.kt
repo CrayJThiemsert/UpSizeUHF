@@ -1,24 +1,22 @@
 package com.handheld.upsizeuhf.ui.dialog
 
-import android.app.Dialog
-import android.os.Bundle
-
-import android.view.View
-
 import android.app.AlertDialog
+import android.app.Dialog
 import android.app.DialogFragment
-import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.os.Bundle
+import android.view.View
 import android.view.animation.Animation
-import android.widget.*
-
+import android.view.animation.Animation.AnimationListener
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
 import com.handheld.upsizeuhf.R
 import com.handheld.upsizeuhf.UHFActivity
 import com.handheld.upsizeuhf.model.User
+import com.handheld.upsizeuhf.util.AnimationUtils
 import com.handheld.upsizeuhf.util.UpsizeUhfUtils
-
-import java.io.IOException
 
 
 class UserSignInDialogFragment : DialogFragment() {
@@ -26,8 +24,9 @@ class UserSignInDialogFragment : DialogFragment() {
     private var mActivity: UHFActivity? = null
 
     var text_title_textview: TextView? = null
+    var username_edittext: EditText? = null
 
-    private lateinit var save_org_member_button: Button
+    private lateinit var signin_button: Button
 
     companion object {
         /**
@@ -96,12 +95,13 @@ class UserSignInDialogFragment : DialogFragment() {
         mActivity = (activity as UHFActivity)
 
         text_title_textview = view.findViewById<TextView>(R.id.trap_group_title)
+        username_edittext = view.findViewById<EditText>(R.id.username_edittext)
 
-        save_org_member_button = view.findViewById(R.id.save_org_member_button)
+        signin_button = view.findViewById(R.id.signin_button)
 
         text_title_textview?.typeface = UpsizeUhfUtils.getFontKanitMedium()
 
-        save_org_member_button?.typeface = UpsizeUhfUtils.getFontKanitMedium()
+        signin_button?.typeface = UpsizeUhfUtils.getFontKanitMedium()
 
 //        text_title_textview?.text = arguments!!.getString("title")
 
@@ -110,17 +110,29 @@ class UserSignInDialogFragment : DialogFragment() {
     }
 
     private fun setEvents() {
-        save_org_member_button.setOnClickListener(ClickSaveMemberButton())
+        signin_button.setOnClickListener(ClickSaveMemberButton())
     }
 
     inner class ClickSaveMemberButton() : View.OnClickListener{
         override fun onClick(p0: View?) {
 //            MediaUtils.playOneBeepSoundNoMediaPlayer()
-//            val animate = AnimationUtils.getBounceAnimation(context!!)
-//            animate.setAnimationListener(SaveMemberButtonAnimationListener())
-//            save_org_member_button.startAnimation(animate)
+            val animate = AnimationUtils.getBounceAnimation(mActivity!!.applicationContext)
+            animate.setAnimationListener(SignInButtonAnimationListener())
+            signin_button.startAnimation(animate)
 
         }
     }
 
+    inner class SignInButtonAnimationListener : AnimationListener {
+        override fun onAnimationStart(animation: Animation) {
+            val uhfActivity = mActivity as UHFActivity
+            var user = User()
+            user.username = username_edittext!!.text.toString()
+            uhfActivity.upDateCurrentUserOperation(user)
+
+        }
+
+        override fun onAnimationEnd(animation: Animation) {}
+        override fun onAnimationRepeat(animation: Animation) {}
+    }
 }

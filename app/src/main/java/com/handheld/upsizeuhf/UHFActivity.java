@@ -53,7 +53,6 @@ import androidx.annotation.NonNull;
 //import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.AutoSizeableTextView;
 import androidx.core.widget.TextViewCompat;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -65,6 +64,7 @@ import com.android.hdhe.uhf.readerInterface.TagModel;
 import com.handheld.upsizeuhf.model.Actor;
 import com.handheld.upsizeuhf.model.Costume;
 import com.handheld.upsizeuhf.model.QueryService;
+import com.handheld.upsizeuhf.model.User;
 import com.handheld.upsizeuhf.ui.ActSceneRVAdapter;
 import com.handheld.upsizeuhf.ui.ActorRVAdapter;
 import com.handheld.upsizeuhf.ui.ItemCodeFilterRVAdapter;
@@ -267,6 +267,8 @@ public class UHFActivity extends Activity implements OnClickListener {
     private SharedPreferences shared;
     private SharedPreferences.Editor editor;
 
+    UserSignInDialogFragment userSignInDialogFragment = new UserSignInDialogFragment();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -282,14 +284,7 @@ public class UHFActivity extends Activity implements OnClickListener {
         }else {
             Log.e("zeng-2","false");
         }
-        try {
-            PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-            String versionName = packageInfo.versionName;
-            int versionCode = packageInfo.versionCode;
-            setTitle(getString(R.string.app_name) + "-v" + versionName + " build " + versionCode + " by [" + currentUserName + "]");
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
+
         // Get the Rf power, and set
         shared = getSharedPreferences("UhfRfPower", 0);
         editor = shared.edit();
@@ -297,6 +292,9 @@ public class UHFActivity extends Activity implements OnClickListener {
         area = shared.getInt("area", 2);
         serverIp = shared.getString("serverIp", "192.168.1.101");
         currentUserName = shared.getString("currentUserName", "");
+
+        showAppTitle();
+
         //init view
         initView();
         // load database once
@@ -308,17 +306,27 @@ public class UHFActivity extends Activity implements OnClickListener {
         // init sound pool
         Util.initSoundPool(this);
 
-        loadUser();
+        if(currentUserName.equalsIgnoreCase("")) {
+            loadUserSignInUI();
+        }
 
     }
 
-    private void loadUser() {
-        UserSignInDialogFragment userSignInDialogFragment = new UserSignInDialogFragment();
+    private void showAppTitle() {
+        try {
+            PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            String versionName = packageInfo.versionName;
+            int versionCode = packageInfo.versionCode;
+            setTitle(getString(R.string.app_name) + "-v" + versionName + " build " + versionCode + " by [" + currentUserName + "]");
+            setTitleColor(getResources().getColor(R.color.colorOrangeRed));
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadUserSignInUI() {
+
         userSignInDialogFragment = UserSignInDialogFragment.Companion.newInstance("", "");
-//        userSignInDialogFragment.setTargetFragment(this.getFragmentManager().getBackStackEntryAt(this.getFragmentManager().getBackStackEntryCount()-1), 300);
-//        userSignInDialogFragment.setTargetFragment(this, 300);
-
-
         userSignInDialogFragment.show(getFragmentManager(), "user_signin_fragment");
     }
 
@@ -1986,6 +1994,19 @@ public class UHFActivity extends Activity implements OnClickListener {
 //        return super.onMenuItemSelected(featureId, item);
 //    }
 
+
+    @Override
+    public boolean onMenuItemSelected(int featureId, @NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_signout:
+                loadUserSignInUI();
+                return true;
+            case R.id.action_settings:
+                return true;
+        }
+        return super.onMenuItemSelected(featureId, item);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
@@ -2320,5 +2341,16 @@ public class UHFActivity extends Activity implements OnClickListener {
         }
 
     }//end of async task
+
+    public void upDateCurrentUserOperation(User user) {
+        editor.putString("currentUserName", user.getUsername());
+        editor.commit();
+
+        currentUserName = shared.getString("currentUserName", "");
+        showAppTitle();
+
+        showToast(getString(R.string.setSuccess));
+        userSignInDialogFragment.dismiss();
+    }
 
 }

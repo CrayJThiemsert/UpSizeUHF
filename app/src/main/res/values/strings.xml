@@ -511,4 +511,5 @@
     <string name="enter_username_here">Enter user name here</string>
 	<string name="username">User name</string>
 	<string name="please_identify_yourself">Please identify yourself</string>
+	<string name="action_signout">Sign out</string>
 </resources>
