@@ -537,4 +537,16 @@
 	<string name="username">User name</string>
     <string name="please_identify_yourself">Please identify yourself</string>
 	<string name="action_signout">Sign out</string>
+    <string name="check_label">Check</string>
+    <string name="please_choose_check_type">Please choose check type</string>
+	<string name="play_box">Play Box</string>
+	<string name="storage_box">Storage Box</string>
+	<string name="ship_box">Ship Box</string>
+    <string name="warning">Warning</string>
+    <string name="message_top">Message top</string>
+	<string name="message_body">Message body</string>
+    <string name="actor_actscene_notfound">Actor and Act Scene not found</string>
+	<string name="actor_actscene_notfound_solution">Please select an Actor and Act, Scene before try again.</string>
+    <string name="itemcode_notfound">Item Code not found.</string>
+	<string name="itemcode_notfound_solution">Please select an Item Code before try again.</string>
 </resources>

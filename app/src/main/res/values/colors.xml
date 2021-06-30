@@ -3,8 +3,12 @@
     <color name="colorOrangeRed">#FFAB00</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorBlack">#383737</color>
+    <color name="colorFontBlack">#493D3D</color>
+    <color name="colorFontSoftBlack">#685050</color>
     <color name="colorOrangeGrey">#DDCCBE</color>
     <color name="colorPurpleLight">#D280F8</color>
+    <color name="colorPurpleRed">#f95d9b</color>
+
     <color name="colorLightGreen">#C0FF0B</color>
     <color name="colorGold">#EFF374</color>
 </resources>

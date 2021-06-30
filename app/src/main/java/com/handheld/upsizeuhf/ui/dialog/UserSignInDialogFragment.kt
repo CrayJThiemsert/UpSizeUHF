@@ -23,7 +23,7 @@ class UserSignInDialogFragment : DialogFragment() {
     private var TAG : String = this.javaClass.simpleName
     private var mActivity: UHFActivity? = null
 
-    var text_title_textview: TextView? = null
+    var dialog_title: TextView? = null
     var username_edittext: EditText? = null
 
     private lateinit var signin_button: Button
@@ -94,12 +94,12 @@ class UserSignInDialogFragment : DialogFragment() {
     private fun initInstance(view: View) {
         mActivity = (activity as UHFActivity)
 
-        text_title_textview = view.findViewById<TextView>(R.id.trap_group_title)
+        dialog_title = view.findViewById<TextView>(R.id.dialog_title)
         username_edittext = view.findViewById<EditText>(R.id.username_edittext)
 
         signin_button = view.findViewById(R.id.signin_button)
 
-        text_title_textview?.typeface = UpsizeUhfUtils.getFontKanitMedium()
+        dialog_title?.typeface = UpsizeUhfUtils.getFontKanitMedium()
 
         signin_button?.typeface = UpsizeUhfUtils.getFontKanitMedium()
 

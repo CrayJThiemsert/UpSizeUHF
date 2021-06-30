@@ -70,7 +70,9 @@ import com.handheld.upsizeuhf.ui.ActorRVAdapter;
 import com.handheld.upsizeuhf.ui.ItemCodeFilterRVAdapter;
 import com.handheld.upsizeuhf.ui.ItemCodeRVAdapter;
 import com.handheld.upsizeuhf.ui.ItemInfoRVAdapter;
+import com.handheld.upsizeuhf.ui.dialog.CheckTypeDialogFragment;
 import com.handheld.upsizeuhf.ui.dialog.UserSignInDialogFragment;
+import com.handheld.upsizeuhf.ui.dialog.WarningMessageDialogFragment;
 import com.handheld.upsizeuhf.util.AnimationUtils;
 import com.handheld.upsizeuhf.util.Constants;
 import com.handheld.upsizeuhf.util.HttpConnectionService;
@@ -171,10 +173,12 @@ public class UHFActivity extends Activity implements OnClickListener {
     private Button back_itemset_info_result_button;//set by back to select condition button
     private Button scan_itemset_info_result_button;//set by next to search/scan button
     private Button clear_itemset_info_result_button; // Clear query result list
+    private Button check_itemset_info_result_button; // Check query result list
 
     private Button back_itemcode_info_result_button;//set by back to select condition button
     private Button scan_itemcode_info_result_button;//set by next to search/scan button
     private Button clear_itemcode_info_result_button; // Clear query result list
+    private Button check_itemcode_info_result_button; // Check query result list
 
     private Button button1;//set button1
     private Button button2;//set button2
@@ -268,6 +272,8 @@ public class UHFActivity extends Activity implements OnClickListener {
     private SharedPreferences.Editor editor;
 
     UserSignInDialogFragment userSignInDialogFragment = new UserSignInDialogFragment();
+    CheckTypeDialogFragment checkTypeDialogFragment = new CheckTypeDialogFragment();
+    WarningMessageDialogFragment warningMessageDialogFragment = new WarningMessageDialogFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -325,9 +331,18 @@ public class UHFActivity extends Activity implements OnClickListener {
     }
 
     private void loadUserSignInUI() {
-
         userSignInDialogFragment = UserSignInDialogFragment.Companion.newInstance("", "");
         userSignInDialogFragment.show(getFragmentManager(), "user_signin_fragment");
+    }
+
+    private void loadCheckTypeUI() {
+        checkTypeDialogFragment = CheckTypeDialogFragment.Companion.newInstance("", "");
+        checkTypeDialogFragment.show(getFragmentManager(), "check_type_fragment");
+    }
+
+    private void loadWarningDialog(String title, String messageTop, String messageBody) {
+        warningMessageDialogFragment = WarningMessageDialogFragment.Companion.newInstance(title, messageTop, messageBody);
+        warningMessageDialogFragment.show(getFragmentManager(), "warning_fragment");
     }
 
 
@@ -882,6 +897,9 @@ public class UHFActivity extends Activity implements OnClickListener {
         clear_itemset_info_result_button = (Button) findViewById(R.id.clear_itemset_info_result_button);
         clear_itemset_info_result_button.setOnClickListener(this);
 
+        check_itemset_info_result_button = (Button) findViewById(R.id.check_itemset_info_result_button);
+        check_itemset_info_result_button.setOnClickListener(this);
+
         back_itemcode_info_result_button = (Button) findViewById(R.id.back_itemcode_info_result_button);
         back_itemcode_info_result_button.setOnClickListener(this);
 
@@ -890,6 +908,9 @@ public class UHFActivity extends Activity implements OnClickListener {
 
         clear_itemcode_info_result_button = (Button) findViewById(R.id.clear_itemcode_info_result_button);
         clear_itemcode_info_result_button.setOnClickListener(this);
+
+        check_itemcode_info_result_button = (Button) findViewById(R.id.check_itemcode_info_result_button);
+        check_itemcode_info_result_button.setOnClickListener(this);
 
         actor_name_rvlist = (RecyclerView)findViewById(R.id.actor_name_rvlist);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,RecyclerView.VERTICAL,false);
@@ -1100,10 +1121,10 @@ public class UHFActivity extends Activity implements OnClickListener {
 
         mItemCodeArrayList = new ArrayList<Costume>();
         mItemCodeArrayList.clear();
-        for(int i = 0; i < mCostumeArrayList.size(); i++) {
+        for (int i = 0; i < mCostumeArrayList.size(); i++) {
             Costume costume = mCostumeArrayList.get(i);
             costume.isFound = false;
-            if(costume.actor.equals(actor) && costume.actScence.equals(actScene)) {
+            if (costume.actor.equals(actor) && costume.actScence.equals(actScene)) {
                 mItemCodeArrayList.add(costume);
             }
         }
@@ -1574,9 +1595,21 @@ public class UHFActivity extends Activity implements OnClickListener {
             }
             break;
 
-            case R.id.clear_itemset_info_result_button:
-                queryItemCodesBySelectedActorActScene();
-                break;
+            case R.id.clear_itemset_info_result_button: {
+                Util.play(1, 0);
+                Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
+                animate.setAnimationListener(new ClearItemSetButtonAnimationListener());
+                clear_itemset_info_result_button.startAnimation(animate);
+            }
+            break;
+
+            case R.id.check_itemset_info_result_button: {
+                Util.play(1, 0);
+                Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
+                animate.setAnimationListener(new CheckItemSetButtonAnimationListener());
+                check_itemset_info_result_button.startAnimation(animate);
+            }
+            break;
 
             // Item Codes Filter =================
             case R.id.back_byitemcode_button: {
@@ -1611,9 +1644,21 @@ public class UHFActivity extends Activity implements OnClickListener {
             }
             break;
 
-            case R.id.clear_itemcode_info_result_button:
-                queryItemInfoBySelectedItemCode();
-                break;
+            case R.id.clear_itemcode_info_result_button: {
+                Util.play(1, 0);
+                Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
+                animate.setAnimationListener(new ClearItemCodeButtonAnimationListener());
+                clear_itemcode_info_result_button.startAnimation(animate);
+            }
+            break;
+
+            case R.id.check_itemcode_info_result_button: {
+                Util.play(1, 0);
+                Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
+                animate.setAnimationListener(new CheckItemCodeButtonAnimationListener());
+                check_itemcode_info_result_button.startAnimation(animate);
+            }
+            break;
             
             // Original inventory
             case R.id.button_start:
@@ -1855,8 +1900,16 @@ public class UHFActivity extends Activity implements OnClickListener {
     private class NextByItemSetFilterButtonAnimationListener implements Animation.AnimationListener   {
         @Override
         public void onAnimationStart(Animation animation) {
-            SetVisible(byitemset_queryresult_layout, textViewS1, viewS1);
-            queryItemCodesBySelectedActorActScene();
+            String actor = selected_actor_textview.getText().toString();
+            String actScene = selected_actscene_textview.getText().toString();
+            Log.d(TAG, "query ItemCodes by actor=" + actor + " : act, scene=" + actScene);
+
+            if(actor.equalsIgnoreCase("") && actScene.equalsIgnoreCase("")) {
+                loadWarningDialog("", getString(R.string.actor_actscene_notfound), getString(R.string.actor_actscene_notfound_solution));
+            } else {
+                SetVisible(byitemset_queryresult_layout, textViewS1, viewS1);
+                queryItemCodesBySelectedActorActScene();
+            }
         }
 
         @Override
@@ -1874,8 +1927,19 @@ public class UHFActivity extends Activity implements OnClickListener {
     private class NextByItemCodeFilterButtonAnimationListener implements Animation.AnimationListener   {
         @Override
         public void onAnimationStart(Animation animation) {
-            SetVisible(byitemcode_queryresult_layout, textViewS1, viewS1);
-            queryItemInfoBySelectedItemCode();
+            String code = byitemcode_selected_code_textview.getText().toString();
+            String type = byitemcode_selected_type_textview.getText().toString();
+            String size = byitemcode_selected_size_textview.getText().toString();
+            String number = byitemcode_selected_number_textview.getText().toString();
+
+            Log.d(TAG, "query Item Info by code=" + code + " : type=" + type + " : size=" + size + " : number=" + number);
+
+            if(code.equalsIgnoreCase("") && type.equalsIgnoreCase("") && size.equalsIgnoreCase("")) {
+                loadWarningDialog("", getString(R.string.itemcode_notfound), getString(R.string.itemcode_notfound_solution));
+            } else {
+                SetVisible(byitemcode_queryresult_layout, textViewS1, viewS1);
+                queryItemInfoBySelectedItemCode();
+            }
         }
 
         @Override
@@ -1989,11 +2053,77 @@ public class UHFActivity extends Activity implements OnClickListener {
         }
     }
 
-//    @Override
-//    public boolean onMenuItemSelected(int featureId, MenuItem item) {
-//        return super.onMenuItemSelected(featureId, item);
-//    }
+    private class ClearItemSetButtonAnimationListener implements Animation.AnimationListener   {
+        @Override
+        public void onAnimationStart(Animation animation) {
+            queryItemCodesBySelectedActorActScene();
+        }
 
+        @Override
+        public void onAnimationEnd(Animation animation) {
+
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    }
+
+    private class CheckItemSetButtonAnimationListener implements Animation.AnimationListener   {
+        @Override
+        public void onAnimationStart(Animation animation) {
+            loadCheckTypeUI();
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    }
+
+    private class ClearItemCodeButtonAnimationListener implements Animation.AnimationListener   {
+        @Override
+        public void onAnimationStart(Animation animation) {
+            queryItemInfoBySelectedItemCode();
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    }
+
+    private class CheckItemCodeButtonAnimationListener implements Animation.AnimationListener   {
+        @Override
+        public void onAnimationStart(Animation animation) {
+            loadCheckTypeUI();
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    }
 
     @Override
     public boolean onMenuItemSelected(int featureId, @NonNull MenuItem item) {

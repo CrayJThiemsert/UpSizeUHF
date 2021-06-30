@@ -518,10 +518,10 @@
 	<string name="storage_box">Storage Box</string>
 	<string name="ship_box">Ship Box</string>
     <string name="warning">Warning</string>
-    <string name="message_top">Message top</string>
+	<string name="message_top">Message top</string>
 	<string name="message_body">Message body</string>
-    <string name="actor_actscene_notfound">Actor and Act Scene not found</string>
+	<string name="actor_actscene_notfound">Actor and Act Scene not found</string>
 	<string name="actor_actscene_notfound_solution">Please select an Actor and Act, Scene before try again.</string>
-    <string name="itemcode_notfound">Item Code not found.</string>
+	<string name="itemcode_notfound">Item Code not found.</string>
 	<string name="itemcode_notfound_solution">Please select an Item Code before try again.</string>
 </resources>

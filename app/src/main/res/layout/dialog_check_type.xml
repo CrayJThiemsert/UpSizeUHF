@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/alertDialog"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/layout_border_radius_light_blue"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/topPanel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/dialog_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingStart="16dp"
+            android:text="@string/please_choose_check_type"
+            android:textStyle="bold"
+            android:fontFamily="@font/kanit_semibold"
+            android:textColor="#314F8A"
+            android:textSize="22sp" />
+
+        <View
+            android:layout_below="@+id/dialog_title"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/holo_blue_light" />
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/topPanel" >
+        <LinearLayout
+            android:id="@+id/check_type_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="0dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/shipbox_type_button"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="0.3"
+                    android:layout_gravity="center"
+                    android:textSize="22sp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="32dp"
+
+                    android:background="@drawable/button_radius_blue"
+
+                    android:text="@string/ship_box"
+                    android:fontFamily="@font/kanit_medium"
+                    android:textColor="@color/colorWhite"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/storagebox_type_button"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="0.3"
+                    android:layout_gravity="center"
+                    android:textSize="22sp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="32dp"
+
+                    android:background="@drawable/button_radius_blue"
+
+                    android:text="@string/storage_box"
+                    android:fontFamily="@font/kanit_medium"
+                    android:textColor="@color/colorWhite"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/playbox_type_button"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="0.3"
+                    android:layout_gravity="center"
+                    android:textSize="22sp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="32dp"
+
+                    android:background="@drawable/button_radius_blue"
+
+                    android:text="@string/play_box"
+                    android:fontFamily="@font/kanit_medium"
+                    android:textColor="@color/colorWhite"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/shipbox_select_filter_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="top"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="15dp"
+                    android:gravity="top"
+                    android:background="@drawable/layout_border_radius_light_blue"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorGold"
+                        android:fontFamily="@font/kanit_light"
+                        android:text="@string/ship_box"/>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:layout_width="match_parent"
+                        android:layout_height="230dp"
+                        android:id="@+id/shipbox_rvlist"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_alignParentBottom="true"
+                    android:gravity="center" >
+
+                    <Button android:text="@string/back_label"
+                        android:id="@+id/back_shipbox_button"
+                        android:layout_width="160dp"
+                        android:layout_height="80dp"
+                        android:layout_gravity="center"
+
+                        android:background="@drawable/button_radius"
+                        android:textSize="24sp"
+                        android:textColor="@color/purple"
+                        android:layout_weight="0.5"
+                        android:layout_margin="16dp"
+
+                        android:singleLine="true"
+                        android:gravity="center" />
+
+                    <Button android:text="@string/check_label"
+                        android:id="@+id/check_shipbox_button"
+                        android:layout_width="160dp"
+                        android:layout_height="80dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/button_radius"
+                        android:textSize="24sp"
+                        android:textColor="@color/purple"
+
+                        android:layout_weight="0.5"
+                        android:layout_margin="16dp"
+
+                        android:singleLine="true"
+                        android:gravity="center" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
+
+</RelativeLayout>

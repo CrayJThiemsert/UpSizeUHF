@@ -5,7 +5,7 @@
     android:id="@+id/alertDialog"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/layout_border_radius_bright"
+    android:background="@drawable/layout_border_radius_red"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -15,7 +15,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/trap_group_title"
+            android:id="@+id/dialog_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="left"
@@ -28,7 +28,7 @@
             android:textSize="22sp" />
 
         <View
-            android:layout_below="@+id/trap_group_title"
+            android:layout_below="@+id/dialog_title"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@android:color/holo_blue_light" />

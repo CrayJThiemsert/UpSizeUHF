@@ -516,7 +516,7 @@
                             android:textSize="22sp"
                             android:textFontWeight="300"
                             android:textColor="@color/colorWhite"
-                            android:text="@string/actor"/>
+                            android:text=""/>
 
                         <TextView
                             android:layout_width="match_parent"
@@ -532,7 +532,7 @@
                             android:textSize="22sp"
                             android:textFontWeight="300"
                             android:textColor="@color/colorWhite"
-                            android:text="@string/actscene"/>
+                            android:text=""/>
 
                     </LinearLayout>
 
@@ -681,7 +681,7 @@
                         android:textSize="24sp"
                         android:textColor="@color/purple"
                         android:layout_weight="0.2"
-                        android:layout_margin="8dp"
+                        android:layout_margin="6dp"
 
                         android:singleLine="true"
                         android:gravity="center" />
@@ -694,9 +694,8 @@
                         android:background="@drawable/button_radius"
                         android:textSize="24sp"
                         android:textColor="@color/purple"
-
-                        android:layout_weight="0.5"
-                        android:layout_margin="8dp"
+                        android:layout_weight="0.3"
+                        android:layout_margin="6dp"
 
                         android:singleLine="true"
                         android:gravity="center" />
@@ -705,16 +704,27 @@
                         android:id="@+id/clear_itemset_info_result_button"
                         android:layout_width="0dp"
                         android:layout_height="100dp"
+                        android:layout_weight="0.2"
+                        android:layout_margin="6dp"
                         android:layout_gravity="center"
-
                         android:background="@drawable/button_radius"
                         android:textSize="24sp"
                         android:textColor="@color/purple"
-                        android:layout_weight="0.3"
-                        android:layout_margin="8dp"
-
                         android:singleLine="true"
                         android:gravity="center" />
+                    <Button android:text="@string/check_label"
+                        android:id="@+id/check_itemset_info_result_button"
+                        android:layout_width="0dp"
+                        android:layout_height="100dp"
+                        android:layout_weight="0.2"
+                        android:layout_margin="6dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/button_radius"
+                        android:textSize="24sp"
+                        android:textColor="@color/purple"
+                        android:singleLine="true"
+                        android:gravity="center" />
+
                 </LinearLayout>
             </RelativeLayout>
         </LinearLayout>
@@ -982,7 +992,7 @@
                                     android:fontFamily="@font/kanit_lightitalic"
                                     android:textSize="22sp"
                                     android:textFontWeight="300"
-                                    android:text="code"/>
+                                    android:text=""/>
                                 <TextView
                                     android:id="@+id/byitemcode_selected_type_textview"
                                     android:layout_width="wrap_content"
@@ -992,7 +1002,7 @@
                                     android:fontFamily="@font/kanit_lightitalic"
                                     android:textSize="22sp"
                                     android:textFontWeight="300"
-                                    android:text="type"/>
+                                    android:text=""/>
                                 <TextView
                                     android:id="@+id/byitemcode_selected_size_textview"
                                     android:layout_width="wrap_content"
@@ -1002,7 +1012,7 @@
                                     android:fontFamily="@font/kanit_lightitalic"
                                     android:textSize="22sp"
                                     android:textFontWeight="300"
-                                    android:text="size"/>
+                                    android:text=""/>
                                 <TextView
                                     android:id="@+id/byitemcode_selected_number_textview"
                                     android:layout_width="wrap_content"
@@ -1012,7 +1022,7 @@
                                     android:fontFamily="@font/kanit_lightitalic"
                                     android:textSize="22sp"
                                     android:textFontWeight="300"
-                                    android:text="number"/>
+                                    android:text=""/>
 
                             </LinearLayout>
                         </LinearLayout>
@@ -1160,7 +1170,7 @@
                         android:textSize="24sp"
                         android:textColor="@color/purple"
                         android:layout_weight="0.2"
-                        android:layout_margin="8dp"
+                        android:layout_margin="6dp"
 
                         android:singleLine="true"
                         android:gravity="center" />
@@ -1173,9 +1183,8 @@
                         android:background="@drawable/button_radius"
                         android:textSize="24sp"
                         android:textColor="@color/purple"
-
-                        android:layout_weight="0.5"
-                        android:layout_margin="8dp"
+                        android:layout_weight="0.3"
+                        android:layout_margin="6dp"
 
                         android:singleLine="true"
                         android:gravity="center" />
@@ -1184,16 +1193,29 @@
                         android:id="@+id/clear_itemcode_info_result_button"
                         android:layout_width="0dp"
                         android:layout_height="100dp"
+                        android:layout_weight="0.2"
+                        android:layout_margin="6dp"
                         android:layout_gravity="center"
-
                         android:background="@drawable/button_radius"
                         android:textSize="24sp"
                         android:textColor="@color/purple"
-                        android:layout_weight="0.3"
-                        android:layout_margin="8dp"
-
                         android:singleLine="true"
                         android:gravity="center" />
+                    <Button android:text="@string/check_label"
+                        android:id="@+id/check_itemcode_info_result_button"
+                        android:layout_width="0dp"
+                        android:layout_height="100dp"
+                        android:layout_weight="0.2"
+                        android:layout_margin="6dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/button_radius"
+                        android:textSize="24sp"
+                        android:textColor="@color/purple"
+                        android:singleLine="true"
+                        android:gravity="center" />
+
+
+
                 </LinearLayout>
             </RelativeLayout>
         </LinearLayout>
