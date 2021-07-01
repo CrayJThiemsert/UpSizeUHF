@@ -18,7 +18,6 @@ import com.handheld.upsizeuhf.R;
 import com.handheld.upsizeuhf.UHFActivity;
 import com.handheld.upsizeuhf.Util;
 import com.handheld.upsizeuhf.model.Costume;
-import com.handheld.upsizeuhf.util.AnimationUtils;
 
 import java.util.ArrayList;
 
@@ -147,7 +146,7 @@ public class ItemInfoRVAdapter extends RecyclerView.Adapter<ItemInfoRVAdapter.It
             actscene_textview = (TextView)itemView.findViewById(R.id.actscene_textview);
             epc_header_textview = (TextView)itemView.findViewById(R.id.epc_header_textview);
             epc_run_textview = (TextView)itemView.findViewById(R.id.epc_run_textview);
-            item_info_layout = (LinearLayout)itemView.findViewById(R.id.item_info_layout);
+            item_info_layout = (LinearLayout)itemView.findViewById(R.id.box_layout);
         }
     }
 }

@@ -89,9 +89,15 @@ class Constants {
         const val COSTUME_All = 1
         const val ACTOR_All = 2
         const val ITEM_CODE_All = 3
+        const val SHIPBOX_All = 4
+        const val STORAGEBOX_All = 5
+        const val PLAYBOX_All = 6
         val COSTUME_All_QUERY : QueryService = QueryService(COSTUME_All, "/costume/costume/list/")
         val ACTOR_All_QUERY : QueryService = QueryService(ACTOR_All, "/costume/costume/actors/")
         val ITEM_CODE_All_QUERY : QueryService = QueryService(ITEM_CODE_All, "/costume/costume/itemcodes/")
+        val SHIPBOX_All_QUERY : QueryService = QueryService(SHIPBOX_All, "/costume/costume/shipboxes/")
+        val STORAGEBOX_All_QUERY : QueryService = QueryService(STORAGEBOX_All, "/costume/costume/storageboxes/")
+        val PLAYBOX_All_QUERY : QueryService = QueryService(PLAYBOX_All, "/costume/costume/playboxes/")
 
         fun getCostumeAllQuery() : QueryService {
             return COSTUME_All_QUERY
@@ -103,6 +109,18 @@ class Constants {
 
         fun getItemCodeAllQuery() : QueryService {
             return ITEM_CODE_All_QUERY
+        }
+
+        fun getShipBoxAllQuery() : QueryService {
+            return SHIPBOX_All_QUERY
+        }
+
+        fun getStorageBoxAllQuery() : QueryService {
+            return STORAGEBOX_All_QUERY
+        }
+
+        fun getPlayBoxAllQuery() : QueryService {
+            return PLAYBOX_All_QUERY
         }
     }
 }

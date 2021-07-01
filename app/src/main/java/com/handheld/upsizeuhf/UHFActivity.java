@@ -213,7 +213,7 @@ public class UHFActivity extends Activity implements OnClickListener {
     private String selectEpc = "";
 
     private ProgressDialog processDialog;
-    private JSONArray restulJsonArray;
+    private JSONArray restfulJsonArray;
     private int success = 0;
     private String actorAllPath = "http://192.168.1.101/costume/costume/actors/";
     private String costumeAllPath = "http://192.168.1.101/costume/costume/list/";
@@ -1193,6 +1193,10 @@ public class UHFActivity extends Activity implements OnClickListener {
         mSelectedActSceneArray.clear();
         mSelectedActSceneArray.add(actSceneName);
         selected_actscene_textview.setText(mSelectedActSceneArray.get(0).toString());
+    }
+
+    public String getServerIp() {
+        return serverIp;
     }
 
     /**
@@ -2371,7 +2375,7 @@ public class UHFActivity extends Activity implements OnClickListener {
             try {
                 success = 1;
                 JSONObject resultJsonObject = new JSONObject(response);
-                restulJsonArray = resultJsonObject.getJSONArray("output");
+                restfulJsonArray = resultJsonObject.getJSONArray("output");
             } catch (JSONException e) {
                 success = 0;
                 e.printStackTrace();
@@ -2388,14 +2392,14 @@ public class UHFActivity extends Activity implements OnClickListener {
             }
 
             if (success == 1) {
-                if (null != restulJsonArray) {
+                if (null != restfulJsonArray) {
                     switch (servicePath.uid) {
                         case Constants.ITEM_CODE_All: {
                                 ArrayList<Costume> itemCodeArrayList = new ArrayList<Costume>();
 
-                                for (int i = 0; i < restulJsonArray.length(); i++) {
+                                for (int i = 0; i < restfulJsonArray.length(); i++) {
                                     try {
-                                        JSONObject jsonObject = restulJsonArray.getJSONObject(i);
+                                        JSONObject jsonObject = restfulJsonArray.getJSONObject(i);
                                         Costume itemCode = new Costume();
 
                                         itemCode.code = jsonObject.getString("code");
@@ -2418,9 +2422,9 @@ public class UHFActivity extends Activity implements OnClickListener {
                         case Constants.ACTOR_All: {
                                 ArrayList<Actor> actorArrayList = new ArrayList<Actor>();
 
-                                for (int i = 0; i < restulJsonArray.length(); i++) {
+                                for (int i = 0; i < restfulJsonArray.length(); i++) {
                                     try {
-                                        JSONObject jsonObject = restulJsonArray.getJSONObject(i);
+                                        JSONObject jsonObject = restfulJsonArray.getJSONObject(i);
                                         Actor actor = new Actor();
                                         actor.name = jsonObject.getString("actor");
                                         actorArrayList.add(actor);
@@ -2439,9 +2443,9 @@ public class UHFActivity extends Activity implements OnClickListener {
                         case Constants.COSTUME_All:
                             mCostumeArrayList = new ArrayList<Costume>();
 
-                            for (int i = 0; i < restulJsonArray.length(); i++) {
+                            for (int i = 0; i < restfulJsonArray.length(); i++) {
                                 try {
-                                    JSONObject jsonObject = restulJsonArray.getJSONObject(i);
+                                    JSONObject jsonObject = restfulJsonArray.getJSONObject(i);
                                     Costume costume = new Costume();
                                     costume.runningNo = jsonObject.getString("runningNo");
                                     costume.actor = jsonObject.getString("actor");

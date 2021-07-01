@@ -524,4 +524,5 @@
 	<string name="actor_actscene_notfound_solution">Please select an Actor and Act, Scene before try again.</string>
     <string name="itemcode_notfound">Item Code not found.</string>
 	<string name="itemcode_notfound_solution">Please select an Item Code before try again.</string>
+    <string name="box">Box</string>
 </resources>
