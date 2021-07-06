@@ -32,6 +32,9 @@ interface CostumeDao {
     @Insert
     fun insert(costume: Costume)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAll(vararg costume: Costume)
+
     @Query("DELETE FROM tblcsvimport")
     suspend fun deleteAll()
 }

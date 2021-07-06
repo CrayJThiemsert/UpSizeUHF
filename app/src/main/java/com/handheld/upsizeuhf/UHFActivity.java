@@ -1596,7 +1596,6 @@ public class UHFActivity extends Activity implements OnClickListener {
         mSelectedItemCodeInfoArray = new ArrayList<Costume>();
         mSelectedItemCodeFilterArray.clear();
         mSelectedItemCodeInfoArray.clear();
-
     }
 
     @Override
@@ -2624,6 +2623,12 @@ public class UHFActivity extends Activity implements OnClickListener {
                         actorRVAdapter = new ActorRVAdapter(mContext, mActivity, mActorArrayList);
                         actor_name_rvlist.setAdapter(actorRVAdapter);
                         actorRVAdapter.notifyDataSetChanged();
+
+                        // Clear act, scence list
+                        mActSceneArrayList = new ArrayList<Costume>();
+                        actsceneRVAdapter = new ActSceneRVAdapter(mContext, mActivity, mActSceneArrayList);
+                        actscene_name_rvlist.setAdapter(actsceneRVAdapter);
+                        actsceneRVAdapter.notifyDataSetChanged();
                     }
                 });
 
@@ -2649,6 +2654,13 @@ public class UHFActivity extends Activity implements OnClickListener {
                         itemCodeFilterRVAdapter = new ItemCodeFilterRVAdapter(mContext, mActivity, mItemCodeFilterArrayList);
                         byitemcode_filter_rvlist.setAdapter(itemCodeFilterRVAdapter);
                         itemCodeFilterRVAdapter.notifyDataSetChanged();
+
+                        // Clear item info filter list
+                        mItemInfoFilterArrayList = new ArrayList<Costume>();
+                        itemInfoFilterRVAdapter = new ItemInfoRVAdapter(mContext, mActivity, mItemInfoFilterArrayList);
+                        byitemcode_item_info_rvlist.setAdapter(itemInfoFilterRVAdapter);
+                        itemInfoFilterRVAdapter.notifyDataSetChanged();
+
                     }
                 });
 

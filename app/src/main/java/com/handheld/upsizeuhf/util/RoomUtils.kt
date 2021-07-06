@@ -20,7 +20,7 @@ class RoomUtils {
         private lateinit var localDb: CostumeRoomDatabase
 
 
-        fun importLocalCostumeDB(context: Context, networkCostumes: MutableList<out Costume>) {
+        fun importLocalCostumeDB(context: Context, networkCostumes: MutableList<Costume>) {
             val time = measureTimeMillis {
 //                localDb = Room.databaseBuilder(context, CostumeRoomDatabase::class.java, "costumedb").allowMainThreadQueries().build()
                 localDb = Room.databaseBuilder(context, CostumeRoomDatabase::class.java, "costumedb").build()
@@ -28,14 +28,22 @@ class RoomUtils {
                 val zero = somethingUsefulZeroAsync()
                 runBlocking { zero.await() }
 
-                var i: Int = 0
-                networkCostumes.forEach { costume ->
-                    val one = doRefreshLocalCostumesAsync(i, costume)
-                    runBlocking {
-                        one.await()
-                        i++
-                    }
+                // Run one by one insert, slow
+//                var i: Int = 0
+//                networkCostumes.forEach { costume ->
+//                    val one = doRefreshLocalCostumesAsync(i, costume)
+//                    runBlocking {
+//                        one.await()
+//                        i++
+//                    }
+//                }
+
+                // Run batch insert, fast
+                val one = doBatchRefreshLocalCostumesAsync(networkCostumes)
+                runBlocking {
+                    one.await()
                 }
+
             }
             println("Completed in $time ms")
             Thread {
@@ -44,7 +52,7 @@ class RoomUtils {
                 val costumeList = loadLocalCostumeList(context)
 
                 Log.d(TAG, "costumesxxx size=" + costumeList.size)
-                Log.d(TAG, "costumesxxx actor=" + costumeList[0].actor)
+//                Log.d(TAG, "costumesxxx actor=" + costumeList[0].actor)
             }.start()
 
         }
@@ -75,7 +83,7 @@ class RoomUtils {
             }
 
             Log.d(TAG, "costumesxxx size=" + returnList.size)
-            Log.d(TAG, "costumesxxx actor=" + returnList[0].actor)
+//            Log.d(TAG, "costumesxxx actor=" + returnList[0].actor)
 
             return returnList
         }
@@ -104,7 +112,7 @@ class RoomUtils {
 
             returnList = returnList.toMutableSet().toMutableList()
             Log.d(TAG, "actors size=" + returnList.size)
-            Log.d(TAG, "1st actor=" + returnList[0].name)
+//            Log.d(TAG, "1st actor=" + returnList[0].name)
 
             return returnList//.toMutableSet().toMutableList()
         }
@@ -144,7 +152,7 @@ class RoomUtils {
 
 //            returnList = returnList.toMutableSet().toMutableList()
             Log.d(TAG, "item code filter size=" + returnList.size)
-            Log.d(TAG, "1st code filter=" + returnList[0].code)
+//            Log.d(TAG, "1st code filter=" + returnList[0].code)
 
             return returnList
         }
@@ -159,9 +167,43 @@ class RoomUtils {
             doRefreshLocalCostumes(i, networkCostume)
         }
 
+        @OptIn(DelicateCoroutinesApi::class)
+        fun doBatchRefreshLocalCostumesAsync(networkCostumes: MutableList<Costume>) = GlobalScope.async {
+            doBatchRefreshLocalCostumes(networkCostumes)
+        }
+
         suspend fun doSomethingUsefulZero(): Boolean {
             val costumeDao = localDb.costumeDao()
             costumeDao.deleteAll()
+            return true
+        }
+
+        suspend fun doBatchRefreshLocalCostumes(networkCostumes: MutableList<Costume>): Boolean {
+            val costumeDao = localDb.costumeDao()
+//            print(networkCostume.actor)
+            var localCostumes: MutableList<com.handheld.upsizeuhf.entity.Costume> = mutableListOf<com.handheld.upsizeuhf.entity.Costume>()
+            var i: Int = 1
+            networkCostumes.forEach { networkCostumes ->
+                var localCostume = com.handheld.upsizeuhf.entity.Costume(
+                        i,
+                        networkCostumes.runningNo,
+                        networkCostumes.actor,
+                        networkCostumes.actScence,
+                        networkCostumes.code,
+                        networkCostumes.type,
+                        networkCostumes.size,
+                        networkCostumes.codeNo,
+                        networkCostumes.epcHeader,
+                        networkCostumes.epcRun,
+                        networkCostumes.shipBox,
+                        networkCostumes.storageBox,
+                        networkCostumes.playBox
+                );
+                i++
+                localCostumes.add(localCostume)
+            }
+
+            costumeDao.insertAll(*localCostumes.toTypedArray());
             return true
         }
 
