@@ -43,6 +43,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
@@ -55,12 +56,15 @@ import androidx.core.widget.AutoSizeableTextView;
 import androidx.core.widget.TextViewCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import cn.pda.serialport.Tools;
 
 import com.android.hdhe.uhf.reader.UhfReader;
 
 import com.android.hdhe.uhf.readerInterface.TagModel;
+import com.handheld.upsizeuhf.dao.CostumeDao;
+import com.handheld.upsizeuhf.database.CostumeRoomDatabase;
 import com.handheld.upsizeuhf.model.Actor;
 import com.handheld.upsizeuhf.model.Costume;
 import com.handheld.upsizeuhf.model.QueryService;
@@ -76,6 +80,7 @@ import com.handheld.upsizeuhf.ui.dialog.WarningMessageDialogFragment;
 import com.handheld.upsizeuhf.util.AnimationUtils;
 import com.handheld.upsizeuhf.util.Constants;
 import com.handheld.upsizeuhf.util.HttpConnectionService;
+import com.handheld.upsizeuhf.util.RoomUtils;
 import com.handheld.upsizeuhf.util.UhfUtils;
 
 import org.json.JSONArray;
@@ -225,6 +230,9 @@ public class UHFActivity extends Activity implements OnClickListener {
     ArrayList<Costume> mItemCodeArrayList = new ArrayList<Costume>();
     ArrayList<Costume> mItemInfoArrayList = new ArrayList<Costume>();
 
+    ArrayList<Actor> mActorArrayList = new ArrayList<Actor>();
+    ArrayList<Costume> mItemCodeFilterArrayList = new ArrayList<Costume>();
+
     ArrayList<Costume> mItemInfoFilterArrayList = new ArrayList<Costume>();
 
     private RecyclerView actor_name_rvlist;
@@ -274,6 +282,10 @@ public class UHFActivity extends Activity implements OnClickListener {
     UserSignInDialogFragment userSignInDialogFragment = new UserSignInDialogFragment();
     CheckTypeDialogFragment checkTypeDialogFragment = new CheckTypeDialogFragment();
     WarningMessageDialogFragment warningMessageDialogFragment = new WarningMessageDialogFragment();
+
+    public static CostumeRoomDatabase costumeRoomDatabase;
+
+    private ProgressBar mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -427,7 +439,32 @@ public class UHFActivity extends Activity implements OnClickListener {
     }
 
     private void loadData() {
+        showProgressBar();
         new ServiceQueryAsyncTask(mContext, mActivity, Constants.Companion.getCostumeAllQuery()).execute();
+
+////        RoomUtils.Companion.createDb(this);
+//        costumeRoomDatabase = Room.databaseBuilder(getApplicationContext(), CostumeRoomDatabase.class,"costumedb").allowMainThreadQueries().build();
+//        CostumeDao costumeDao = costumeRoomDatabase.costumeDao();
+//
+////        com.handheld.upsizeuhf.entity.Costume costume = new com.handheld.upsizeuhf.entity.Costume("99999",
+////                "Doctor K",
+////                "Operation V",
+////                "code V",
+////                "type V",
+////                "v",
+////                "X",
+////                "4567894545678945",
+////                "12345612",
+////                "",
+////                "",
+////                ""
+////        );
+////
+////        costumeDao.insert(costume);
+//        List<com.handheld.upsizeuhf.entity.Costume> costumeList = costumeDao.getAllCostumes();
+//
+//        Log.d(TAG, "costumesxxx size=" + costumeList.size());
+//        Log.d(TAG, "costumesxxx actor=" + costumeList.get(0).getActor().toString());
     }
 
     private void initView() {
@@ -956,6 +993,16 @@ public class UHFActivity extends Activity implements OnClickListener {
         total_item_info_textview = (TextView)findViewById(R.id.total_item_info_textview);
         item_info_scanned_textview = (TextView)findViewById(R.id.item_info_scanned_textview);
 
+        mProgressBar = (ProgressBar)findViewById(R.id.progressBar);
+
+    }
+
+    private void showProgressBar() {
+        mProgressBar.setVisibility(View.VISIBLE);
+    }
+
+    private void hideProgressBar() {
+        mProgressBar.setVisibility(View.INVISIBLE);
     }
 
     private boolean isActSceneExistingInActSceneArray(String actScene) {
@@ -1041,8 +1088,9 @@ public class UHFActivity extends Activity implements OnClickListener {
             if(costume.code.trim().equals(itemCode.code.trim()) &&
                     costume.type.trim().equals(itemCode.type.trim()) &&
                     costume.size.trim().equals(itemCode.size.trim()) &&
-                    costume.codeNo.trim().equals(itemCode.codeNo.trim()) &&
-                    !isItemCodeExistingInItemCodeInfoArray(costume)) {
+                    costume.codeNo.trim().equals(itemCode.codeNo.trim())) {
+//                    &&
+//                    !isItemCodeExistingInItemCodeInfoArray(costume)) {
                 mItemInfoFilterArrayList.add(costume);
             }
         }
@@ -1051,7 +1099,7 @@ public class UHFActivity extends Activity implements OnClickListener {
         byitemcode_item_info_rvlist.setAdapter(itemInfoFilterRVAdapter);
         itemInfoFilterRVAdapter.notifyDataSetChanged();
 
-        if(mItemInfoFilterArrayList.size() == 1) {
+//        if(mItemInfoFilterArrayList.size() == 1) {
             Costume costume = (Costume) mItemInfoFilterArrayList.get(0);
             addSelectedActScene(costume.actScence);
             byitemcode_selected_code_textview.setText(costume.code);
@@ -1059,12 +1107,12 @@ public class UHFActivity extends Activity implements OnClickListener {
             byitemcode_selected_size_textview.setText(costume.size);
             byitemcode_selected_number_textview.setText(costume.codeNo);
 
-        } else {
-            byitemcode_selected_code_textview.setText("");
-            byitemcode_selected_type_textview.setText("");
-            byitemcode_selected_size_textview.setText("");
-            byitemcode_selected_number_textview.setText("");
-        }
+//        } else {
+//            byitemcode_selected_code_textview.setText("");
+//            byitemcode_selected_type_textview.setText("");
+//            byitemcode_selected_size_textview.setText("");
+//            byitemcode_selected_number_textview.setText("");
+//        }
 
         processDialog.dismiss();
     }
@@ -1086,22 +1134,25 @@ public class UHFActivity extends Activity implements OnClickListener {
         processDialog.setCancelable(false);
         processDialog.show();
 
-        mItemInfoArrayList = new ArrayList<Costume>();
-        mItemInfoArrayList.clear();
-        for(int i = 0; i < mCostumeArrayList.size(); i++) {
-            Costume costume = mCostumeArrayList.get(i);
-            costume.isFound = false;
-            if(costume.code.trim().equals(code.trim()) && costume.type.trim().equals(type.trim()) && costume.size.trim().equals(size.trim()) && costume.codeNo.trim().equals(number.trim())) {
-                mItemInfoArrayList.add(costume);
+        if(mSelectedItemCodeInfoArray.size() == 0) {
+            mItemInfoArrayList = new ArrayList<Costume>();
+            mItemInfoArrayList.clear();
+            for (int i = 0; i < mCostumeArrayList.size(); i++) {
+                Costume costume = mCostumeArrayList.get(i);
+                costume.isFound = false;
+                if (costume.code.trim().equals(code.trim()) && costume.type.trim().equals(type.trim()) && costume.size.trim().equals(size.trim()) && costume.codeNo.trim().equals(number.trim())) {
+                    mItemInfoArrayList.add(costume);
+                }
             }
+        } else {
+            mItemInfoArrayList = mSelectedItemCodeInfoArray;
         }
-
         itemInfoResultRVAdapter = new ItemInfoRVAdapter(mContext, mActivity, mItemInfoArrayList);
+
         item_info_result_rvlist.setAdapter(itemInfoResultRVAdapter);
         itemInfoResultRVAdapter.notifyDataSetChanged();
-
-        item_info_scanned_textview.setText(Integer.toString(0));
         total_item_info_textview.setText(Integer.toString(mItemInfoArrayList.size()));
+        item_info_scanned_textview.setText(Integer.toString(0));
 
         processDialog.dismiss();
     }
@@ -1206,6 +1257,11 @@ public class UHFActivity extends Activity implements OnClickListener {
     public void addSelectedItemInfo(Costume itemInfo) {
         mSelectedItemCodeInfoArray.clear();
         mSelectedItemCodeInfoArray.add(itemInfo);
+
+        byitemcode_selected_code_textview.setText(itemInfo.code);
+        byitemcode_selected_type_textview.setText(itemInfo.type);
+        byitemcode_selected_size_textview.setText(itemInfo.size);
+        byitemcode_selected_number_textview.setText(itemInfo.codeNo);
     }
 
 
@@ -1826,13 +1882,11 @@ public class UHFActivity extends Activity implements OnClickListener {
         @Override
         public void onAnimationStart(Animation animation) {
             SetVisible(byitemset_select_filter_layout, textViewS1, viewS1);
-            new ServiceQueryAsyncTask(mContext, mActivity, Constants.Companion.getActorAllQuery()).execute();
+            // Load Actor List
+//            new ServiceQueryAsyncTask(mContext, mActivity, Constants.Companion.getActorAllQuery()).execute();
 
-//            // Clear act scene list
-//            mActSceneArrayList = new ArrayList<Costume>();
-//            actsceneRVAdapter = new ActSceneRVAdapter(mContext, mActivity, mActSceneArrayList);
-//            actscene_name_rvlist.setAdapter(actsceneRVAdapter);
-//            actsceneRVAdapter.notifyDataSetChanged();
+            new LoadActorThread().start();
+
         }
 
         @Override
@@ -1851,7 +1905,8 @@ public class UHFActivity extends Activity implements OnClickListener {
         @Override
         public void onAnimationStart(Animation animation) {
             SetVisible(byitemcode_select_filter_layout, textViewS1, viewS1);
-            new ServiceQueryAsyncTask(mContext, mActivity, Constants.Companion.getItemCodeAllQuery()).execute();
+//            new ServiceQueryAsyncTask(mContext, mActivity, Constants.Companion.getItemCodeAllQuery()).execute();
+            new LoadItemCodeThread().start();
         }
 
         @Override
@@ -2416,6 +2471,7 @@ public class UHFActivity extends Activity implements OnClickListener {
                                 itemCodeFilterRVAdapter = new ItemCodeFilterRVAdapter(mContext, mActivity, itemCodeArrayList);
                                 byitemcode_filter_rvlist.setAdapter(itemCodeFilterRVAdapter);
                                 itemCodeFilterRVAdapter.notifyDataSetChanged();
+
                                 processDialog.dismiss();
                             }
                             break;
@@ -2465,6 +2521,19 @@ public class UHFActivity extends Activity implements OnClickListener {
                                 }
                             }
                             Log.d(TAG, "mCostumeArrayList.size()=" + mCostumeArrayList.size());
+                            Log.d(TAG, "importLocalCostumeDB...");
+                            if(mCostumeArrayList.size() > 0) {
+                                // refresh local costume database by network database
+                                new ImportLocalCostumeThread().start();
+                            } else {
+                                // load costume list from local database
+                                processDialog = new ProgressDialog(mContext);
+                                processDialog.setMessage("Please  Wait ...");
+                                processDialog.setCancelable(false);
+                                processDialog.show();
+                                new LoadLocalCostumeThread().start();
+                            }
+
                             processDialog.dismiss();
                             break;
                     }
@@ -2475,6 +2544,121 @@ public class UHFActivity extends Activity implements OnClickListener {
         }
 
     }//end of async task
+
+    class ImportLocalCostumeThread extends Thread {
+        public void run() {
+            try {
+                runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        showProgressBar();
+                        processDialog = new ProgressDialog(mContext);
+                        processDialog.setMessage("Updating local costume list. Please  Wait ...");
+                        processDialog.setCancelable(false);
+                        processDialog.show();
+                        by_item_set_button.setBackgroundColor(getResources().getColor(R.color.colorGrey));
+                        by_item_code_button.setBackgroundColor(getResources().getColor(R.color.colorGrey));
+                        by_item_set_button.setEnabled(false);
+                        by_item_code_button.setEnabled(false);
+                    }
+                });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            System.out.println("thread is running...");
+            RoomUtils.Companion.importLocalCostumeDB(getApplicationContext(), mCostumeArrayList);
+
+            try {
+                runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        hideProgressBar();
+                        processDialog.dismiss();
+                        by_item_set_button.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+                        by_item_code_button.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+                        by_item_set_button.setEnabled(true);
+                        by_item_code_button.setEnabled(true);
+                    }
+                });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    class LoadLocalCostumeThread extends Thread {
+        public void run() {
+            System.out.println("thread is running...");
+            mCostumeArrayList = (ArrayList<Costume>) RoomUtils.Companion.loadLocalCostumeList(getApplicationContext());
+
+            try {
+                runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        processDialog.dismiss();
+                    }
+                });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    class LoadActorThread extends Thread {
+
+        public void run() {
+            System.out.println("thread is running...");
+            mActorArrayList = (ArrayList<Actor>) RoomUtils.Companion.loadActorList(getApplicationContext(), mCostumeArrayList);
+
+            try {
+                runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        actorRVAdapter = new ActorRVAdapter(mContext, mActivity, mActorArrayList);
+                        actor_name_rvlist.setAdapter(actorRVAdapter);
+                        actorRVAdapter.notifyDataSetChanged();
+                    }
+                });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+        }
+    }
+
+    class LoadItemCodeThread extends Thread {
+
+        public void run() {
+            System.out.println("thread is running...");
+            mItemCodeFilterArrayList = (ArrayList<Costume>) RoomUtils.Companion.loadItemCodeFilterList(getApplicationContext(), mCostumeArrayList);
+
+            try {
+                runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        itemCodeFilterRVAdapter = new ItemCodeFilterRVAdapter(mContext, mActivity, mItemCodeFilterArrayList);
+                        byitemcode_filter_rvlist.setAdapter(itemCodeFilterRVAdapter);
+                        itemCodeFilterRVAdapter.notifyDataSetChanged();
+                    }
+                });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+        }
+    }
 
     public void upDateCurrentUserOperation(User user) {
         editor.putString("currentUserName", user.getUsername());

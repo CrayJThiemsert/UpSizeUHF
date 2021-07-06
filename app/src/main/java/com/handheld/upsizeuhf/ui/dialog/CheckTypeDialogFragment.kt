@@ -351,6 +351,9 @@ class CheckTypeDialogFragment : DialogFragment() {
                             val jsonObject: JSONObject = restfulJsonArray!!.getJSONObject(i)
                             val box = Box()
                             box.name = jsonObject.getString("name")
+                            box.epc = jsonObject.getString("epc")
+                            box.epcHeader = jsonObject.getString("epcHeader")
+                            box.epcRun = jsonObject.getString("epcRun")
                             boxArrayList.add(box)
                         } catch (e: JSONException) {
                             e.printStackTrace()

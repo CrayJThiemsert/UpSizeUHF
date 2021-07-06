@@ -12,4 +12,5 @@
     <color name="colorLightGreen">#C0FF0B</color>
     <color name="colorGold">#EFF374</color>
     <color name="colorNightBlue">#314F8A</color>
+    <color name="colorGrey">#bfbfbf</color>
 </resources>
