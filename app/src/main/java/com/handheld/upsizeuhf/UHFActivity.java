@@ -2433,6 +2433,8 @@ public class UHFActivity extends Activity implements OnClickListener {
             } catch (JSONException e) {
                 success = 0;
                 e.printStackTrace();
+
+
             }
             return null;
         }
@@ -2539,6 +2541,13 @@ public class UHFActivity extends Activity implements OnClickListener {
 
 
                 }
+            } else {
+                // load costume list from local database
+                processDialog = new ProgressDialog(mContext);
+                processDialog.setMessage("Cannot access database server. then use local database instead!! Please  Wait ...");
+                processDialog.setCancelable(false);
+                processDialog.show();
+                new LoadLocalCostumeThread().start();
             }
         }
 
