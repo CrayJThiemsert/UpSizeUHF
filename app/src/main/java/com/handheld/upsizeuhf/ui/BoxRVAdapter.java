@@ -18,6 +18,7 @@ import com.handheld.upsizeuhf.R;
 import com.handheld.upsizeuhf.UHFActivity;
 import com.handheld.upsizeuhf.Util;
 import com.handheld.upsizeuhf.model.Box;
+import com.handheld.upsizeuhf.ui.dialog.CheckTypeDialogFragment;
 
 import java.util.ArrayList;
 
@@ -25,6 +26,7 @@ public class BoxRVAdapter extends RecyclerView.Adapter<BoxRVAdapter.BoxViewHolde
     private String TAG = this.getClass().getSimpleName();
     private Context mContext;
     private Activity mActivity;
+    private CheckTypeDialogFragment mFragment;
 
     private int lastPosition = -1;
     int row_index = -1;
@@ -50,7 +52,9 @@ public class BoxRVAdapter extends RecyclerView.Adapter<BoxRVAdapter.BoxViewHolde
         holder.epc_header_textview.setOnClickListener(new BoxRVAdapter.ItemInfoOnClickListener(box, position));
         holder.epc_run_textview.setOnClickListener(new BoxRVAdapter.ItemInfoOnClickListener(box, position));
 
-        if (row_index == position) {
+        if(box.selected) {
+            holder.box_layout.setBackground(mContext.getResources().getDrawable(R.drawable.layout_border_radius_found));
+        } else if (row_index == position) {
             holder.box_layout.setBackground(mContext.getResources().getDrawable(R.drawable.layout_border_radius_selected));
         } else {
             holder.box_layout.setBackground(mContext.getResources().getDrawable(R.drawable.layout_border_radius));
@@ -73,11 +77,13 @@ public class BoxRVAdapter extends RecyclerView.Adapter<BoxRVAdapter.BoxViewHolde
         @Override
         public void onClick(View view) {
             Util.play(1, 0);
+//            mFragment.clearBoxList();
+
             row_index=position;
             notifyDataSetChanged();
 
-//            UHFActivity uhfActivity = (UHFActivity)mActivity;
-//            uhfActivity.addSelectedItemInfo(box);
+            UHFActivity uhfActivity = (UHFActivity)mActivity;
+            uhfActivity.setSelectedCheckedBox(box);
         }
     }
 
@@ -94,10 +100,11 @@ public class BoxRVAdapter extends RecyclerView.Adapter<BoxRVAdapter.BoxViewHolde
         }
     }
 
-    public BoxRVAdapter(Context context, Activity activity, ArrayList<Box> boxs) {
+    public BoxRVAdapter(Context context, Activity activity, ArrayList<Box> boxs, CheckTypeDialogFragment fragment) {
         mContext = context;
         mActivity = activity;
         mBoxArrayList = boxs;
+        mFragment = fragment;
     }
 
     private class NameAnimationListener implements Animation.AnimationListener   {

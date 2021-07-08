@@ -99,6 +99,13 @@ class Constants {
         val STORAGEBOX_All_QUERY : QueryService = QueryService(STORAGEBOX_All, "/costume/costume/storageboxes/")
         val PLAYBOX_All_QUERY : QueryService = QueryService(PLAYBOX_All, "/costume/costume/playboxes/")
 
+        const val ITEM_SET_MODE = 1
+        const val ITEM_CODE_MODE = 2
+
+        const val TYPE_SHIPBOX = "shipbox"
+        const val TYPE_STORAGEBOX = "storagebox"
+        const val TYPE_PLAYBOX = "playbox"
+
         fun getCostumeAllQuery() : QueryService {
             return COSTUME_All_QUERY
         }

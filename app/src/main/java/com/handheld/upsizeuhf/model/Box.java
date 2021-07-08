@@ -1,14 +1,16 @@
 package com.handheld.upsizeuhf.model;
 
+import androidx.annotation.NonNull;
+
 public class Box {
-    public String uid;
+    public int uid;
     public String name;
     public String epc;
     public String epcHeader;
     public String epcRun;
     public boolean selected = false;
 
-    public Box(String uid, String name, String epc, String epcHeader, String epcRun) {
+    public Box(int uid, String name, String epc, String epcHeader, String epcRun) {
         this.name = name;
         this.uid = uid;
         this.epc = epc;
@@ -18,10 +20,21 @@ public class Box {
 
     public Box() {
         this.name = "";
-        this.uid = "";
+        this.uid = -1;
         this.selected = false;
         this.epc = "";
         this.epcHeader = "";
         this.epcRun = "";
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "Box - " +
+                "uid=" + this.uid +
+                ", name=" + this.name +
+                ", epc=" + this.epc +
+                ", epcHeader=" + this.epcHeader +
+                ", epcRun=" + this.epcRun;
     }
 }

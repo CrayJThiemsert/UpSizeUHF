@@ -19,11 +19,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.handheld.upsizeuhf.R
 import com.handheld.upsizeuhf.UHFActivity
 import com.handheld.upsizeuhf.model.Box
+import com.handheld.upsizeuhf.model.Costume
 import com.handheld.upsizeuhf.model.QueryService
 import com.handheld.upsizeuhf.ui.BoxRVAdapter
 import com.handheld.upsizeuhf.util.AnimationUtils
 import com.handheld.upsizeuhf.util.Constants
-import com.handheld.upsizeuhf.util.Constants.Companion.getActorAllQuery
 import com.handheld.upsizeuhf.util.Constants.Companion.getPlayBoxAllQuery
 import com.handheld.upsizeuhf.util.Constants.Companion.getShipBoxAllQuery
 import com.handheld.upsizeuhf.util.Constants.Companion.getStorageBoxAllQuery
@@ -66,9 +66,11 @@ class CheckTypeDialogFragment : DialogFragment() {
     private var playbox_rvlist: RecyclerView? = null
     private var playboxRVAdapter: BoxRVAdapter? = null
 
-
+    private var mBoxArrayList = ArrayList<Box>()
 
     companion object {
+        private var costumeCheckedList: MutableList<Costume> = mutableListOf<Costume>()
+
         /**
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.
@@ -79,7 +81,7 @@ class CheckTypeDialogFragment : DialogFragment() {
          */
         // TODO: Rename and change types and number of parameters
 
-        fun newInstance(param1: String, param2: String) : CheckTypeDialogFragment   {
+        fun newInstance(param1: String, param2: String, costumeCheckedListParam: MutableList<Costume>) : CheckTypeDialogFragment   {
             val fragment = CheckTypeDialogFragment()
             val args = Bundle()
             args.putString("text", param1)
@@ -95,6 +97,8 @@ class CheckTypeDialogFragment : DialogFragment() {
             args.putBoolean("active", false)
             args.putString("email", "")
             fragment.arguments = args
+
+            costumeCheckedList = costumeCheckedListParam
             return fragment
         }
 
@@ -192,6 +196,23 @@ class CheckTypeDialogFragment : DialogFragment() {
 
         back_playbox_button.setOnClickListener(ClickBackBoxButton(back_playbox_button))
         check_playbox_button.setOnClickListener(ClickCheckBoxButton(check_playbox_button))
+
+        loadExistedBoxType()
+    }
+
+    private fun loadExistedBoxType() {
+        val uhfActivity = mActivity as UHFActivity
+        when(uhfActivity.getSelectedCheckedBoxType()) {
+            Constants.TYPE_SHIPBOX -> {
+                loadShipBoxPage()
+            }
+            Constants.TYPE_STORAGEBOX -> {
+                loadStorageBoxPage()
+            }
+            Constants.TYPE_PLAYBOX -> {
+                loadPlayBoxPage()
+            }
+        }
     }
 
     private fun setVisible(layout : LinearLayout) {
@@ -233,30 +254,54 @@ class CheckTypeDialogFragment : DialogFragment() {
         }
     }
 
+    fun loadShipBoxPage() {
+        setVisible(shipbox_select_filter_layout)
+
+        val uhfActivity = mActivity as UHFActivity
+        uhfActivity.setSelectedCheckedBoxType(Constants.TYPE_SHIPBOX)
+
+        ServiceQueryAsyncTask(mActivity!!.applicationContext, mActivity!!, getShipBoxAllQuery()).execute()
+    }
+
     inner class ShipBoxButtonAnimationListener : AnimationListener {
         override fun onAnimationStart(animation: Animation) {
-            setVisible(shipbox_select_filter_layout)
-            ServiceQueryAsyncTask(mActivity!!.applicationContext, mActivity!!, getShipBoxAllQuery()).execute()
+            loadShipBoxPage()
         }
 
         override fun onAnimationEnd(animation: Animation) {}
         override fun onAnimationRepeat(animation: Animation) {}
+    }
+
+    fun loadStorageBoxPage() {
+        setVisible(storagebox_select_filter_layout)
+
+        val uhfActivity = mActivity as UHFActivity
+        uhfActivity.setSelectedCheckedBoxType(Constants.TYPE_STORAGEBOX)
+
+        ServiceQueryAsyncTask(mActivity!!.applicationContext, mActivity!!, getStorageBoxAllQuery()).execute()
     }
 
     inner class StorageBoxButtonAnimationListener : AnimationListener {
         override fun onAnimationStart(animation: Animation) {
-            setVisible(storagebox_select_filter_layout)
-            ServiceQueryAsyncTask(mActivity!!.applicationContext, mActivity!!, getStorageBoxAllQuery()).execute()
+            loadStorageBoxPage()
         }
 
         override fun onAnimationEnd(animation: Animation) {}
         override fun onAnimationRepeat(animation: Animation) {}
     }
 
+    fun loadPlayBoxPage() {
+        setVisible(playbox_select_filter_layout)
+
+        val uhfActivity = mActivity as UHFActivity
+        uhfActivity.setSelectedCheckedBoxType(Constants.TYPE_PLAYBOX)
+
+        ServiceQueryAsyncTask(mActivity!!.applicationContext, mActivity!!, getPlayBoxAllQuery()).execute()
+    }
+
     inner class PlayBoxButtonAnimationListener : AnimationListener {
         override fun onAnimationStart(animation: Animation) {
-            setVisible(playbox_select_filter_layout)
-            ServiceQueryAsyncTask(mActivity!!.applicationContext, mActivity!!, getPlayBoxAllQuery()).execute()
+            loadPlayBoxPage()
         }
 
         override fun onAnimationEnd(animation: Animation) {}
@@ -304,23 +349,56 @@ class CheckTypeDialogFragment : DialogFragment() {
         override fun onAnimationRepeat(animation: Animation) {}
     }
 
-    inner class ClickCheckBoxButton(check_shipbox_button: Button) : View.OnClickListener{
+    inner class ClickCheckBoxButton(check_button: Button) : View.OnClickListener{
+        lateinit var check_button: Button
+        init {
+            this.check_button = check_button
+        }
         override fun onClick(p0: View?) {
             val animate = AnimationUtils.getBounceAnimation(mActivity!!.applicationContext)
-            animate.setAnimationListener(CheckShipBoxButtonAnimationListener())
-            check_shipbox_button.startAnimation(animate)
+            animate.setAnimationListener(CheckBoxButtonAnimationListener())
+
+            check_button.startAnimation(animate)
 
         }
     }
 
-    inner class CheckShipBoxButtonAnimationListener : AnimationListener {
+    inner class CheckBoxButtonAnimationListener : AnimationListener {
         override fun onAnimationStart(animation: Animation) {
-
+            val uhfActivity = mActivity as UHFActivity
+            val box = uhfActivity.getSelectedCheckedBox()
+            Log.d(TAG, "selected box=" + box.toString())
 
         }
 
         override fun onAnimationEnd(animation: Animation) {}
         override fun onAnimationRepeat(animation: Animation) {}
+    }
+
+    public fun clearBoxList() {
+        mBoxArrayList.forEach { box ->
+            box.selected = false
+        }
+        val uhfActivity = mActivity as UHFActivity
+
+
+        when (uhfActivity.getSelectedCheckedBoxType()) {
+            Constants.TYPE_SHIPBOX -> {
+                shipboxRVAdapter = BoxRVAdapter(mActivity!!.applicationContext, mActivity, mBoxArrayList, this@CheckTypeDialogFragment)
+                shipbox_rvlist!!.setAdapter(shipboxRVAdapter)
+                shipboxRVAdapter!!.notifyDataSetChanged()
+            }
+            Constants.TYPE_STORAGEBOX -> {
+                storageboxRVAdapter = BoxRVAdapter(mActivity!!.applicationContext, mActivity, mBoxArrayList, this@CheckTypeDialogFragment)
+                storagebox_rvlist!!.setAdapter(storageboxRVAdapter)
+                storageboxRVAdapter!!.notifyDataSetChanged()
+            }
+            Constants.TYPE_PLAYBOX -> {
+                playboxRVAdapter = BoxRVAdapter(mActivity!!.applicationContext, mActivity, mBoxArrayList, this@CheckTypeDialogFragment)
+                playbox_rvlist!!.setAdapter(playboxRVAdapter)
+                playboxRVAdapter!!.notifyDataSetChanged()
+            }
+        }
     }
 
     inner class ServiceQueryAsyncTask(private val mContext: Context, private val mActivity: Activity, servicePath: QueryService) : AsyncTask<Void?, Void?, Void?>() {
@@ -344,17 +422,28 @@ class CheckTypeDialogFragment : DialogFragment() {
 
             if (success == 1) {
                 if (null != restfulJsonArray) {
-                    val boxArrayList = ArrayList<Box>()
+                    val uhfActivity = mActivity as UHFActivity
+                    val existedBox = uhfActivity.selectedCheckedBox
+
+                    mBoxArrayList = ArrayList<Box>()
                     var i = 0
                     while (i < restfulJsonArray!!.length()) {
                         try {
                             val jsonObject: JSONObject = restfulJsonArray!!.getJSONObject(i)
                             val box = Box()
+                            box.uid = jsonObject.getInt("uid")
                             box.name = jsonObject.getString("name")
                             box.epc = jsonObject.getString("epc")
                             box.epcHeader = jsonObject.getString("epcHeader")
                             box.epcRun = jsonObject.getString("epcRun")
-                            boxArrayList.add(box)
+
+//                            if(existedBox.uid == box.uid) {
+//                                box.selected = true
+//                            } else {
+//                                box.selected = false
+//                            }
+
+                            mBoxArrayList.add(box)
                         } catch (e: JSONException) {
                             e.printStackTrace()
                         }
@@ -362,17 +451,17 @@ class CheckTypeDialogFragment : DialogFragment() {
                     }
                     when (servicePath.uid) {
                         Constants.SHIPBOX_All -> {
-                            shipboxRVAdapter = BoxRVAdapter(mContext, mActivity, boxArrayList)
+                            shipboxRVAdapter = BoxRVAdapter(mContext, mActivity, mBoxArrayList, this@CheckTypeDialogFragment)
                             shipbox_rvlist!!.setAdapter(shipboxRVAdapter)
                             shipboxRVAdapter!!.notifyDataSetChanged()
                         }
                         Constants.STORAGEBOX_All -> {
-                            storageboxRVAdapter = BoxRVAdapter(mContext, mActivity, boxArrayList)
+                            storageboxRVAdapter = BoxRVAdapter(mContext, mActivity, mBoxArrayList, this@CheckTypeDialogFragment)
                             storagebox_rvlist!!.setAdapter(storageboxRVAdapter)
                             storageboxRVAdapter!!.notifyDataSetChanged()
                         }
                         Constants.PLAYBOX_All -> {
-                            playboxRVAdapter = BoxRVAdapter(mContext, mActivity, boxArrayList)
+                            playboxRVAdapter = BoxRVAdapter(mContext, mActivity, mBoxArrayList, this@CheckTypeDialogFragment)
                             playbox_rvlist!!.setAdapter(playboxRVAdapter)
                             playboxRVAdapter!!.notifyDataSetChanged()
                         }

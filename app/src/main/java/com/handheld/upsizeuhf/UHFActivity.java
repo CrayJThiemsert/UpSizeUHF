@@ -66,6 +66,7 @@ import com.android.hdhe.uhf.readerInterface.TagModel;
 import com.handheld.upsizeuhf.dao.CostumeDao;
 import com.handheld.upsizeuhf.database.CostumeRoomDatabase;
 import com.handheld.upsizeuhf.model.Actor;
+import com.handheld.upsizeuhf.model.Box;
 import com.handheld.upsizeuhf.model.Costume;
 import com.handheld.upsizeuhf.model.QueryService;
 import com.handheld.upsizeuhf.model.User;
@@ -229,6 +230,7 @@ public class UHFActivity extends Activity implements OnClickListener {
     ArrayList<Costume> mActSceneArrayList = new ArrayList<Costume>();
     ArrayList<Costume> mItemCodeArrayList = new ArrayList<Costume>();
     ArrayList<Costume> mItemInfoArrayList = new ArrayList<Costume>();
+    ArrayList<Costume> mScannedFoundItemArrayList = new ArrayList<Costume>();
 
     ArrayList<Actor> mActorArrayList = new ArrayList<Actor>();
     ArrayList<Costume> mItemCodeFilterArrayList = new ArrayList<Costume>();
@@ -262,6 +264,9 @@ public class UHFActivity extends Activity implements OnClickListener {
 
     public ArrayList<Costume> mSelectedItemCodeFilterArray = new ArrayList<Costume>();
     public ArrayList<Costume> mSelectedItemCodeInfoArray = new ArrayList<Costume>();
+
+    public Box mSelectedCheckedBox = new Box();
+    public String mSelectedCheckedBoxType = "";
 
     private TextView byitemcode_selected_code_textview;
     private TextView byitemcode_selected_type_textview;
@@ -347,9 +352,39 @@ public class UHFActivity extends Activity implements OnClickListener {
         userSignInDialogFragment.show(getFragmentManager(), "user_signin_fragment");
     }
 
-    private void loadCheckTypeUI() {
-        checkTypeDialogFragment = CheckTypeDialogFragment.Companion.newInstance("", "");
-        checkTypeDialogFragment.show(getFragmentManager(), "check_type_fragment");
+    private void loadCheckTypeUI(int mode) {
+        switch (mode) {
+            case Constants.ITEM_SET_MODE: {
+                Log.d(TAG, "Found mItemCodeArrayList.size()="+mItemCodeArrayList.size());
+                mScannedFoundItemArrayList = filterOnlyScannedFound(mItemCodeArrayList);
+                break;
+            }
+
+            case Constants.ITEM_CODE_MODE: {
+                Log.d(TAG, "Found mItemInfoArrayList.size()="+mItemInfoArrayList.size());
+                mScannedFoundItemArrayList = filterOnlyScannedFound(mItemInfoArrayList);
+                break;
+            }
+        }
+
+        Log.d(TAG, "Found mScannedFoundItemArrayList.size()="+mScannedFoundItemArrayList.size());
+        if(mScannedFoundItemArrayList.size() > 0) {
+            checkTypeDialogFragment = CheckTypeDialogFragment.Companion.newInstance("", "", mScannedFoundItemArrayList);
+            checkTypeDialogFragment.show(getFragmentManager(), "check_type_fragment");
+        } else {
+            loadWarningDialog("", getString(R.string.costume_notfound), getString(R.string.costume_notfound_solution));
+        }
+    }
+
+    private ArrayList<Costume> filterOnlyScannedFound(ArrayList<Costume> costumeRawArrayList) {
+        ArrayList<Costume> resultList = new ArrayList<Costume>();
+        for(int i = 0; i < costumeRawArrayList.size(); i++) {
+            Costume costume = costumeRawArrayList.get(i);
+            if(costume.isFound) {
+                resultList.add(costume);
+            }
+        }
+        return resultList;
     }
 
     private void loadWarningDialog(String title, String messageTop, String messageBody) {
@@ -1264,6 +1299,26 @@ public class UHFActivity extends Activity implements OnClickListener {
         byitemcode_selected_number_textview.setText(itemInfo.codeNo);
     }
 
+    /**
+     * add only one name in this time, but open for the future more than one name
+     * @param box
+     */
+    public void setSelectedCheckedBox(Box box) {
+        mSelectedCheckedBox = box;
+    }
+
+    public Box getSelectedCheckedBox() {
+        return mSelectedCheckedBox;
+    }
+
+    public void setSelectedCheckedBoxType(String boxType) {
+        mSelectedCheckedBoxType = boxType;
+    }
+
+    public String getSelectedCheckedBoxType() {
+        return mSelectedCheckedBoxType;
+    }
+
 
     /**
      * Inventory EPC Thread
@@ -2132,7 +2187,7 @@ public class UHFActivity extends Activity implements OnClickListener {
     private class CheckItemSetButtonAnimationListener implements Animation.AnimationListener   {
         @Override
         public void onAnimationStart(Animation animation) {
-            loadCheckTypeUI();
+            loadCheckTypeUI(Constants.ITEM_SET_MODE);
         }
 
         @Override
@@ -2168,7 +2223,7 @@ public class UHFActivity extends Activity implements OnClickListener {
     private class CheckItemCodeButtonAnimationListener implements Animation.AnimationListener   {
         @Override
         public void onAnimationStart(Animation animation) {
-            loadCheckTypeUI();
+            loadCheckTypeUI(Constants.ITEM_CODE_MODE);
         }
 
         @Override
@@ -2504,6 +2559,7 @@ public class UHFActivity extends Activity implements OnClickListener {
                                 try {
                                     JSONObject jsonObject = restfulJsonArray.getJSONObject(i);
                                     Costume costume = new Costume();
+                                    costume.uid = jsonObject.getInt("uid");
                                     costume.runningNo = jsonObject.getString("runningNo");
                                     costume.actor = jsonObject.getString("actor");
                                     costume.actScence = jsonObject.getString("actScence");

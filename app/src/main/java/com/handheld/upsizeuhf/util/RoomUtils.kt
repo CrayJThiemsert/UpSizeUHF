@@ -66,6 +66,7 @@ class RoomUtils {
             var returnList: MutableList<Costume> = mutableListOf<Costume>()
             costumeList.forEach { localCostume ->
                 val costume: Costume = Costume(
+                        localCostume.uid,
                         localCostume.runningNo,
                         localCostume.actor,
                         localCostume.actScence,
@@ -133,6 +134,7 @@ class RoomUtils {
                 val codeSplit = name.split("^")
                 if(codeSplit.size == 4) {
                     var costumeItemCode = Costume(
+                            -1,
                             "",
                             "",
                             "",

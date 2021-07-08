@@ -1,6 +1,7 @@
 package com.handheld.upsizeuhf.model;
 
 public class Costume {
+    public int uid;
     public String runningNo;
     public String actor;
     public String actScence;
@@ -15,7 +16,8 @@ public class Costume {
     public String playBox;
     public boolean isFound = false;
 
-    public Costume(String runningNo, String actor, String actScence, String code, String type, String size, String codeNo, String epcHeader, String epcRun, String shipBox, String storageBox, String playBox) {
+    public Costume(int uid, String runningNo, String actor, String actScence, String code, String type, String size, String codeNo, String epcHeader, String epcRun, String shipBox, String storageBox, String playBox) {
+        this.uid = uid;
         this.runningNo = runningNo;
         this.actor = actor;
         this.actScence = actScence;
@@ -31,6 +33,7 @@ public class Costume {
     }
 
     public Costume() {
+        this.uid = -1;
         this.runningNo = "";
         this.actor = "";
         this.actScence = "";
