@@ -88,7 +88,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class UHFActivity extends Activity implements OnClickListener {
+public class UHFActivity extends Activity implements OnClickListener, CheckTypeDialogFragment.ReloadCostumeListener {
     private String TAG = this.getClass().getSimpleName();
     /****************** for view:**************************************/
     private LinearLayout ls1;
@@ -292,6 +292,8 @@ public class UHFActivity extends Activity implements OnClickListener {
 
     private ProgressBar mProgressBar;
 
+    private int mCurrentSearchMode = Constants.ITEM_SET_MODE;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -374,7 +376,9 @@ public class UHFActivity extends Activity implements OnClickListener {
         Log.d(TAG, "Found mScannedFoundItemArrayList.size()="+mScannedFoundItemArrayList.size());
         if(mScannedFoundItemArrayList.size() > 0) {
             checkTypeDialogFragment = CheckTypeDialogFragment.Companion.newInstance("", "", mScannedFoundItemArrayList);
+
             checkTypeDialogFragment.show(getFragmentManager(), "check_type_fragment");
+
         } else {
             loadWarningDialog("", getString(R.string.costume_notfound), getString(R.string.costume_notfound_solution));
         }
@@ -1327,6 +1331,11 @@ public class UHFActivity extends Activity implements OnClickListener {
         return mSelectedCheckedBoxType;
     }
 
+    @Override
+    public void onFinishCheckedBoxDialog() {
+        loadData();
+    }
+
 
     /**
      * Inventory EPC Thread
@@ -2021,6 +2030,7 @@ public class UHFActivity extends Activity implements OnClickListener {
     private class NextByItemSetFilterButtonAnimationListener implements Animation.AnimationListener   {
         @Override
         public void onAnimationStart(Animation animation) {
+            mCurrentSearchMode = Constants.ITEM_SET_MODE;
             String actor = selected_actor_textview.getText().toString();
             String actScene = selected_actscene_textview.getText().toString();
             Log.d(TAG, "query ItemCodes by actor=" + actor + " : act, scene=" + actScene);
@@ -2052,6 +2062,8 @@ public class UHFActivity extends Activity implements OnClickListener {
             String type = byitemcode_selected_type_textview.getText().toString();
             String size = byitemcode_selected_size_textview.getText().toString();
             String number = byitemcode_selected_number_textview.getText().toString();
+
+            mCurrentSearchMode = Constants.ITEM_CODE_MODE;
 
             Log.d(TAG, "query Item Info by code=" + code + " : type=" + type + " : size=" + size + " : number=" + number);
 
@@ -2657,6 +2669,29 @@ public class UHFActivity extends Activity implements OnClickListener {
                         by_item_code_button.setBackgroundColor(getResources().getColor(R.color.colorWhite));
                         by_item_set_button.setEnabled(true);
                         by_item_code_button.setEnabled(true);
+                    }
+                });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            new RefreshItemSetResultThread().start();
+        }
+    }
+
+    class RefreshItemSetResultThread extends Thread {
+        public void run() {
+            try {
+                runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        if(mCurrentSearchMode == Constants.ITEM_SET_MODE) {
+                            queryItemCodesBySelectedActorActScene();
+                        } else if(mCurrentSearchMode == Constants.ITEM_CODE_MODE) {
+                            queryItemInfoBySelectedItemCode();
+                        }
                     }
                 });
 

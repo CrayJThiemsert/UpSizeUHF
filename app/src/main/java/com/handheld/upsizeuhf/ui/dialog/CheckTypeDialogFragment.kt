@@ -39,6 +39,7 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.*
+//import androidx.fragment.app.DialogFragment
 
 
 class CheckTypeDialogFragment : DialogFragment() {
@@ -74,6 +75,12 @@ class CheckTypeDialogFragment : DialogFragment() {
     private var playboxRVAdapter: BoxRVAdapter? = null
 
     private var mBoxArrayList = ArrayList<Box>()
+
+    interface ReloadCostumeListener {
+        fun onFinishCheckedBoxDialog()
+    }
+
+    public lateinit var reloadCostumeListener: ReloadCostumeListener
 
     companion object {
         private var costumeCheckedList: MutableList<Costume> = mutableListOf<Costume>()
@@ -126,11 +133,11 @@ class CheckTypeDialogFragment : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(activity)
         // Get the layout inflater
-        val inflater = activity.layoutInflater
+        val inflater = activity?.layoutInflater
 
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
-        val view: View = inflater.inflate(R.layout.dialog_check_type, null)
+        val view: View = inflater!!.inflate(R.layout.dialog_check_type, null)
 
         initInstance(view)
 
@@ -385,7 +392,7 @@ class CheckTypeDialogFragment : DialogFragment() {
 //            Example path:
 //            http://192.168.1.101/costume/costume/checked/?costume_uid_list=341,342,343&actionType=storagebox&actionValue=1&byUser=cray
             var procedure = getCheckedHistoryProcedure()
-            procedure.path = procedure.path + "?costume_uid_list="+scannedFoundList + "&actionType="+boxType+"&actionValue="+box.uid+"&byUser=" + byUser
+            procedure.path = "/costume/costume/checked/" + "?costume_uid_list="+scannedFoundList + "&actionType="+boxType+"&actionValue="+box.uid+"&byUser=" + byUser
 
             ServiceQueryAsyncTask(mActivity!!.applicationContext, mActivity!!, procedure).execute()
 //            dismiss()
@@ -553,8 +560,8 @@ class CheckTypeDialogFragment : DialogFragment() {
 
                         Constants.CHECKED_HISTORY -> {
 //                            ReloadCostumesThread().start()
+                            sendBackResult()
 
-                            dismiss()
                         }
                     }
 
@@ -586,5 +593,14 @@ class CheckTypeDialogFragment : DialogFragment() {
             return null
         }
     } //end of async task
+
+    private fun sendBackResult() {
+//        val listener = this as ReloadCostumeListener?
+        reloadCostumeListener = activity as ReloadCostumeListener
+        reloadCostumeListener.onFinishCheckedBoxDialog()
+
+//        listener!!.onFinishCheckedBoxDialog()
+        dismiss()
+    }
 
 }

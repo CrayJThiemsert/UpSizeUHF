@@ -83,6 +83,14 @@ public class ItemCodeRVAdapter extends RecyclerView.Adapter<ItemCodeRVAdapter.It
             }
         });
 
+        holder.current_box_textview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                row_index=position;
+                notifyDataSetChanged();
+            }
+        });
+
         holder.item_code_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

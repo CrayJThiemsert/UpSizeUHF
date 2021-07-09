@@ -527,4 +527,5 @@
     <string name="box">Box</string>
     <string name="costume_notfound">Costume not found</string>
 	<string name="costume_notfound_solution">Please scan until find tag before check complete set(box)</string>
+    <string name="refresh">Refresh</string>
 </resources>

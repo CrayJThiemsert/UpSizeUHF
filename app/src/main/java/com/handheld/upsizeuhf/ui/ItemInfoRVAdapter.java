@@ -51,6 +51,10 @@ public class ItemInfoRVAdapter extends RecyclerView.Adapter<ItemInfoRVAdapter.It
         holder.actscene_textview.setOnClickListener(new ItemInfoRVAdapter.ItemInfoOnClickListener(costume, position));
         holder.epc_header_textview.setOnClickListener(new ItemInfoRVAdapter.ItemInfoOnClickListener(costume, position));
         holder.epc_run_textview.setOnClickListener(new ItemInfoRVAdapter.ItemInfoOnClickListener(costume, position));
+        holder.current_box_textview.setOnClickListener(new ItemInfoRVAdapter.ItemInfoOnClickListener(costume, position));
+
+        String currentBox = getCurrentBoxString(costume);
+        holder.current_box_textview.setText(currentBox);
 
         if(costume.isFound) {
             holder.item_info_layout.setBackground(mContext.getResources().getDrawable(R.drawable.layout_border_radius_found));
@@ -61,6 +65,18 @@ public class ItemInfoRVAdapter extends RecyclerView.Adapter<ItemInfoRVAdapter.It
                 holder.item_info_layout.setBackground(mContext.getResources().getDrawable(R.drawable.layout_border_radius));
             }
         }
+    }
+
+    private String getCurrentBoxString(Costume costume) {
+        String result = "";
+        if(!costume.shipBox.equalsIgnoreCase("")) {
+            result = mActivity.getString(R.string.ship_box) + ": " + costume.shipBox;
+        } else if(!costume.storageBox.equalsIgnoreCase("")) {
+            result = mActivity.getString(R.string.storage_box) + ": " + costume.storageBox;
+        } else if(!costume.playBox.equalsIgnoreCase("")) {
+            result = mActivity.getString(R.string.play_box) + ": " + costume.playBox;
+        }
+        return result;
     }
 
     @Override
@@ -137,7 +153,7 @@ public class ItemInfoRVAdapter extends RecyclerView.Adapter<ItemInfoRVAdapter.It
         TextView actscene_textview;
         TextView epc_header_textview;
         TextView epc_run_textview;
-
+        TextView current_box_textview;
         LinearLayout item_info_layout;
 
         public ItemInfoViewHolder(@NonNull View itemView) {
@@ -146,7 +162,10 @@ public class ItemInfoRVAdapter extends RecyclerView.Adapter<ItemInfoRVAdapter.It
             actscene_textview = (TextView)itemView.findViewById(R.id.actscene_textview);
             epc_header_textview = (TextView)itemView.findViewById(R.id.epc_header_textview);
             epc_run_textview = (TextView)itemView.findViewById(R.id.epc_run_textview);
+            current_box_textview = (TextView)itemView.findViewById(R.id.current_box_textview);
             item_info_layout = (LinearLayout)itemView.findViewById(R.id.box_layout);
+
+            current_box_textview.setText("");
         }
     }
 }
