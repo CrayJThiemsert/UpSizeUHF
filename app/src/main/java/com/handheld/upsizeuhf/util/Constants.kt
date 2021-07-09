@@ -92,12 +92,15 @@ class Constants {
         const val SHIPBOX_All = 4
         const val STORAGEBOX_All = 5
         const val PLAYBOX_All = 6
+        const val CHECKED_HISTORY = 7
         val COSTUME_All_QUERY : QueryService = QueryService(COSTUME_All, "/costume/costume/list/")
         val ACTOR_All_QUERY : QueryService = QueryService(ACTOR_All, "/costume/costume/actors/")
         val ITEM_CODE_All_QUERY : QueryService = QueryService(ITEM_CODE_All, "/costume/costume/itemcodes/")
         val SHIPBOX_All_QUERY : QueryService = QueryService(SHIPBOX_All, "/costume/costume/shipboxes/")
         val STORAGEBOX_All_QUERY : QueryService = QueryService(STORAGEBOX_All, "/costume/costume/storageboxes/")
         val PLAYBOX_All_QUERY : QueryService = QueryService(PLAYBOX_All, "/costume/costume/playboxes/")
+
+        val CHECKED_HISTORY_PROCEDURE : QueryService = QueryService(CHECKED_HISTORY, "/costume/costume/checked/")
 
         const val ITEM_SET_MODE = 1
         const val ITEM_CODE_MODE = 2
@@ -128,6 +131,10 @@ class Constants {
 
         fun getPlayBoxAllQuery() : QueryService {
             return PLAYBOX_All_QUERY
+        }
+
+        fun getCheckedHistoryProcedure() : QueryService {
+            return CHECKED_HISTORY_PROCEDURE
         }
     }
 }

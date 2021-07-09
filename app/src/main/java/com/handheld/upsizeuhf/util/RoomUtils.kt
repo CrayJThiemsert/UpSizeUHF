@@ -51,7 +51,7 @@ class RoomUtils {
 //                val costumeList: List<com.handheld.upsizeuhf.entity.Costume> = costumeDao.getAllCostumes()
                 val costumeList = loadLocalCostumeList(context)
 
-                Log.d(TAG, "costumesxxx size=" + costumeList.size)
+                Log.d(TAG, "costumesxx1 size=" + costumeList.size)
 //                Log.d(TAG, "costumesxxx actor=" + costumeList[0].actor)
             }.start()
 
@@ -83,7 +83,7 @@ class RoomUtils {
                 returnList.add(costume)
             }
 
-            Log.d(TAG, "costumesxxx size=" + returnList.size)
+            Log.d(TAG, "costumesxx2 size=" + returnList.size)
 //            Log.d(TAG, "costumesxxx actor=" + returnList[0].actor)
 
             return returnList

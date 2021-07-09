@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.handheld.upsizeuhf.R;
 import com.handheld.upsizeuhf.Util;
 import com.handheld.upsizeuhf.model.Costume;
+import com.handheld.upsizeuhf.util.Constants;
 import com.handheld.upsizeuhf.util.UhfUtils;
 
 import java.util.ArrayList;
@@ -52,6 +53,9 @@ public class ItemCodeRVAdapter extends RecyclerView.Adapter<ItemCodeRVAdapter.It
 
         holder.epc_header_textview.setText(epcTop);
         holder.epc_run_textview.setText(epcBottom);
+
+        String currentBox = getCurrentBoxString(costume);
+        holder.current_box_textview.setText(currentBox);
 
         holder.epc_header_textview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,6 +102,18 @@ public class ItemCodeRVAdapter extends RecyclerView.Adapter<ItemCodeRVAdapter.It
         }
 
 //        setAnimation(holder.itemView, position);
+    }
+
+    private String getCurrentBoxString(Costume costume) {
+        String result = "";
+        if(!costume.shipBox.equalsIgnoreCase("")) {
+            result = mActivity.getString(R.string.ship_box) + ": " + costume.shipBox;
+        } else if(!costume.storageBox.equalsIgnoreCase("")) {
+            result = mActivity.getString(R.string.storage_box) + ": " + costume.storageBox;
+        } else if(!costume.playBox.equalsIgnoreCase("")) {
+            result = mActivity.getString(R.string.play_box) + ": " + costume.playBox;
+        }
+        return result;
     }
 
     @Override
@@ -157,6 +173,7 @@ public class ItemCodeRVAdapter extends RecyclerView.Adapter<ItemCodeRVAdapter.It
         TextView number_textview;
         TextView epc_header_textview;
         TextView epc_run_textview;
+        TextView current_box_textview;
         LinearLayout item_code_layout;
 
         public ItemCodeViewHolder(@NonNull View itemView) {
@@ -167,7 +184,10 @@ public class ItemCodeRVAdapter extends RecyclerView.Adapter<ItemCodeRVAdapter.It
             number_textview = (TextView)itemView.findViewById(R.id.number_textview);
             epc_header_textview = (TextView)itemView.findViewById(R.id.epc_header_textview);
             epc_run_textview = (TextView)itemView.findViewById(R.id.epc_run_textview);
+            current_box_textview = (TextView)itemView.findViewById(R.id.current_box_textview);
             item_code_layout = (LinearLayout)itemView.findViewById(R.id.item_code_layout);
+
+            current_box_textview.setText("");
         }
     }
 }

@@ -335,6 +335,10 @@ public class UHFActivity extends Activity implements OnClickListener {
 
     }
 
+    public String getCurrentUserName() {
+        return currentUserName;
+    }
+
     private void showAppTitle() {
         try {
             PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
@@ -374,6 +378,10 @@ public class UHFActivity extends Activity implements OnClickListener {
         } else {
             loadWarningDialog("", getString(R.string.costume_notfound), getString(R.string.costume_notfound_solution));
         }
+    }
+
+    public ArrayList<Costume> getScannedFoundItemArrayList() {
+        return mScannedFoundItemArrayList;
     }
 
     private ArrayList<Costume> filterOnlyScannedFound(ArrayList<Costume> costumeRawArrayList) {
@@ -473,7 +481,7 @@ public class UHFActivity extends Activity implements OnClickListener {
         super.onDestroy();
     }
 
-    private void loadData() {
+    public void loadData() {
         showProgressBar();
         new ServiceQueryAsyncTask(mContext, mActivity, Constants.Companion.getCostumeAllQuery()).execute();
 
@@ -1078,7 +1086,7 @@ public class UHFActivity extends Activity implements OnClickListener {
         clearSearchandCheckData();
 
         processDialog = new ProgressDialog(mContext);
-        processDialog.setMessage("Please  Wait ...");
+        processDialog.setMessage("Please  Wait ... refreshActScene");
         processDialog.setCancelable(false);
         processDialog.show();
 
@@ -1112,7 +1120,7 @@ public class UHFActivity extends Activity implements OnClickListener {
         clearItemCodeData();
 
         processDialog = new ProgressDialog(mContext);
-        processDialog.setMessage("Please  Wait ...");
+        processDialog.setMessage("Please  Wait ... refreshItemCodeInfo");
         processDialog.setCancelable(false);
         processDialog.show();
 
@@ -1165,7 +1173,7 @@ public class UHFActivity extends Activity implements OnClickListener {
         Log.d(TAG, "query Item Info by code=" + code + " : type=" + type + " : size=" + size + " : number=" + number);
 
         processDialog = new ProgressDialog(mContext);
-        processDialog.setMessage("Please  Wait ...");
+        processDialog.setMessage("Please  Wait ... queryItemInfoBySelectedItemCode");
         processDialog.setCancelable(false);
         processDialog.show();
 
@@ -1201,7 +1209,7 @@ public class UHFActivity extends Activity implements OnClickListener {
         Log.d(TAG, "query ItemCodes by actor=" + actor + " : act, scene=" + actScene);
 
         processDialog = new ProgressDialog(mContext);
-        processDialog.setMessage("Please  Wait ...");
+        processDialog.setMessage("Please  Wait ... queryItemCodesBySelectedActorActScene");
         processDialog.setCancelable(false);
         processDialog.show();
 
@@ -2465,7 +2473,7 @@ public class UHFActivity extends Activity implements OnClickListener {
         protected void onPreExecute() {
             super.onPreExecute();
             processDialog = new ProgressDialog(mContext);
-            processDialog.setMessage("Please  Wait ...");
+            processDialog.setMessage("Please  Wait ... ServiceQueryAsyncTask");
             processDialog.setCancelable(false);
             processDialog.show();
         }
@@ -2585,7 +2593,7 @@ public class UHFActivity extends Activity implements OnClickListener {
                             } else {
                                 // load costume list from local database
                                 processDialog = new ProgressDialog(mContext);
-                                processDialog.setMessage("Please  Wait ...");
+                                processDialog.setMessage("Please  Wait ... COSTUME_All");
                                 processDialog.setCancelable(false);
                                 processDialog.show();
                                 new LoadLocalCostumeThread().start();
@@ -2625,12 +2633,16 @@ public class UHFActivity extends Activity implements OnClickListener {
                         by_item_code_button.setBackgroundColor(getResources().getColor(R.color.colorGrey));
                         by_item_set_button.setEnabled(false);
                         by_item_code_button.setEnabled(false);
+
+                        hideProgressBar();
+                        processDialog.dismiss();
                     }
                 });
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
             System.out.println("thread is running...");
             RoomUtils.Companion.importLocalCostumeDB(getApplicationContext(), mCostumeArrayList);
 

@@ -55,9 +55,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
+            android:id="@+id/current_box_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="EPC -->"
+            android:text="Storage Box by Cray"
+            android:layout_gravity="bottom"
             android:textColor="@color/colorOrangeGrey"/>
 
         <LinearLayout

@@ -18,16 +18,23 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.handheld.upsizeuhf.R
 import com.handheld.upsizeuhf.UHFActivity
+import com.handheld.upsizeuhf.model.Actor
 import com.handheld.upsizeuhf.model.Box
 import com.handheld.upsizeuhf.model.Costume
 import com.handheld.upsizeuhf.model.QueryService
+import com.handheld.upsizeuhf.ui.ActSceneRVAdapter
+import com.handheld.upsizeuhf.ui.ActorRVAdapter
 import com.handheld.upsizeuhf.ui.BoxRVAdapter
 import com.handheld.upsizeuhf.util.AnimationUtils
 import com.handheld.upsizeuhf.util.Constants
+import com.handheld.upsizeuhf.util.Constants.Companion.getCheckedHistoryProcedure
 import com.handheld.upsizeuhf.util.Constants.Companion.getPlayBoxAllQuery
 import com.handheld.upsizeuhf.util.Constants.Companion.getShipBoxAllQuery
 import com.handheld.upsizeuhf.util.Constants.Companion.getStorageBoxAllQuery
 import com.handheld.upsizeuhf.util.HttpConnectionService
+import com.handheld.upsizeuhf.util.RoomUtils.Companion.loadActorList
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -367,12 +374,37 @@ class CheckTypeDialogFragment : DialogFragment() {
         override fun onAnimationStart(animation: Animation) {
             val uhfActivity = mActivity as UHFActivity
             val box = uhfActivity.getSelectedCheckedBox()
+            val scannedFoundList = getCostumeUidString(uhfActivity.getScannedFoundItemArrayList())
+            val boxType = uhfActivity.selectedCheckedBoxType
+            val byUser = uhfActivity.currentUserName
+            Log.d(TAG, "Scanned found Costume Uid list=" + scannedFoundList)
+            Log.d(TAG, "selected box type=" + boxType)
             Log.d(TAG, "selected box=" + box.toString())
+            Log.d(TAG, "byUser=" + byUser)
 
+//            Example path:
+//            http://192.168.1.101/costume/costume/checked/?costume_uid_list=341,342,343&actionType=storagebox&actionValue=1&byUser=cray
+            var procedure = getCheckedHistoryProcedure()
+            procedure.path = procedure.path + "?costume_uid_list="+scannedFoundList + "&actionType="+boxType+"&actionValue="+box.uid+"&byUser=" + byUser
+
+            ServiceQueryAsyncTask(mActivity!!.applicationContext, mActivity!!, procedure).execute()
+//            dismiss()
         }
 
         override fun onAnimationEnd(animation: Animation) {}
         override fun onAnimationRepeat(animation: Animation) {}
+    }
+    private fun getCostumeUidString(srcList: MutableList<Costume>): String {
+        var result = ""
+        srcList.forEach { costume ->
+            if(costume.uid != null) {
+                result += costume.uid.toString() + ","
+            }
+        }
+        if(result.length > 1) {
+            result = result.substring(0, result.length-1)
+        }
+        return result
     }
 
     public fun clearBoxList() {
@@ -401,6 +433,50 @@ class CheckTypeDialogFragment : DialogFragment() {
         }
     }
 
+    inner class ReloadCostumesThread : Thread() {
+        override fun run() {
+            println("thread is running...")
+
+            try {
+                val uhfActivity = mActivity as UHFActivity
+                uhfActivity.runOnUiThread(Runnable {
+                    uhfActivity.loadData()
+
+                    ReloadItemCodesList().start()
+                })
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    inner class ReloadItemCodesList : Thread() {
+        override fun run() {
+            println("thread is running...")
+
+            try {
+                val uhfActivity = mActivity as UHFActivity
+                uhfActivity.runOnUiThread(Runnable {
+                    uhfActivity.queryItemCodesBySelectedActorActScene()
+
+                })
+                dismiss()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+//    fun reloadCostumes() = GlobalScope.async {
+//        val uhfActivity = mActivity as UHFActivity
+//        uhfActivity.loadData()
+//    }
+
+//    fun reloadItemCodesList() = GlobalScope.async {
+//        val uhfActivity = mActivity as UHFActivity
+//        uhfActivity.queryItemCodesBySelectedActorActScene()
+//    }
+
     inner class ServiceQueryAsyncTask(private val mContext: Context, private val mActivity: Activity, servicePath: QueryService) : AsyncTask<Void?, Void?, Void?>() {
         private var TAG : String = this.javaClass.simpleName
         var response = ""
@@ -425,17 +501,21 @@ class CheckTypeDialogFragment : DialogFragment() {
                     val uhfActivity = mActivity as UHFActivity
                     val existedBox = uhfActivity.selectedCheckedBox
 
-                    mBoxArrayList = ArrayList<Box>()
-                    var i = 0
-                    while (i < restfulJsonArray!!.length()) {
-                        try {
-                            val jsonObject: JSONObject = restfulJsonArray!!.getJSONObject(i)
-                            val box = Box()
-                            box.uid = jsonObject.getInt("uid")
-                            box.name = jsonObject.getString("name")
-                            box.epc = jsonObject.getString("epc")
-                            box.epcHeader = jsonObject.getString("epcHeader")
-                            box.epcRun = jsonObject.getString("epcRun")
+                    when (servicePath.uid) {
+                        Constants.SHIPBOX_All,
+                        Constants.STORAGEBOX_All,
+                        Constants.PLAYBOX_All -> {
+                            mBoxArrayList = ArrayList<Box>()
+                            var i = 0
+                            while (i < restfulJsonArray!!.length()) {
+                                try {
+                                    val jsonObject: JSONObject = restfulJsonArray!!.getJSONObject(i)
+                                    val box = Box()
+                                    box.uid = jsonObject.getInt("uid")
+                                    box.name = jsonObject.getString("name")
+                                    box.epc = jsonObject.getString("epc")
+                                    box.epcHeader = jsonObject.getString("epcHeader")
+                                    box.epcRun = jsonObject.getString("epcRun")
 
 //                            if(existedBox.uid == box.uid) {
 //                                box.selected = true
@@ -443,29 +523,41 @@ class CheckTypeDialogFragment : DialogFragment() {
 //                                box.selected = false
 //                            }
 
-                            mBoxArrayList.add(box)
-                        } catch (e: JSONException) {
-                            e.printStackTrace()
+                                    mBoxArrayList.add(box)
+                                } catch (e: JSONException) {
+                                    e.printStackTrace()
+                                }
+                                i++
+                            }
+                            when (servicePath.uid) {
+                                Constants.SHIPBOX_All -> {
+                                    shipboxRVAdapter = BoxRVAdapter(mContext, mActivity, mBoxArrayList, this@CheckTypeDialogFragment)
+                                    shipbox_rvlist!!.setAdapter(shipboxRVAdapter)
+                                    shipboxRVAdapter!!.notifyDataSetChanged()
+                                }
+                                Constants.STORAGEBOX_All -> {
+                                    storageboxRVAdapter = BoxRVAdapter(mContext, mActivity, mBoxArrayList, this@CheckTypeDialogFragment)
+                                    storagebox_rvlist!!.setAdapter(storageboxRVAdapter)
+                                    storageboxRVAdapter!!.notifyDataSetChanged()
+                                }
+                                Constants.PLAYBOX_All -> {
+                                    playboxRVAdapter = BoxRVAdapter(mContext, mActivity, mBoxArrayList, this@CheckTypeDialogFragment)
+                                    playbox_rvlist!!.setAdapter(playboxRVAdapter)
+                                    playboxRVAdapter!!.notifyDataSetChanged()
+                                }
+
+
+                            }
+
                         }
-                        i++
+
+                        Constants.CHECKED_HISTORY -> {
+//                            ReloadCostumesThread().start()
+
+                            dismiss()
+                        }
                     }
-                    when (servicePath.uid) {
-                        Constants.SHIPBOX_All -> {
-                            shipboxRVAdapter = BoxRVAdapter(mContext, mActivity, mBoxArrayList, this@CheckTypeDialogFragment)
-                            shipbox_rvlist!!.setAdapter(shipboxRVAdapter)
-                            shipboxRVAdapter!!.notifyDataSetChanged()
-                        }
-                        Constants.STORAGEBOX_All -> {
-                            storageboxRVAdapter = BoxRVAdapter(mContext, mActivity, mBoxArrayList, this@CheckTypeDialogFragment)
-                            storagebox_rvlist!!.setAdapter(storageboxRVAdapter)
-                            storageboxRVAdapter!!.notifyDataSetChanged()
-                        }
-                        Constants.PLAYBOX_All -> {
-                            playboxRVAdapter = BoxRVAdapter(mContext, mActivity, mBoxArrayList, this@CheckTypeDialogFragment)
-                            playbox_rvlist!!.setAdapter(playboxRVAdapter)
-                            playboxRVAdapter!!.notifyDataSetChanged()
-                        }
-                    }
+
                 }
             }
         }
