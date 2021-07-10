@@ -8,6 +8,9 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.handheld.upsizeuhf.dao.CostumeDao
 import com.handheld.upsizeuhf.entity.Costume
+import com.handheld.upsizeuhf.entity.PlayBox
+import com.handheld.upsizeuhf.entity.ShipBox
+import com.handheld.upsizeuhf.entity.StorageBox
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,7 +19,7 @@ import kotlinx.coroutines.launch
  * This is the backend. The database. This used to be done by the OpenHelper.
  * The fact that this has very few comments emphasizes its coolness.
  */
-@Database(entities = [Costume::class], version = 1)
+@Database(entities = [Costume::class, ShipBox::class, StorageBox::class, PlayBox::class], version = 1)
 abstract class CostumeRoomDatabase : RoomDatabase() {
 
     abstract fun costumeDao(): CostumeDao
@@ -76,7 +79,13 @@ abstract class CostumeRoomDatabase : RoomDatabase() {
         suspend fun populateDatabase(costumeDao: CostumeDao) {
             // Start the app with a clean database every time.
             // Not needed if you only populate on creation.
-            costumeDao.deleteAll()
+            costumeDao.deleteAllCostume()
+
+            costumeDao.deleteAllShipBox()
+
+            costumeDao.deleteAllStorageBox()
+
+            costumeDao.deleteAllPlayBox()
 
 //            var costume = Costume(runningNo = "99999",
 //                    actor = "Doctor K",

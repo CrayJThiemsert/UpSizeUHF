@@ -232,6 +232,14 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     ArrayList<Costume> mItemInfoArrayList = new ArrayList<Costume>();
     ArrayList<Costume> mScannedFoundItemArrayList = new ArrayList<Costume>();
 
+    // For CheckTypeDialog
+    ArrayList<Box> mShipBoxArrayList = new ArrayList<Box>();
+    ArrayList<Box> mStorageBoxArrayList = new ArrayList<Box>();
+    ArrayList<Box> mPlayBoxArrayList = new ArrayList<Box>();
+
+
+
+
     ArrayList<Actor> mActorArrayList = new ArrayList<Actor>();
     ArrayList<Costume> mItemCodeFilterArrayList = new ArrayList<Costume>();
 
@@ -314,14 +322,15 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         shared = getSharedPreferences("UhfRfPower", 0);
         editor = shared.edit();
         power = shared.getInt("power", 26);
-        area = shared.getInt("area", 2);
+        area = shared.getInt("area", 3);
         serverIp = shared.getString("serverIp", "192.168.1.101");
-        currentUserName = shared.getString("currentUserName", "");
+        currentUserName = shared.getString("currentUserName", "admin");
 
         showAppTitle();
 
         //init view
         initView();
+
         // load database once
         loadData();
         //start inventory thread
@@ -330,10 +339,6 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         thread.start();
         // init sound pool
         Util.initSoundPool(this);
-
-        if(currentUserName.equalsIgnoreCase("")) {
-            loadUserSignInUI();
-        }
 
     }
 
@@ -354,6 +359,9 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     }
 
     private void loadUserSignInUI() {
+//        if (processDialog.isShowing()) {
+//            processDialog.dismiss();
+//        }
         userSignInDialogFragment = UserSignInDialogFragment.Companion.newInstance("", "");
         userSignInDialogFragment.show(getFragmentManager(), "user_signin_fragment");
     }
@@ -489,29 +497,25 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         showProgressBar();
         new ServiceQueryAsyncTask(mContext, mActivity, Constants.Companion.getCostumeAllQuery()).execute();
 
-////        RoomUtils.Companion.createDb(this);
-//        costumeRoomDatabase = Room.databaseBuilder(getApplicationContext(), CostumeRoomDatabase.class,"costumedb").allowMainThreadQueries().build();
-//        CostumeDao costumeDao = costumeRoomDatabase.costumeDao();
-//
-////        com.handheld.upsizeuhf.entity.Costume costume = new com.handheld.upsizeuhf.entity.Costume("99999",
-////                "Doctor K",
-////                "Operation V",
-////                "code V",
-////                "type V",
-////                "v",
-////                "X",
-////                "4567894545678945",
-////                "12345612",
-////                "",
-////                "",
-////                ""
-////        );
-////
-////        costumeDao.insert(costume);
-//        List<com.handheld.upsizeuhf.entity.Costume> costumeList = costumeDao.getAllCostumes();
-//
-//        Log.d(TAG, "costumesxxx size=" + costumeList.size());
-//        Log.d(TAG, "costumesxxx actor=" + costumeList.get(0).getActor().toString());
+        new ServiceQueryAsyncTask(mContext, mActivity, Constants.Companion.getShipBoxAllQuery()).execute();
+
+        new ServiceQueryAsyncTask(mContext, mActivity, Constants.Companion.getStorageBoxAllQuery()).execute();
+
+        new ServiceQueryAsyncTask(mContext, mActivity, Constants.Companion.getPlayBoxAllQuery()).execute();
+
+//        if (processDialog.isShowing()) {
+//            processDialog.dismiss();
+//        }
+
+        hideProgressBar();
+
+        if(currentUserName.equalsIgnoreCase("")) {
+            loadUserSignInUI();
+        }
+
+
+
+
     }
 
     private void initView() {
@@ -956,9 +960,11 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         // Search & Check
         by_item_set_button = (Button) findViewById(R.id.by_item_set_button);
         by_item_set_button.setOnClickListener(this);
+        by_item_set_button.setBackgroundColor(getResources().getColor(R.color.colorGrey));
 
         by_item_code_button = (Button) findViewById(R.id.by_item_code_button);
         by_item_code_button.setOnClickListener(this);
+        by_item_code_button.setBackgroundColor(getResources().getColor(R.color.colorGrey));
 
         back_byitemset_button = (Button) findViewById(R.id.back_byitemset_button);
         back_byitemset_button.setOnClickListener(this);
@@ -1329,6 +1335,18 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
 
     public String getSelectedCheckedBoxType() {
         return mSelectedCheckedBoxType;
+    }
+
+    public ArrayList<Box> getmShipBoxArrayList() {
+        return mShipBoxArrayList;
+    }
+
+    public ArrayList<Box> getmStorageBoxArrayList() {
+        return mStorageBoxArrayList;
+    }
+
+    public ArrayList<Box> getmPlayBoxArrayList() {
+        return mPlayBoxArrayList;
     }
 
     @Override
@@ -2094,6 +2112,10 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     private class BackByItemSetInfoResultButtonAnimationListener implements Animation.AnimationListener   {
         @Override
         public void onAnimationStart(Animation animation) {
+            thread.interrupt();
+            scanItemSetFlag = false;
+            scan_itemset_info_result_button.setText(R.string.scan);
+
             SetVisible(byitemset_select_filter_layout, textViewS1, viewS1);
         }
 
@@ -2112,6 +2134,10 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     private class BackByItemCodeInfoResultButtonAnimationListener implements Animation.AnimationListener   {
         @Override
         public void onAnimationStart(Animation animation) {
+            thread.interrupt();
+            scanItemCodeFlag = false;
+            scan_itemcode_info_result_button.setText(R.string.scan);
+
             SetVisible(byitemcode_select_filter_layout, textViewS1, viewS1);
         }
 
@@ -2484,10 +2510,10 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            processDialog = new ProgressDialog(mContext);
-            processDialog.setMessage("Please  Wait ... ServiceQueryAsyncTask");
-            processDialog.setCancelable(false);
-            processDialog.show();
+//            processDialog = new ProgressDialog(mContext);
+//            processDialog.setMessage("Please  Wait ... ServiceQueryAsyncTask");
+//            processDialog.setCancelable(false);
+//            processDialog.show();
         }
 
         @Override
@@ -2518,9 +2544,9 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
 
-            if (processDialog.isShowing()) {
-                processDialog.dismiss();
-            }
+//            if (processDialog.isShowing()) {
+//                processDialog.dismiss();
+//            }
 
             if (success == 1) {
                 if (null != restfulJsonArray) {
@@ -2548,7 +2574,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                                 byitemcode_filter_rvlist.setAdapter(itemCodeFilterRVAdapter);
                                 itemCodeFilterRVAdapter.notifyDataSetChanged();
 
-                                processDialog.dismiss();
+//                                processDialog.dismiss();
                             }
                             break;
                         case Constants.ACTOR_All: {
@@ -2569,62 +2595,134 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                                 actor_name_rvlist.setAdapter(actorRVAdapter);
                                 actorRVAdapter.notifyDataSetChanged();
 
-                                processDialog.dismiss();
+//                                processDialog.dismiss();
                             }
                             break;
-                        case Constants.COSTUME_All:
-                            mCostumeArrayList = new ArrayList<Costume>();
+                        case Constants.COSTUME_All: {
+                                mCostumeArrayList = new ArrayList<Costume>();
 
-                            for (int i = 0; i < restfulJsonArray.length(); i++) {
-                                try {
-                                    JSONObject jsonObject = restfulJsonArray.getJSONObject(i);
-                                    Costume costume = new Costume();
-                                    costume.uid = jsonObject.getInt("uid");
-                                    costume.runningNo = jsonObject.getString("runningNo");
-                                    costume.actor = jsonObject.getString("actor");
-                                    costume.actScence = jsonObject.getString("actScence");
-                                    costume.code = jsonObject.getString("code");
-                                    costume.type = jsonObject.getString("type");
-                                    costume.size = jsonObject.getString("size");
-                                    costume.codeNo = jsonObject.getString("codeNo");
-                                    costume.epcHeader = jsonObject.getString("epcHeader");
-                                    costume.epcRun = jsonObject.getString("epcRun");
-                                    costume.shipBox = jsonObject.getString("shipBox");
-                                    costume.storageBox = jsonObject.getString("storageBox");
-                                    costume.playBox = jsonObject.getString("playBox");
-                                    mCostumeArrayList.add(costume);
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
+                                for (int i = 0; i < restfulJsonArray.length(); i++) {
+                                    try {
+                                        JSONObject jsonObject = restfulJsonArray.getJSONObject(i);
+                                        Costume costume = new Costume();
+                                        costume.uid = jsonObject.getInt("uid");
+                                        costume.runningNo = jsonObject.getString("runningNo");
+                                        costume.actor = jsonObject.getString("actor");
+                                        costume.actScence = jsonObject.getString("actScence");
+                                        costume.code = jsonObject.getString("code");
+                                        costume.type = jsonObject.getString("type");
+                                        costume.size = jsonObject.getString("size");
+                                        costume.codeNo = jsonObject.getString("codeNo");
+                                        costume.epcHeader = jsonObject.getString("epcHeader");
+                                        costume.epcRun = jsonObject.getString("epcRun");
+                                        costume.shipBox = jsonObject.getString("shipBox");
+                                        costume.storageBox = jsonObject.getString("storageBox");
+                                        costume.playBox = jsonObject.getString("playBox");
+                                        mCostumeArrayList.add(costume);
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
                                 }
-                            }
-                            Log.d(TAG, "mCostumeArrayList.size()=" + mCostumeArrayList.size());
-                            Log.d(TAG, "importLocalCostumeDB...");
-                            if(mCostumeArrayList.size() > 0) {
-                                // refresh local costume database by network database
-                                new ImportLocalCostumeThread().start();
-                            } else {
-                                // load costume list from local database
-                                processDialog = new ProgressDialog(mContext);
-                                processDialog.setMessage("Please  Wait ... COSTUME_All");
-                                processDialog.setCancelable(false);
-                                processDialog.show();
-                                new LoadLocalCostumeThread().start();
-                            }
+                                Log.d(TAG, "mCostumeArrayList.size()=" + mCostumeArrayList.size());
 
-                            processDialog.dismiss();
+                                if (mCostumeArrayList.size() > 0) {
+                                    Log.d(TAG, "importLocalCostumeDB...");
+                                    // refresh local costume database by network database
+                                    new ImportLocalCostumeThread().start();
+                                } else {
+                                    // load costume list from local database
+//                                    processDialog = new ProgressDialog(mContext);
+//                                    processDialog.setMessage("Please  Wait ... COSTUME_All");
+//                                    processDialog.setCancelable(false);
+//                                    processDialog.show();
+                                    new LoadLocalCostumeThread().start();
+                                }
+
+//                                processDialog.dismiss();
+                            }
+                            break;
+
+                        case Constants.SHIPBOX_All:
+                        case Constants.STORAGEBOX_All:
+                        case Constants.PLAYBOX_All: {
+                                ArrayList<Box> boxArrayList = new ArrayList<Box>();
+
+                                for (int i = 0; i < restfulJsonArray.length(); i++) {
+                                    try {
+                                        JSONObject jsonObject = restfulJsonArray.getJSONObject(i);
+                                        Box box = new Box();
+                                        box.uid = jsonObject.getInt("uid");
+                                        box.name = jsonObject.getString("name");
+                                        box.epc = jsonObject.getString("epc");
+                                        box.epcHeader = jsonObject.getString("epcHeader");
+                                        box.epcRun = jsonObject.getString("epcRun");
+                                        boxArrayList.add(box);
+
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+                                Log.d(TAG, "boxArrayList.size()=" + boxArrayList.size());
+
+                                switch(servicePath.uid) {
+                                    case Constants.SHIPBOX_All: {
+                                            if(boxArrayList.size() > 0) {
+                                                mShipBoxArrayList = boxArrayList;
+
+                                                new ImportLocalShipBoxThread().start();
+                                            } else {
+                                                new LoadLocalShipBoxThread().start();
+                                            }
+
+//                                            shipboxRVAdapter = BoxRVAdapter(mContext, mActivity, boxArrayList, this@CheckTypeDialogFragment)
+//                                            shipbox_rvlist!!.setAdapter(shipboxRVAdapter)
+//                                            shipboxRVAdapter!!.notifyDataSetChanged()
+                                        }
+                                        break;
+                                    case Constants.STORAGEBOX_All: {
+                                            if(boxArrayList.size() > 0) {
+                                                mStorageBoxArrayList = boxArrayList;
+
+                                                new ImportLocalStorageBoxThread().start();
+                                            } else {
+                                                new LoadLocalStorageBoxThread().start();
+                                            }
+//                                            storageboxRVAdapter = BoxRVAdapter(mContext, mActivity, boxArrayList, this@CheckTypeDialogFragment)
+//                                            storagebox_rvlist!!.setAdapter(storageboxRVAdapter)
+//                                            storageboxRVAdapter!!.notifyDataSetChanged()
+                                        }
+                                        break;
+                                    case Constants.PLAYBOX_All: {
+                                            if(boxArrayList.size() > 0) {
+                                                mPlayBoxArrayList = boxArrayList;
+
+                                                new ImportLocalPlayBoxThread().start();
+                                            } else {
+                                                new LoadLocalPlayBoxThread().start();
+                                            }
+
+//                                            playboxRVAdapter = BoxRVAdapter(mContext, mActivity, boxArrayList, this@CheckTypeDialogFragment)
+//                                            playbox_rvlist!!.setAdapter(playboxRVAdapter)
+//                                            playboxRVAdapter!!.notifyDataSetChanged()
+                                        }
+                                        break;
+                                }
+//                                processDialog.dismiss();
+                            }
                             break;
                     }
-
-
                 }
             } else {
+
                 // load costume list from local database
-                processDialog = new ProgressDialog(mContext);
-                processDialog.setMessage("Cannot access database server. then use local database instead!! Please  Wait ...");
-                processDialog.setCancelable(false);
-                processDialog.show();
+//                processDialog = new ProgressDialog(mContext);
+//                processDialog.setMessage("Cannot access database server. then use local database instead!! Please  Wait ...");
+//                processDialog.setCancelable(false);
+//                processDialog.show();
                 new LoadLocalCostumeThread().start();
             }
+//            processDialog.dismiss();
         }
 
     }//end of async task
@@ -2637,26 +2735,26 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                     @Override
                     public void run() {
                         showProgressBar();
-                        processDialog = new ProgressDialog(mContext);
-                        processDialog.setMessage("Updating local costume list. Please  Wait ...");
-                        processDialog.setCancelable(false);
-                        processDialog.show();
+//                        processDialog = new ProgressDialog(mContext);
+//                        processDialog.setMessage("Updating local costume list. Please  Wait ...");
+//                        processDialog.setCancelable(false);
+//                        processDialog.show();
                         by_item_set_button.setBackgroundColor(getResources().getColor(R.color.colorGrey));
                         by_item_code_button.setBackgroundColor(getResources().getColor(R.color.colorGrey));
                         by_item_set_button.setEnabled(false);
                         by_item_code_button.setEnabled(false);
 
-                        hideProgressBar();
-                        processDialog.dismiss();
+//                        hideProgressBar();
+//                        processDialog.dismiss();
                     }
                 });
+
+                System.out.println("thread is running...");
+                RoomUtils.Companion.importLocalCostumeDB(getApplicationContext(), mCostumeArrayList);
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
-            System.out.println("thread is running...");
-            RoomUtils.Companion.importLocalCostumeDB(getApplicationContext(), mCostumeArrayList);
 
             try {
                 runOnUiThread(new Runnable() {
@@ -2664,7 +2762,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                     @Override
                     public void run() {
                         hideProgressBar();
-                        processDialog.dismiss();
+//                        processDialog.dismiss();
                         by_item_set_button.setBackgroundColor(getResources().getColor(R.color.colorWhite));
                         by_item_code_button.setBackgroundColor(getResources().getColor(R.color.colorWhite));
                         by_item_set_button.setEnabled(true);
@@ -2677,6 +2775,150 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
             }
 
             new RefreshItemSetResultThread().start();
+        }
+    }
+
+    class ImportLocalShipBoxThread extends Thread {
+        public void run() {
+            try {
+//                runOnUiThread(new Runnable() {
+//
+//                    @Override
+//                    public void run() {
+//                        showProgressBar();
+//                        processDialog = new ProgressDialog(mContext);
+//                        processDialog.setMessage("Updating local shipbox list. Please  Wait ...");
+//                        processDialog.setCancelable(false);
+//                        processDialog.show();
+//
+//                        by_item_set_button.setBackgroundColor(getResources().getColor(R.color.colorGrey));
+//                        by_item_code_button.setBackgroundColor(getResources().getColor(R.color.colorGrey));
+//                        by_item_set_button.setEnabled(false);
+//                        by_item_code_button.setEnabled(false);
+//
+//                    }
+//                });
+
+                System.out.println("thread is running...");
+                RoomUtils.Companion.importLocalShipBoxDB(getApplicationContext(), mShipBoxArrayList);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+//            try {
+//                runOnUiThread(new Runnable() {
+//
+//                    @Override
+//                    public void run() {
+//                        hideProgressBar();
+//                        processDialog.dismiss();
+//                        by_item_set_button.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+//                        by_item_code_button.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+//                        by_item_set_button.setEnabled(true);
+//                        by_item_code_button.setEnabled(true);
+//                    }
+//                });
+//
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+        }
+    }
+
+    class ImportLocalStorageBoxThread extends Thread {
+        public void run() {
+            try {
+//                runOnUiThread(new Runnable() {
+//
+//                    @Override
+//                    public void run() {
+//                        showProgressBar();
+//                        processDialog = new ProgressDialog(mContext);
+//                        processDialog.setMessage("Updating local storagebox list. Please  Wait ...");
+//                        processDialog.setCancelable(false);
+//                        processDialog.show();
+
+//                        by_item_set_button.setBackgroundColor(getResources().getColor(R.color.colorGrey));
+//                        by_item_code_button.setBackgroundColor(getResources().getColor(R.color.colorGrey));
+//                        by_item_set_button.setEnabled(false);
+//                        by_item_code_button.setEnabled(false);
+
+//                    }
+//                });
+
+                System.out.println("thread is running...");
+                RoomUtils.Companion.importLocalStorageBoxDB(getApplicationContext(), mStorageBoxArrayList);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+//            try {
+//                runOnUiThread(new Runnable() {
+//
+//                    @Override
+//                    public void run() {
+//                        hideProgressBar();
+//                        processDialog.dismiss();
+//                        by_item_set_button.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+//                        by_item_code_button.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+//                        by_item_set_button.setEnabled(true);
+//                        by_item_code_button.setEnabled(true);
+//                    }
+//                });
+//
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+        }
+    }
+
+    class ImportLocalPlayBoxThread extends Thread {
+        public void run() {
+            try {
+//                runOnUiThread(new Runnable() {
+//
+//                    @Override
+//                    public void run() {
+//                        showProgressBar();
+//                        processDialog = new ProgressDialog(mContext);
+//                        processDialog.setMessage("Updating local playbox list. Please  Wait ...");
+//                        processDialog.setCancelable(false);
+//                        processDialog.show();
+//
+//                        by_item_set_button.setBackgroundColor(getResources().getColor(R.color.colorGrey));
+//                        by_item_code_button.setBackgroundColor(getResources().getColor(R.color.colorGrey));
+//                        by_item_set_button.setEnabled(false);
+//                        by_item_code_button.setEnabled(false);
+//
+//                    }
+//                });
+
+                System.out.println("thread is running...");
+                RoomUtils.Companion.importLocalPlayBoxDB(getApplicationContext(), mPlayBoxArrayList);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+//            try {
+//                runOnUiThread(new Runnable() {
+//
+//                    @Override
+//                    public void run() {
+//                        hideProgressBar();
+//                        processDialog.dismiss();
+//                        by_item_set_button.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+//                        by_item_code_button.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+//                        by_item_set_button.setEnabled(true);
+//                        by_item_code_button.setEnabled(true);
+//                    }
+//                });
+//
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
         }
     }
 
@@ -2703,17 +2945,91 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
 
     class LoadLocalCostumeThread extends Thread {
         public void run() {
-            System.out.println("thread is running...");
-            mCostumeArrayList = (ArrayList<Costume>) RoomUtils.Companion.loadLocalCostumeList(getApplicationContext());
-
             try {
-                runOnUiThread(new Runnable() {
+                System.out.println("thread is running...");
+                mCostumeArrayList = (ArrayList<Costume>) RoomUtils.Companion.loadLocalCostumeList(getApplicationContext());
+//                runOnUiThread(new Runnable() {
+//
+//                    @Override
+//                    public void run() {
+//                        processDialog.dismiss();
+//                    }
+//                });
 
-                    @Override
-                    public void run() {
-                        processDialog.dismiss();
-                    }
-                });
+                try {
+                    runOnUiThread(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            hideProgressBar();
+//                            processDialog.dismiss();
+                            by_item_set_button.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+                            by_item_code_button.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+                            by_item_set_button.setEnabled(true);
+                            by_item_code_button.setEnabled(true);
+                        }
+                    });
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    class LoadLocalShipBoxThread extends Thread {
+        public void run() {
+            try {
+                System.out.println("thread is running...");
+                mShipBoxArrayList = (ArrayList<Box>) RoomUtils.Companion.loadLocalShipBoxList(getApplicationContext());
+//                runOnUiThread(new Runnable() {
+//
+//                    @Override
+//                    public void run() {
+//                        processDialog.dismiss();
+//                    }
+//                });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    class LoadLocalStorageBoxThread extends Thread {
+        public void run() {
+            try {
+                System.out.println("thread is running...");
+                mStorageBoxArrayList = (ArrayList<Box>) RoomUtils.Companion.loadLocalStorageBoxList(getApplicationContext());
+//                runOnUiThread(new Runnable() {
+//
+//                    @Override
+//                    public void run() {
+//                        processDialog.dismiss();
+//                    }
+//                });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    class LoadLocalPlayBoxThread extends Thread {
+        public void run() {
+            try {
+                System.out.println("thread is running...");
+                mPlayBoxArrayList = (ArrayList<Box>) RoomUtils.Companion.loadLocalPlayBoxList(getApplicationContext());
+//                runOnUiThread(new Runnable() {
+//
+//                    @Override
+//                    public void run() {
+//                        processDialog.dismiss();
+//                    }
+//                });
 
             } catch (Exception e) {
                 e.printStackTrace();

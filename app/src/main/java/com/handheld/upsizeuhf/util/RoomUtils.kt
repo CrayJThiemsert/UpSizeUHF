@@ -7,6 +7,7 @@ import androidx.room.Room
 import com.handheld.upsizeuhf.dao.CostumeDao
 import com.handheld.upsizeuhf.database.CostumeRoomDatabase
 import com.handheld.upsizeuhf.model.Actor
+import com.handheld.upsizeuhf.model.Box
 import com.handheld.upsizeuhf.model.Costume
 import kotlinx.coroutines.*
 import java.util.ArrayList
@@ -25,36 +26,85 @@ class RoomUtils {
 //                localDb = Room.databaseBuilder(context, CostumeRoomDatabase::class.java, "costumedb").allowMainThreadQueries().build()
                 localDb = Room.databaseBuilder(context, CostumeRoomDatabase::class.java, "costumedb").build()
 
-                val zero = somethingUsefulZeroAsync()
-                runBlocking { zero.await() }
+                // Clear
+                val deleteCostumeTask = deleteAllLocalCostumeAsync()
+                runBlocking { deleteCostumeTask.await() }
 
-                // Run one by one insert, slow
-//                var i: Int = 0
-//                networkCostumes.forEach { costume ->
-//                    val one = doRefreshLocalCostumesAsync(i, costume)
-//                    runBlocking {
-//                        one.await()
-//                        i++
-//                    }
-//                }
-
+                // =========================================
+                // Insert all new
                 // Run batch insert, fast
-                val one = doBatchRefreshLocalCostumesAsync(networkCostumes)
+                val insertAllCostumesTask = doBatchInsertAllLocalCostumesAsync(networkCostumes)
                 runBlocking {
-                    one.await()
+                    insertAllCostumesTask.await()
+                }
+            }
+            println("Completed in $time ms")
+//            Thread {
+//                val costumeList = loadLocalCostumeList(context)
+//
+//                Log.d(TAG, "costumesxx1 size=" + costumeList.size)
+//            }.start()
+
+        }
+
+        fun importLocalShipBoxDB(context: Context, networkShipBoxes: MutableList<Box>) {
+            val time = measureTimeMillis {
+                localDb = Room.databaseBuilder(context, CostumeRoomDatabase::class.java, "costumedb").build()
+
+                // Clear
+                val deleteShipBoxTask = deleteAllLocalShipBoxAsync()
+                runBlocking { deleteShipBoxTask.await() }
+
+                // =========================================
+                // Insert all new
+                // Run batch insert, fast
+                val insertAllShipBoxesTask = doBatchInsertAllLocalShipBoxesAsync(networkShipBoxes)
+                runBlocking {
+                    insertAllShipBoxesTask.await()
                 }
 
             }
             println("Completed in $time ms")
-            Thread {
-//                val costumeDao = localDb.costumeDao()
-//                val costumeList: List<com.handheld.upsizeuhf.entity.Costume> = costumeDao.getAllCostumes()
-                val costumeList = loadLocalCostumeList(context)
+        }
 
-                Log.d(TAG, "costumesxx1 size=" + costumeList.size)
-//                Log.d(TAG, "costumesxxx actor=" + costumeList[0].actor)
-            }.start()
+        fun importLocalStorageBoxDB(context: Context, networkStorageBoxes: MutableList<Box>) {
+            val time = measureTimeMillis {
+                localDb = Room.databaseBuilder(context, CostumeRoomDatabase::class.java, "costumedb").build()
 
+                // Clear
+                val deleteStorageBoxTask = deleteAllLocalStorageBoxAsync()
+                runBlocking { deleteStorageBoxTask.await() }
+
+                // =========================================
+                // Insert all new
+                // Run batch insert, fast
+                val insertAllStorageBoxesTask = doBatchInsertAllLocalStorageBoxesAsync(networkStorageBoxes)
+                runBlocking {
+                    insertAllStorageBoxesTask.await()
+                }
+
+            }
+            println("Completed in $time ms")
+        }
+
+        fun importLocalPlayBoxDB(context: Context, networkPlayBoxes: MutableList<Box>) {
+            val time = measureTimeMillis {
+                localDb = Room.databaseBuilder(context, CostumeRoomDatabase::class.java, "costumedb").build()
+
+                // Clear
+                val deletePlayBoxTask = deleteAllLocalPlayBoxAsync()
+                runBlocking { deletePlayBoxTask.await() }
+
+                // =========================================
+                // Insert all new
+                // Run batch insert, fast
+                val insertAllPlayBoxesTask = doBatchInsertAllLocalPlayBoxesAsync(networkPlayBoxes)
+                runBlocking {
+                    insertAllPlayBoxesTask.await()
+                }
+
+            }
+            println("Completed in $time ms")
         }
 
         fun loadLocalCostumeList(context: Context): MutableList<Costume> {
@@ -85,6 +135,75 @@ class RoomUtils {
 
             Log.d(TAG, "costumesxx2 size=" + returnList.size)
 //            Log.d(TAG, "costumesxxx actor=" + returnList[0].actor)
+
+            return returnList
+        }
+
+        fun loadLocalShipBoxList(context: Context): MutableList<Box> {
+            localDb = Room.databaseBuilder(context, CostumeRoomDatabase::class.java, "costumedb").build()
+            val costumeDao = localDb.costumeDao()
+            val shipBoxList: List<com.handheld.upsizeuhf.entity.ShipBox> = costumeDao.getAllShipBoxes()
+
+            Log.d(TAG, "loadLocalShipBoxList size=" + shipBoxList.size)
+            var returnList: MutableList<Box> = mutableListOf<Box>()
+            shipBoxList.forEach { localShipBox ->
+                val box: Box = Box(
+                        localShipBox.uid,
+                        localShipBox.name,
+                        localShipBox.epc,
+                        localShipBox.epcHeader,
+                        localShipBox.epcRun
+                )
+                returnList.add(box)
+            }
+
+            Log.d(TAG, "shipBox list size=" + returnList.size)
+
+            return returnList
+        }
+
+        fun loadLocalStorageBoxList(context: Context): MutableList<Box> {
+            localDb = Room.databaseBuilder(context, CostumeRoomDatabase::class.java, "costumedb").build()
+            val costumeDao = localDb.costumeDao()
+            val storageBoxList: List<com.handheld.upsizeuhf.entity.StorageBox> = costumeDao.getAllStorageBoxes()
+
+            Log.d(TAG, "loadLocalStorageBoxList size=" + storageBoxList.size)
+            var returnList: MutableList<Box> = mutableListOf<Box>()
+            storageBoxList.forEach { localStorageBox ->
+                val box: Box = Box(
+                        localStorageBox.uid,
+                        localStorageBox.name,
+                        localStorageBox.epc,
+                        localStorageBox.epcHeader,
+                        localStorageBox.epcRun
+                )
+                returnList.add(box)
+            }
+
+            Log.d(TAG, "storageBox list size=" + returnList.size)
+
+            return returnList
+        }
+
+        fun loadLocalPlayBoxList(context: Context): MutableList<Box> {
+            localDb = Room.databaseBuilder(context, CostumeRoomDatabase::class.java, "costumedb").build()
+            val costumeDao = localDb.costumeDao()
+            val playBoxList: List<com.handheld.upsizeuhf.entity.PlayBox> = costumeDao.getAllPlayBoxes()
+
+            Log.d(TAG, "loadLocalPlayBoxList size=" + playBoxList.size)
+            var returnList: MutableList<Box> = mutableListOf<Box>()
+            playBoxList.forEach { localPlayBox ->
+                val box: Box = Box(
+                        localPlayBox.uid,
+                        localPlayBox.name,
+                        localPlayBox.epc,
+                        localPlayBox.epcHeader,
+                        localPlayBox.epcRun
+                )
+                returnList.add(box)
+            }
+
+            Log.d(TAG, "playBox list size=" + returnList.size)
 
             return returnList
         }
@@ -152,16 +271,28 @@ class RoomUtils {
                 }
             }
 
-//            returnList = returnList.toMutableSet().toMutableList()
             Log.d(TAG, "item code filter size=" + returnList.size)
-//            Log.d(TAG, "1st code filter=" + returnList[0].code)
-
             return returnList
         }
 
         @OptIn(DelicateCoroutinesApi::class)
-        fun somethingUsefulZeroAsync() = GlobalScope.async {
-            doSomethingUsefulZero()
+        fun deleteAllLocalCostumeAsync() = GlobalScope.async {
+            doDeleteAllLocalCostume()
+        }
+
+        @OptIn(DelicateCoroutinesApi::class)
+        fun deleteAllLocalShipBoxAsync() = GlobalScope.async {
+            doDeleteAllLocalShipBox()
+        }
+
+        @OptIn(DelicateCoroutinesApi::class)
+        fun deleteAllLocalStorageBoxAsync() = GlobalScope.async {
+            doDeleteAllLocalStorageBox()
+        }
+
+        @OptIn(DelicateCoroutinesApi::class)
+        fun deleteAllLocalPlayBoxAsync() = GlobalScope.async {
+            doDeleteAllLocalPlayBox()
         }
 
         @OptIn(DelicateCoroutinesApi::class)
@@ -170,17 +301,50 @@ class RoomUtils {
         }
 
         @OptIn(DelicateCoroutinesApi::class)
-        fun doBatchRefreshLocalCostumesAsync(networkCostumes: MutableList<Costume>) = GlobalScope.async {
-            doBatchRefreshLocalCostumes(networkCostumes)
+        fun doBatchInsertAllLocalCostumesAsync(networkCostumes: MutableList<Costume>) = GlobalScope.async {
+            doBatchInsertAllLocalCostumes(networkCostumes)
         }
 
-        suspend fun doSomethingUsefulZero(): Boolean {
+        @OptIn(DelicateCoroutinesApi::class)
+        fun doBatchInsertAllLocalShipBoxesAsync(networkShipBoxes: MutableList<Box>) = GlobalScope.async {
+            doBatchInsertAllLocalShipBoxes(networkShipBoxes)
+        }
+
+        @OptIn(DelicateCoroutinesApi::class)
+        fun doBatchInsertAllLocalStorageBoxesAsync(networkStorageBoxes: MutableList<Box>) = GlobalScope.async {
+            doBatchInsertAllLocalStorageBoxes(networkStorageBoxes)
+        }
+
+        @OptIn(DelicateCoroutinesApi::class)
+        fun doBatchInsertAllLocalPlayBoxesAsync(networkPlayBoxes: MutableList<Box>) = GlobalScope.async {
+            doBatchInsertAllLocalPlayBoxes(networkPlayBoxes)
+        }
+
+        suspend fun doDeleteAllLocalCostume(): Boolean {
             val costumeDao = localDb.costumeDao()
-            costumeDao.deleteAll()
+            costumeDao.deleteAllCostume()
             return true
         }
 
-        suspend fun doBatchRefreshLocalCostumes(networkCostumes: MutableList<Costume>): Boolean {
+        suspend fun doDeleteAllLocalShipBox(): Boolean {
+            val costumeDao = localDb.costumeDao()
+            costumeDao.deleteAllShipBox()
+            return true
+        }
+
+        suspend fun doDeleteAllLocalStorageBox(): Boolean {
+            val costumeDao = localDb.costumeDao()
+            costumeDao.deleteAllStorageBox()
+            return true
+        }
+
+        suspend fun doDeleteAllLocalPlayBox(): Boolean {
+            val costumeDao = localDb.costumeDao()
+            costumeDao.deleteAllPlayBox()
+            return true
+        }
+
+        suspend fun doBatchInsertAllLocalCostumes(networkCostumes: MutableList<Costume>): Boolean {
             val costumeDao = localDb.costumeDao()
 //            print(networkCostume.actor)
             var localCostumes: MutableList<com.handheld.upsizeuhf.entity.Costume> = mutableListOf<com.handheld.upsizeuhf.entity.Costume>()
@@ -205,7 +369,70 @@ class RoomUtils {
                 localCostumes.add(localCostume)
             }
 
-            costumeDao.insertAll(*localCostumes.toTypedArray());
+            costumeDao.insertAllCostume(*localCostumes.toTypedArray());
+            return true
+        }
+
+        suspend fun doBatchInsertAllLocalShipBoxes(networkShipBoxes: MutableList<Box>): Boolean {
+            val costumeDao = localDb.costumeDao()
+            var localShipBoxes: MutableList<com.handheld.upsizeuhf.entity.ShipBox> = mutableListOf<com.handheld.upsizeuhf.entity.ShipBox>()
+            var i: Int = 1
+            networkShipBoxes.forEach { networkShipBox ->
+                var localShipBox = com.handheld.upsizeuhf.entity.ShipBox(
+                        i,
+                        networkShipBox.name,
+                        networkShipBox.epc,
+                        networkShipBox.epcHeader,
+                        networkShipBox.epcRun,
+                        true
+                );
+                i++
+                localShipBoxes.add(localShipBox)
+            }
+
+            costumeDao.insertAllShipBox(*localShipBoxes.toTypedArray());
+            return true
+        }
+
+        suspend fun doBatchInsertAllLocalStorageBoxes(networkStorageBoxes: MutableList<Box>): Boolean {
+            val costumeDao = localDb.costumeDao()
+            var localStorageBoxes: MutableList<com.handheld.upsizeuhf.entity.StorageBox> = mutableListOf<com.handheld.upsizeuhf.entity.StorageBox>()
+            var i: Int = 1
+            networkStorageBoxes.forEach { networkStorageBox ->
+                var localStorageBox = com.handheld.upsizeuhf.entity.StorageBox(
+                        i,
+                        networkStorageBox.name,
+                        networkStorageBox.epc,
+                        networkStorageBox.epcHeader,
+                        networkStorageBox.epcRun,
+                        true
+                );
+                i++
+                localStorageBoxes.add(localStorageBox)
+            }
+
+            costumeDao.insertAllStorageBox(*localStorageBoxes.toTypedArray());
+            return true
+        }
+
+        suspend fun doBatchInsertAllLocalPlayBoxes(networkPlayBoxes: MutableList<Box>): Boolean {
+            val costumeDao = localDb.costumeDao()
+            var localPlayBoxes: MutableList<com.handheld.upsizeuhf.entity.PlayBox> = mutableListOf<com.handheld.upsizeuhf.entity.PlayBox>()
+            var i: Int = 1
+            networkPlayBoxes.forEach { networkPlayBox ->
+                var localPlayBox = com.handheld.upsizeuhf.entity.PlayBox(
+                        i,
+                        networkPlayBox.name,
+                        networkPlayBox.epc,
+                        networkPlayBox.epcHeader,
+                        networkPlayBox.epcRun,
+                        true
+                );
+                i++
+                localPlayBoxes.add(localPlayBox)
+            }
+
+            costumeDao.insertAllPlayBox(*localPlayBoxes.toTypedArray());
             return true
         }
 
@@ -228,7 +455,7 @@ class RoomUtils {
                     networkCostume.storageBox,
                     networkCostume.playBox
             );
-            costumeDao.insert(localCostume);
+            costumeDao.insertCostume(localCostume);
             return true
         }
 

@@ -2,13 +2,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        />
 
     <TextView
         android:id="@+id/textview_title_config"
@@ -321,6 +314,7 @@
 
                     <Button android:text="@string/by_item_set_label"
                         android:id="@+id/by_item_set_button"
+                        android:enabled="false"
                         android:layout_width="260dip"
                         android:layout_height="100dip"
                         android:layout_gravity="center"
@@ -344,6 +338,7 @@
 
                     <Button android:text="@string/by_item_code_label"
                         android:id="@+id/by_item_code_button"
+                        android:enabled="false"
                         android:layout_width="260dip"
                         android:layout_height="100dip"
                         android:layout_gravity="center"
@@ -1723,4 +1718,13 @@
         </LinearLayout>
     </FrameLayout>
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="invisible"
+        android:elevation="30dp"
+        />
 </RelativeLayout>
