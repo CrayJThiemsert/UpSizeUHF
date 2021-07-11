@@ -18,27 +18,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.handheld.upsizeuhf.R
 import com.handheld.upsizeuhf.UHFActivity
-import com.handheld.upsizeuhf.model.Actor
 import com.handheld.upsizeuhf.model.Box
 import com.handheld.upsizeuhf.model.Costume
 import com.handheld.upsizeuhf.model.QueryService
-import com.handheld.upsizeuhf.ui.ActSceneRVAdapter
-import com.handheld.upsizeuhf.ui.ActorRVAdapter
 import com.handheld.upsizeuhf.ui.BoxRVAdapter
 import com.handheld.upsizeuhf.util.AnimationUtils
 import com.handheld.upsizeuhf.util.Constants
 import com.handheld.upsizeuhf.util.Constants.Companion.getCheckedHistoryProcedure
-import com.handheld.upsizeuhf.util.Constants.Companion.getPlayBoxAllQuery
-import com.handheld.upsizeuhf.util.Constants.Companion.getShipBoxAllQuery
-import com.handheld.upsizeuhf.util.Constants.Companion.getStorageBoxAllQuery
 import com.handheld.upsizeuhf.util.HttpConnectionService
-import com.handheld.upsizeuhf.util.RoomUtils.Companion.loadActorList
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.*
+
 //import androidx.fragment.app.DialogFragment
 
 
@@ -77,10 +69,15 @@ class CheckTypeDialogFragment : DialogFragment() {
     private var mBoxArrayList = ArrayList<Box>()
 
     interface ReloadCostumeListener {
-        fun onFinishCheckedBoxDialog()
+        fun onFinishCheckedBoxDialog(msgBody: String)
     }
 
     public lateinit var reloadCostumeListener: ReloadCostumeListener
+
+    lateinit var mScannedFoundList: String
+    lateinit var mBoxType: String
+    lateinit var mByUser: String
+    lateinit var mCheckedBox: Box
 
     companion object {
         private var costumeCheckedList: MutableList<Costume> = mutableListOf<Costume>()
@@ -404,6 +401,12 @@ class CheckTypeDialogFragment : DialogFragment() {
             val scannedFoundList = getCostumeUidString(uhfActivity.getScannedFoundItemArrayList())
             val boxType = uhfActivity.selectedCheckedBoxType
             val byUser = uhfActivity.currentUserName
+
+            mCheckedBox = box
+            mScannedFoundList = scannedFoundList
+            mBoxType = boxType
+            mByUser = byUser
+
             Log.d(TAG, "Scanned found Costume Uid list=" + scannedFoundList)
             Log.d(TAG, "selected box type=" + boxType)
             Log.d(TAG, "selected box=" + box.toString())
@@ -415,6 +418,7 @@ class CheckTypeDialogFragment : DialogFragment() {
             procedure.path = "/costume/costume/checked/" + "?costume_uid_list="+scannedFoundList + "&actionType="+boxType+"&actionValue="+box.uid+"&byUser=" + byUser
 
             ServiceQueryAsyncTask(mActivity!!.applicationContext, mActivity!!, procedure).execute()
+
 //            dismiss()
         }
 
@@ -487,7 +491,7 @@ class CheckTypeDialogFragment : DialogFragment() {
                     uhfActivity.queryItemCodesBySelectedActorActScene()
 
                 })
-                dismiss()
+//                dismiss()
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -616,8 +620,17 @@ class CheckTypeDialogFragment : DialogFragment() {
 
     private fun sendBackResult() {
 //        val listener = this as ReloadCostumeListener?
+        Log.d(TAG, "Scanned found Costume Uid list=" + mScannedFoundList)
+        Log.d(TAG, "selected box type=" + mBoxType)
+        Log.d(TAG, "selected box=" + mCheckedBox.toString())
+        Log.d(TAG, "byUser=" + mByUser)
+
+        var msgBody = "Checked item id: " + mScannedFoundList + "\n" +
+                "in " + mBoxType + ": " + mCheckedBox.name + "\n" +
+                "by " + mByUser
+
         reloadCostumeListener = activity as ReloadCostumeListener
-        reloadCostumeListener.onFinishCheckedBoxDialog()
+        reloadCostumeListener.onFinishCheckedBoxDialog(msgBody)
 
 //        listener!!.onFinishCheckedBoxDialog()
         dismiss()

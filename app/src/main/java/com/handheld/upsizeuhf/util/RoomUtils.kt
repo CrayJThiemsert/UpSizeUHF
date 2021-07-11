@@ -10,6 +10,7 @@ import com.handheld.upsizeuhf.model.Actor
 import com.handheld.upsizeuhf.model.Box
 import com.handheld.upsizeuhf.model.Costume
 import kotlinx.coroutines.*
+import java.lang.Exception
 import java.util.ArrayList
 import kotlin.system.measureTimeMillis
 
@@ -23,19 +24,27 @@ class RoomUtils {
 
         fun importLocalCostumeDB(context: Context, networkCostumes: MutableList<Costume>) {
             val time = measureTimeMillis {
-//                localDb = Room.databaseBuilder(context, CostumeRoomDatabase::class.java, "costumedb").allowMainThreadQueries().build()
-                localDb = Room.databaseBuilder(context, CostumeRoomDatabase::class.java, "costumedb").build()
+                try {
 
-                // Clear
-                val deleteCostumeTask = deleteAllLocalCostumeAsync()
-                runBlocking { deleteCostumeTask.await() }
 
-                // =========================================
-                // Insert all new
-                // Run batch insert, fast
-                val insertAllCostumesTask = doBatchInsertAllLocalCostumesAsync(networkCostumes)
-                runBlocking {
-                    insertAllCostumesTask.await()
+                    //                localDb = Room.databaseBuilder(context, CostumeRoomDatabase::class.java, "costumedb").allowMainThreadQueries().build()
+                    localDb = Room.databaseBuilder(context, CostumeRoomDatabase::class.java, "costumedb").build()
+
+                    // Clear
+                    val deleteCostumeTask = deleteAllLocalCostumeAsync()
+                    runBlocking { deleteCostumeTask.await() }
+
+                    // =========================================
+                    // Insert all new
+                    // Run batch insert, fast
+                    val insertAllCostumesTask = doBatchInsertAllLocalCostumesAsync(networkCostumes)
+                    runBlocking {
+                        insertAllCostumesTask.await()
+                    }
+                }catch (e: Exception) {
+                    e.printStackTrace()
+                } finally {
+                    // localDb.close()
                 }
             }
             println("Completed in $time ms")
@@ -49,18 +58,24 @@ class RoomUtils {
 
         fun importLocalShipBoxDB(context: Context, networkShipBoxes: MutableList<Box>) {
             val time = measureTimeMillis {
-                localDb = Room.databaseBuilder(context, CostumeRoomDatabase::class.java, "costumedb").build()
+                try {
+                    localDb = Room.databaseBuilder(context, CostumeRoomDatabase::class.java, "costumedb").build()
 
-                // Clear
-                val deleteShipBoxTask = deleteAllLocalShipBoxAsync()
-                runBlocking { deleteShipBoxTask.await() }
+                    // Clear
+                    val deleteShipBoxTask = deleteAllLocalShipBoxAsync()
+                    runBlocking { deleteShipBoxTask.await() }
 
-                // =========================================
-                // Insert all new
-                // Run batch insert, fast
-                val insertAllShipBoxesTask = doBatchInsertAllLocalShipBoxesAsync(networkShipBoxes)
-                runBlocking {
-                    insertAllShipBoxesTask.await()
+                    // =========================================
+                    // Insert all new
+                    // Run batch insert, fast
+                    val insertAllShipBoxesTask = doBatchInsertAllLocalShipBoxesAsync(networkShipBoxes)
+                    runBlocking {
+                        insertAllShipBoxesTask.await()
+                    }
+                }catch (e: Exception) {
+                    e.printStackTrace()
+                } finally {
+                    // localDb.close()
                 }
 
             }
@@ -69,18 +84,26 @@ class RoomUtils {
 
         fun importLocalStorageBoxDB(context: Context, networkStorageBoxes: MutableList<Box>) {
             val time = measureTimeMillis {
-                localDb = Room.databaseBuilder(context, CostumeRoomDatabase::class.java, "costumedb").build()
+                try {
 
-                // Clear
-                val deleteStorageBoxTask = deleteAllLocalStorageBoxAsync()
-                runBlocking { deleteStorageBoxTask.await() }
 
-                // =========================================
-                // Insert all new
-                // Run batch insert, fast
-                val insertAllStorageBoxesTask = doBatchInsertAllLocalStorageBoxesAsync(networkStorageBoxes)
-                runBlocking {
-                    insertAllStorageBoxesTask.await()
+                    localDb = Room.databaseBuilder(context, CostumeRoomDatabase::class.java, "costumedb").build()
+
+                    // Clear
+                    val deleteStorageBoxTask = deleteAllLocalStorageBoxAsync()
+                    runBlocking { deleteStorageBoxTask.await() }
+
+                    // =========================================
+                    // Insert all new
+                    // Run batch insert, fast
+                    val insertAllStorageBoxesTask = doBatchInsertAllLocalStorageBoxesAsync(networkStorageBoxes)
+                    runBlocking {
+                        insertAllStorageBoxesTask.await()
+                    }
+                }catch (e: Exception) {
+                    e.printStackTrace()
+                } finally {
+                    // localDb.close()
                 }
 
             }
@@ -89,18 +112,24 @@ class RoomUtils {
 
         fun importLocalPlayBoxDB(context: Context, networkPlayBoxes: MutableList<Box>) {
             val time = measureTimeMillis {
-                localDb = Room.databaseBuilder(context, CostumeRoomDatabase::class.java, "costumedb").build()
+                try {
+                    localDb = Room.databaseBuilder(context, CostumeRoomDatabase::class.java, "costumedb").build()
 
-                // Clear
-                val deletePlayBoxTask = deleteAllLocalPlayBoxAsync()
-                runBlocking { deletePlayBoxTask.await() }
+                    // Clear
+                    val deletePlayBoxTask = deleteAllLocalPlayBoxAsync()
+                    runBlocking { deletePlayBoxTask.await() }
 
-                // =========================================
-                // Insert all new
-                // Run batch insert, fast
-                val insertAllPlayBoxesTask = doBatchInsertAllLocalPlayBoxesAsync(networkPlayBoxes)
-                runBlocking {
-                    insertAllPlayBoxesTask.await()
+                    // =========================================
+                    // Insert all new
+                    // Run batch insert, fast
+                    val insertAllPlayBoxesTask = doBatchInsertAllLocalPlayBoxesAsync(networkPlayBoxes)
+                    runBlocking {
+                        insertAllPlayBoxesTask.await()
+                    }
+                }catch (e: Exception) {
+                    e.printStackTrace()
+                } finally {
+                    // localDb.close()
                 }
 
             }
@@ -108,29 +137,36 @@ class RoomUtils {
         }
 
         fun loadLocalCostumeList(context: Context): MutableList<Costume> {
-            localDb = Room.databaseBuilder(context, CostumeRoomDatabase::class.java, "costumedb").build()
-            val costumeDao = localDb.costumeDao()
-            val costumeList: List<com.handheld.upsizeuhf.entity.Costume> = costumeDao.getAllCostumes()
-
-            Log.d(TAG, "loadLocalCostumeList size=" + costumeList.size)
             var returnList: MutableList<Costume> = mutableListOf<Costume>()
-            costumeList.forEach { localCostume ->
-                val costume: Costume = Costume(
-                        localCostume.uid,
-                        localCostume.runningNo,
-                        localCostume.actor,
-                        localCostume.actScence,
-                        localCostume.code,
-                        localCostume.type,
-                        localCostume.size,
-                        localCostume.codeNo,
-                        localCostume.epcHeader,
-                        localCostume.epcRun,
-                        localCostume.shipBox,
-                        localCostume.storageBox,
-                        localCostume.playBox
-                )
-                returnList.add(costume)
+            try {
+                localDb = Room.databaseBuilder(context, CostumeRoomDatabase::class.java, "costumedb").build()
+                val costumeDao = localDb.costumeDao()
+                val costumeList: List<com.handheld.upsizeuhf.entity.Costume> = costumeDao.getAllCostumes()
+
+                Log.d(TAG, "loadLocalCostumeList size=" + costumeList.size)
+
+                costumeList.forEach { localCostume ->
+                    val costume: Costume = Costume(
+                            localCostume.uid,
+                            localCostume.runningNo,
+                            localCostume.actor,
+                            localCostume.actScence,
+                            localCostume.code,
+                            localCostume.type,
+                            localCostume.size,
+                            localCostume.codeNo,
+                            localCostume.epcHeader,
+                            localCostume.epcRun,
+                            localCostume.shipBox,
+                            localCostume.storageBox,
+                            localCostume.playBox
+                    )
+                    returnList.add(costume)
+                }
+            }catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                // localDb.close()
             }
 
             Log.d(TAG, "costumesxx2 size=" + returnList.size)
@@ -140,21 +176,29 @@ class RoomUtils {
         }
 
         fun loadLocalShipBoxList(context: Context): MutableList<Box> {
-            localDb = Room.databaseBuilder(context, CostumeRoomDatabase::class.java, "costumedb").build()
-            val costumeDao = localDb.costumeDao()
-            val shipBoxList: List<com.handheld.upsizeuhf.entity.ShipBox> = costumeDao.getAllShipBoxes()
-
-            Log.d(TAG, "loadLocalShipBoxList size=" + shipBoxList.size)
             var returnList: MutableList<Box> = mutableListOf<Box>()
-            shipBoxList.forEach { localShipBox ->
-                val box: Box = Box(
-                        localShipBox.uid,
-                        localShipBox.name,
-                        localShipBox.epc,
-                        localShipBox.epcHeader,
-                        localShipBox.epcRun
-                )
-                returnList.add(box)
+
+            try {
+                localDb = Room.databaseBuilder(context, CostumeRoomDatabase::class.java, "costumedb").build()
+                val costumeDao = localDb.costumeDao()
+                val shipBoxList: List<com.handheld.upsizeuhf.entity.ShipBox> = costumeDao.getAllShipBoxes()
+
+                Log.d(TAG, "loadLocalShipBoxList size=" + shipBoxList.size)
+
+                shipBoxList.forEach { localShipBox ->
+                    val box: Box = Box(
+                            localShipBox.uid,
+                            localShipBox.name,
+                            localShipBox.epc,
+                            localShipBox.epcHeader,
+                            localShipBox.epcRun
+                    )
+                    returnList.add(box)
+                }
+            }catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                // localDb.close()
             }
 
             Log.d(TAG, "shipBox list size=" + returnList.size)
@@ -163,21 +207,28 @@ class RoomUtils {
         }
 
         fun loadLocalStorageBoxList(context: Context): MutableList<Box> {
-            localDb = Room.databaseBuilder(context, CostumeRoomDatabase::class.java, "costumedb").build()
-            val costumeDao = localDb.costumeDao()
-            val storageBoxList: List<com.handheld.upsizeuhf.entity.StorageBox> = costumeDao.getAllStorageBoxes()
-
-            Log.d(TAG, "loadLocalStorageBoxList size=" + storageBoxList.size)
             var returnList: MutableList<Box> = mutableListOf<Box>()
-            storageBoxList.forEach { localStorageBox ->
-                val box: Box = Box(
-                        localStorageBox.uid,
-                        localStorageBox.name,
-                        localStorageBox.epc,
-                        localStorageBox.epcHeader,
-                        localStorageBox.epcRun
-                )
-                returnList.add(box)
+            try {
+                localDb = Room.databaseBuilder(context, CostumeRoomDatabase::class.java, "costumedb").build()
+                val costumeDao = localDb.costumeDao()
+                val storageBoxList: List<com.handheld.upsizeuhf.entity.StorageBox> = costumeDao.getAllStorageBoxes()
+
+                Log.d(TAG, "loadLocalStorageBoxList size=" + storageBoxList.size)
+
+                storageBoxList.forEach { localStorageBox ->
+                    val box: Box = Box(
+                            localStorageBox.uid,
+                            localStorageBox.name,
+                            localStorageBox.epc,
+                            localStorageBox.epcHeader,
+                            localStorageBox.epcRun
+                    )
+                    returnList.add(box)
+                }
+            }catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                // localDb.close()
             }
 
             Log.d(TAG, "storageBox list size=" + returnList.size)
@@ -186,21 +237,28 @@ class RoomUtils {
         }
 
         fun loadLocalPlayBoxList(context: Context): MutableList<Box> {
-            localDb = Room.databaseBuilder(context, CostumeRoomDatabase::class.java, "costumedb").build()
-            val costumeDao = localDb.costumeDao()
-            val playBoxList: List<com.handheld.upsizeuhf.entity.PlayBox> = costumeDao.getAllPlayBoxes()
-
-            Log.d(TAG, "loadLocalPlayBoxList size=" + playBoxList.size)
             var returnList: MutableList<Box> = mutableListOf<Box>()
-            playBoxList.forEach { localPlayBox ->
-                val box: Box = Box(
-                        localPlayBox.uid,
-                        localPlayBox.name,
-                        localPlayBox.epc,
-                        localPlayBox.epcHeader,
-                        localPlayBox.epcRun
-                )
-                returnList.add(box)
+            try {
+                localDb = Room.databaseBuilder(context, CostumeRoomDatabase::class.java, "costumedb").build()
+                val costumeDao = localDb.costumeDao()
+                val playBoxList: List<com.handheld.upsizeuhf.entity.PlayBox> = costumeDao.getAllPlayBoxes()
+
+                Log.d(TAG, "loadLocalPlayBoxList size=" + playBoxList.size)
+
+                playBoxList.forEach { localPlayBox ->
+                    val box: Box = Box(
+                            localPlayBox.uid,
+                            localPlayBox.name,
+                            localPlayBox.epc,
+                            localPlayBox.epcHeader,
+                            localPlayBox.epcRun
+                    )
+                    returnList.add(box)
+                }
+            }catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                // localDb.close()
             }
 
             Log.d(TAG, "playBox list size=" + returnList.size)

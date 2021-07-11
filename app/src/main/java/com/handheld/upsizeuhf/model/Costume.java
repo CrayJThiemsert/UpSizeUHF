@@ -1,5 +1,7 @@
 package com.handheld.upsizeuhf.model;
 
+import androidx.annotation.NonNull;
+
 public class Costume {
     public int uid;
     public String runningNo;
@@ -46,5 +48,24 @@ public class Costume {
         this.shipBox = "";
         this.storageBox = "";
         this.playBox = "";
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "Costume = " +
+                "uid=" + this.uid + ", " +
+                "runningNo=" + this.runningNo + ", " +
+                "actor=" + this.actor + ", " +
+                "actScence=" + this.actScence + ", " +
+                "code=" + this.code + ", " +
+                "type=" + this.type + ", " +
+                "size=" + this.size + ", " +
+                "codeNo=" + this.codeNo + ", " +
+                "epcHeader=" + this.epcHeader + ", " +
+                "epcRun=" + this.epcRun + ", " +
+                "shipBox=" + this.shipBox + ", " +
+                "storageBox=" + this.storageBox + ", " +
+                "playBox=" + this.playBox + ", ";
     }
 }

@@ -76,6 +76,7 @@ import com.handheld.upsizeuhf.ui.ItemCodeFilterRVAdapter;
 import com.handheld.upsizeuhf.ui.ItemCodeRVAdapter;
 import com.handheld.upsizeuhf.ui.ItemInfoRVAdapter;
 import com.handheld.upsizeuhf.ui.dialog.CheckTypeDialogFragment;
+import com.handheld.upsizeuhf.ui.dialog.SuccessMessageDialogFragment;
 import com.handheld.upsizeuhf.ui.dialog.UserSignInDialogFragment;
 import com.handheld.upsizeuhf.ui.dialog.WarningMessageDialogFragment;
 import com.handheld.upsizeuhf.util.AnimationUtils;
@@ -237,8 +238,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     ArrayList<Box> mStorageBoxArrayList = new ArrayList<Box>();
     ArrayList<Box> mPlayBoxArrayList = new ArrayList<Box>();
 
-
-
+    private boolean isOnline = false;
 
     ArrayList<Actor> mActorArrayList = new ArrayList<Actor>();
     ArrayList<Costume> mItemCodeFilterArrayList = new ArrayList<Costume>();
@@ -295,12 +295,16 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     UserSignInDialogFragment userSignInDialogFragment = new UserSignInDialogFragment();
     CheckTypeDialogFragment checkTypeDialogFragment = new CheckTypeDialogFragment();
     WarningMessageDialogFragment warningMessageDialogFragment = new WarningMessageDialogFragment();
+    SuccessMessageDialogFragment successMessageDialogFragment = new SuccessMessageDialogFragment();
 
     public static CostumeRoomDatabase costumeRoomDatabase;
 
     private ProgressBar mProgressBar;
 
     private int mCurrentSearchMode = Constants.ITEM_SET_MODE;
+
+    private String mSelectedActorFilter = "";
+    private Costume mSelectedItemCodeFilter = new Costume();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -351,7 +355,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
             PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             String versionName = packageInfo.versionName;
             int versionCode = packageInfo.versionCode;
-            setTitle(getString(R.string.app_name) + "-v" + versionName + " build " + versionCode + " by [" + currentUserName + "]");
+            setTitle(getString(R.string.app_name) + "-v" + versionName + " build " + versionCode + " by [" + currentUserName + "]" + ((isOnline) ? " - Online" : " - Offline") );
             setTitleColor(getResources().getColor(R.color.colorOrangeRed));
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
@@ -410,6 +414,11 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     private void loadWarningDialog(String title, String messageTop, String messageBody) {
         warningMessageDialogFragment = WarningMessageDialogFragment.Companion.newInstance(title, messageTop, messageBody);
         warningMessageDialogFragment.show(getFragmentManager(), "warning_fragment");
+    }
+
+    private void loadSuccessDialog(String title, String messageTop, String messageBody) {
+        successMessageDialogFragment = SuccessMessageDialogFragment.Companion.newInstance(title, messageTop, messageBody);
+        successMessageDialogFragment.show(getFragmentManager(), "success_fragment");
     }
 
 
@@ -512,9 +521,6 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         if(currentUserName.equalsIgnoreCase("")) {
             loadUserSignInUI();
         }
-
-
-
 
     }
 
@@ -1124,7 +1130,8 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     }
 
     public void refreshItemCodeInfo(Costume itemCode) {
-        Log.d(TAG, "refreshItemCodeInfo selected itemCode=" + itemCode);
+        Log.d(TAG, "refreshItemCodeInfo selected itemCode=" + itemCode.toString());
+        mSelectedItemCodeFilter = itemCode;
 
         // clear item code info data[selected item code]
         clearItemCodeData();
@@ -1147,6 +1154,8 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                 mItemInfoFilterArrayList.add(costume);
             }
         }
+
+        Log.d(TAG, "mItemInfoFilterArrayList.size=" + mItemInfoFilterArrayList.size());
 
         itemInfoFilterRVAdapter = new ItemInfoRVAdapter(mContext, mActivity, mItemInfoFilterArrayList);
         byitemcode_item_info_rvlist.setAdapter(itemInfoFilterRVAdapter);
@@ -1248,6 +1257,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
      * @param actorName
      */
     public void addSelectedActor(String actorName) {
+        mSelectedActorFilter = actorName;
         mSelectedActorArray.clear();
         mSelectedActorArray.add(actorName);
         selected_actor_textview.setText(mSelectedActorArray.get(0).toString());
@@ -1350,10 +1360,82 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     }
 
     @Override
-    public void onFinishCheckedBoxDialog() {
+    public void onFinishCheckedBoxDialog(String msgBody) {
         loadData();
+
+        if(mCurrentSearchMode == Constants.ITEM_SET_MODE) {
+//            new RefreshActSceneListAsyncTask().execute();
+            new RefreshActSceneListThread().start();
+        } else if(mCurrentSearchMode == Constants.ITEM_CODE_MODE) {
+//            new RefreshItemInfoListAsyncTask().execute();
+            new RefreshItemInfoListThread().start();
+        }
+
+        loadSuccessDialog("", getString(R.string.checked_completed), msgBody);
     }
 
+    private class ReloadDataAsyncTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            loadData();
+            return null;
+        }
+    }
+
+    private class RefreshActSceneListAsyncTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            refreshActScene(mSelectedActorFilter);
+            return null;
+        }
+    }
+
+    private class RefreshItemInfoListAsyncTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            refreshItemCodeInfo(mSelectedItemCodeFilter);
+            return null;
+        }
+    }
+
+    class RefreshActSceneListThread extends Thread {
+        public void run() {
+            try {
+                runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        refreshActScene(mSelectedActorFilter);
+                    }
+                });
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    class RefreshItemInfoListThread extends Thread {
+        public void run() {
+            try {
+                runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        refreshItemCodeInfo(mSelectedItemCodeFilter);
+                    }
+                });
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     /**
      * Inventory EPC Thread
@@ -1970,6 +2052,9 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     private class ByItemSetButtonAnimationListener implements Animation.AnimationListener   {
         @Override
         public void onAnimationStart(Animation animation) {
+            // Clear select actor
+            mSelectedActorFilter = "";
+
             SetVisible(byitemset_select_filter_layout, textViewS1, viewS1);
             // Load Actor List
 //            new ServiceQueryAsyncTask(mContext, mActivity, Constants.Companion.getActorAllQuery()).execute();
@@ -1993,6 +2078,9 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     private class ByItemCodeButtonAnimationListener implements Animation.AnimationListener   {
         @Override
         public void onAnimationStart(Animation animation) {
+            // clear select item code
+            mSelectedItemCodeFilter = new Costume();
+
             SetVisible(byitemcode_select_filter_layout, textViewS1, viewS1);
 //            new ServiceQueryAsyncTask(mContext, mActivity, Constants.Companion.getItemCodeAllQuery()).execute();
             new LoadItemCodeThread().start();
@@ -2767,6 +2855,10 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                         by_item_code_button.setBackgroundColor(getResources().getColor(R.color.colorWhite));
                         by_item_set_button.setEnabled(true);
                         by_item_code_button.setEnabled(true);
+
+                        isOnline = true;
+                        showAppTitle();
+
                     }
                 });
 
