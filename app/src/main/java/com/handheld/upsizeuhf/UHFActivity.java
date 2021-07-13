@@ -21,6 +21,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -76,6 +78,7 @@ import com.handheld.upsizeuhf.ui.ItemCodeFilterRVAdapter;
 import com.handheld.upsizeuhf.ui.ItemCodeRVAdapter;
 import com.handheld.upsizeuhf.ui.ItemInfoRVAdapter;
 import com.handheld.upsizeuhf.ui.dialog.CheckTypeDialogFragment;
+import com.handheld.upsizeuhf.ui.dialog.ErrorMessageDialogFragment;
 import com.handheld.upsizeuhf.ui.dialog.SuccessMessageDialogFragment;
 import com.handheld.upsizeuhf.ui.dialog.UserSignInDialogFragment;
 import com.handheld.upsizeuhf.ui.dialog.WarningMessageDialogFragment;
@@ -213,7 +216,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     private int power = 0;//rate of work
     private int area = 0;
     private int frequency = 0;
-    private String serverIp = "192.168.1.101"; // Dev server
+    private String serverIp = "192.168.71.119"; // Dev server
     private String currentUserName = ""; // The current user
 
     private String what = "uhf";
@@ -222,8 +225,8 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     private ProgressDialog processDialog;
     private JSONArray restfulJsonArray;
     private int success = 0;
-    private String actorAllPath = "http://192.168.1.101/costume/costume/actors/";
-    private String costumeAllPath = "http://192.168.1.101/costume/costume/list/";
+    private String actorAllPath = "http://192.168.71.119/costume/costume/actors/";
+    private String costumeAllPath = "http://192.168.71.119/costume/costume/list/";
 
     private Context mContext;
     private Activity mActivity;
@@ -296,6 +299,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     CheckTypeDialogFragment checkTypeDialogFragment = new CheckTypeDialogFragment();
     WarningMessageDialogFragment warningMessageDialogFragment = new WarningMessageDialogFragment();
     SuccessMessageDialogFragment successMessageDialogFragment = new SuccessMessageDialogFragment();
+    ErrorMessageDialogFragment errorMessageDialogFragment = new ErrorMessageDialogFragment();
 
     public static CostumeRoomDatabase costumeRoomDatabase;
 
@@ -327,8 +331,16 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         editor = shared.edit();
         power = shared.getInt("power", 26);
         area = shared.getInt("area", 3);
-        serverIp = shared.getString("serverIp", "192.168.1.101");
+        serverIp = shared.getString("serverIp", "192.168.71.119");
         currentUserName = shared.getString("currentUserName", "admin");
+
+        ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
+        if (mWifi.isConnected()) {
+            // Do whatever
+            isOnline = true;
+        }
 
         showAppTitle();
 
@@ -355,7 +367,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
             PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             String versionName = packageInfo.versionName;
             int versionCode = packageInfo.versionCode;
-            setTitle(getString(R.string.app_name) + "-v" + versionName + " build " + versionCode + " by [" + currentUserName + "]" + ((isOnline) ? " - Online" : " - Offline") );
+            setTitle(getString(R.string.app_name) + "-v" + versionName + " build " + versionCode + "." + versionName + " by [" + currentUserName + "]" + ((isOnline) ? " - Online" : " - Offline") );
             setTitleColor(getResources().getColor(R.color.colorOrangeRed));
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
@@ -387,9 +399,13 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
 
         Log.d(TAG, "Found mScannedFoundItemArrayList.size()="+mScannedFoundItemArrayList.size());
         if(mScannedFoundItemArrayList.size() > 0) {
-            checkTypeDialogFragment = CheckTypeDialogFragment.Companion.newInstance("", "", mScannedFoundItemArrayList);
+            if(isOnline) {
+                checkTypeDialogFragment = CheckTypeDialogFragment.Companion.newInstance("", "", mScannedFoundItemArrayList);
 
-            checkTypeDialogFragment.show(getFragmentManager(), "check_type_fragment");
+                checkTypeDialogFragment.show(getFragmentManager(), "check_type_fragment");
+            } else {
+                loadWarningDialog("", getString(R.string.database_server_offline), getString(R.string.database_server_offline_solution));
+            }
 
         } else {
             loadWarningDialog("", getString(R.string.costume_notfound), getString(R.string.costume_notfound_solution));
@@ -414,6 +430,11 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     private void loadWarningDialog(String title, String messageTop, String messageBody) {
         warningMessageDialogFragment = WarningMessageDialogFragment.Companion.newInstance(title, messageTop, messageBody);
         warningMessageDialogFragment.show(getFragmentManager(), "warning_fragment");
+    }
+
+    private void loadErrorDialog(String title, String messageTop, String messageBody) {
+        errorMessageDialogFragment = ErrorMessageDialogFragment.Companion.newInstance(title, messageTop, messageBody);
+        errorMessageDialogFragment.show(getFragmentManager(), "error_fragment");
     }
 
     private void loadSuccessDialog(String title, String messageTop, String messageBody) {
@@ -506,21 +527,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         showProgressBar();
         new ServiceQueryAsyncTask(mContext, mActivity, Constants.Companion.getCostumeAllQuery()).execute();
 
-        new ServiceQueryAsyncTask(mContext, mActivity, Constants.Companion.getShipBoxAllQuery()).execute();
 
-        new ServiceQueryAsyncTask(mContext, mActivity, Constants.Companion.getStorageBoxAllQuery()).execute();
-
-        new ServiceQueryAsyncTask(mContext, mActivity, Constants.Companion.getPlayBoxAllQuery()).execute();
-
-//        if (processDialog.isShowing()) {
-//            processDialog.dismiss();
-//        }
-
-        hideProgressBar();
-
-        if(currentUserName.equalsIgnoreCase("")) {
-            loadUserSignInUI();
-        }
 
     }
 
@@ -2057,8 +2064,6 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
 
             SetVisible(byitemset_select_filter_layout, textViewS1, viewS1);
             // Load Actor List
-//            new ServiceQueryAsyncTask(mContext, mActivity, Constants.Companion.getActorAllQuery()).execute();
-
             new LoadActorThread().start();
 
         }
@@ -2082,7 +2087,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
             mSelectedItemCodeFilter = new Costume();
 
             SetVisible(byitemcode_select_filter_layout, textViewS1, viewS1);
-//            new ServiceQueryAsyncTask(mContext, mActivity, Constants.Companion.getItemCodeAllQuery()).execute();
+
             new LoadItemCodeThread().start();
         }
 
@@ -2303,6 +2308,10 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     private class ClearItemSetButtonAnimationListener implements Animation.AnimationListener   {
         @Override
         public void onAnimationStart(Animation animation) {
+            thread.interrupt();
+            scanItemSetFlag = false;
+            scan_itemset_info_result_button.setText(R.string.scan);
+
             queryItemCodesBySelectedActorActScene();
         }
 
@@ -2321,6 +2330,10 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     private class CheckItemSetButtonAnimationListener implements Animation.AnimationListener   {
         @Override
         public void onAnimationStart(Animation animation) {
+            thread.interrupt();
+            scanItemSetFlag = false;
+            scan_itemset_info_result_button.setText(R.string.scan);
+
             loadCheckTypeUI(Constants.ITEM_SET_MODE);
         }
 
@@ -2339,6 +2352,10 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     private class ClearItemCodeButtonAnimationListener implements Animation.AnimationListener   {
         @Override
         public void onAnimationStart(Animation animation) {
+            thread.interrupt();
+            scanItemCodeFlag = false;
+            scan_itemcode_info_result_button.setText(R.string.scan);
+
             queryItemInfoBySelectedItemCode();
         }
 
@@ -2357,6 +2374,10 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     private class CheckItemCodeButtonAnimationListener implements Animation.AnimationListener   {
         @Override
         public void onAnimationStart(Animation animation) {
+            thread.interrupt();
+            scanItemCodeFlag = false;
+            scan_itemcode_info_result_button.setText(R.string.scan);
+
             loadCheckTypeUI(Constants.ITEM_CODE_MODE);
         }
 
@@ -2619,11 +2640,11 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                 success = 1;
                 JSONObject resultJsonObject = new JSONObject(response);
                 restfulJsonArray = resultJsonObject.getJSONArray("output");
+                isOnline = true;
             } catch (JSONException e) {
                 success = 0;
                 e.printStackTrace();
-
-
+                loadErrorDialog("", getString(R.string.database_server_offline) + " " + path, getString(R.string.database_server_offline_solution));
             }
             return null;
         }
@@ -2715,6 +2736,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
 
                                 if (mCostumeArrayList.size() > 0) {
                                     Log.d(TAG, "importLocalCostumeDB...");
+                                    isOnline = true;
                                     // refresh local costume database by network database
                                     new ImportLocalCostumeThread().start();
                                 } else {
@@ -2727,6 +2749,8 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                                 }
 
 //                                processDialog.dismiss();
+                                new ServiceQueryAsyncTask(mContext, mActivity, Constants.Companion.getShipBoxAllQuery()).execute();
+
                             }
                             break;
 
@@ -2763,9 +2787,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                                                 new LoadLocalShipBoxThread().start();
                                             }
 
-//                                            shipboxRVAdapter = BoxRVAdapter(mContext, mActivity, boxArrayList, this@CheckTypeDialogFragment)
-//                                            shipbox_rvlist!!.setAdapter(shipboxRVAdapter)
-//                                            shipboxRVAdapter!!.notifyDataSetChanged()
+                                            new ServiceQueryAsyncTask(mContext, mActivity, Constants.Companion.getStorageBoxAllQuery()).execute();
                                         }
                                         break;
                                     case Constants.STORAGEBOX_All: {
@@ -2776,9 +2798,8 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                                             } else {
                                                 new LoadLocalStorageBoxThread().start();
                                             }
-//                                            storageboxRVAdapter = BoxRVAdapter(mContext, mActivity, boxArrayList, this@CheckTypeDialogFragment)
-//                                            storagebox_rvlist!!.setAdapter(storageboxRVAdapter)
-//                                            storageboxRVAdapter!!.notifyDataSetChanged()
+
+                                            new ServiceQueryAsyncTask(mContext, mActivity, Constants.Companion.getPlayBoxAllQuery()).execute();
                                         }
                                         break;
                                     case Constants.PLAYBOX_All: {
@@ -2790,9 +2811,12 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                                                 new LoadLocalPlayBoxThread().start();
                                             }
 
-//                                            playboxRVAdapter = BoxRVAdapter(mContext, mActivity, boxArrayList, this@CheckTypeDialogFragment)
-//                                            playbox_rvlist!!.setAdapter(playboxRVAdapter)
-//                                            playboxRVAdapter!!.notifyDataSetChanged()
+                                            // Verify current user name empty?
+                                            if(currentUserName.equalsIgnoreCase("")) {
+                                                loadUserSignInUI();
+                                            }
+                                            hideProgressBar();
+
                                         }
                                         break;
                                 }

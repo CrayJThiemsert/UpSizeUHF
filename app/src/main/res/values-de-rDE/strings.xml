@@ -526,8 +526,11 @@
 	<string name="itemcode_notfound_solution">Please select an Item Code before try again.</string>
     <string name="box">Box</string>
     <string name="costume_notfound">Costume not found</string>
-	<string name="costume_notfound_solution">Please scan until find tag before check complete set(box)</string>
+	<string name="costume_notfound_solution">Please scan until find tag(green highlight) before check complete set(box)</string>
     <string name="refresh">Refresh</string>
     <string name="checked_completed">Checked completed set(box) is success</string>
 	<string name="success">Success</string>
+    <string name="database_server_offline">Database Server cannot access</string>
+	<string name="database_server_offline_solution"><![CDATA[Please turn the wifi on and access to the same database server network.\n\nMake sure the \"Server IP\" is correct. (Goto menu Settings->More settings>>->Server IP)]]></string>
+    <string name="error">Error</string>
 </resources>

@@ -61,7 +61,7 @@
                 android:paddingStart="16dp"
                 android:text="@string/message_top"
                 android:textStyle="bold"
-                android:maxLines="2"
+                android:maxLines="4"
                 android:minLines="1"
                 android:fontFamily="@font/kanit_medium"
                 android:textColor="@color/colorFontBlack"
@@ -90,7 +90,7 @@
                     android:textStyle="italic"
                     android:fontFamily="@font/kanit_italic"
                     android:textColor="@color/colorFontSoftBlack"
-                    android:maxLines="4"
+                    android:maxLines="8"
                     android:minLines="1"
                     android:textSize="20sp" />
             </ScrollView>

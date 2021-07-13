@@ -5,7 +5,7 @@
     android:id="@+id/alertDialog"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/layout_border_radius_green"
+    android:background="@drawable/layout_border_radius_red_error"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -22,7 +22,7 @@
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:paddingStart="16dp"
-            android:text="@string/success"
+            android:text="@string/error"
             android:textStyle="bold"
             android:fontFamily="@font/kanit_semibold"
             android:textColor="@color/colorFontBlack"
