@@ -1,4 +1,4 @@
-#Fri Jul 09 21:12:28 ICT 2021
+#Tue Jul 13 09:47:45 ICT 2021
 base.0=D\:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\build\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
 renamed.0=classes.dex
 path.0=classes.dex

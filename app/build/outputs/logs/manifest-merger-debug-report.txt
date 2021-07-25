@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:2:1-27:12
-INJECTED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:2:1-27:12
-INJECTED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:2:1-27:12
-INJECTED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:2:1-27:12
+ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:2:1-28:12
+INJECTED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:2:1-28:12
+INJECTED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:2:1-28:12
+INJECTED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:2:1-28:12
 MERGED from [androidx.room:room-ktx:2.3.0] C:\Users\Dell\.gradle\caches\transforms-2\files-2.1\10f46af8fcc17cb7facc31a5bc7ddfd0\jetified-room-ktx-2.3.0\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.activity:activity-ktx:1.2.3] C:\Users\Dell\.gradle\caches\transforms-2\files-2.1\0f3c97822eb56c2d5c576c3e4c861485\jetified-activity-ktx-1.2.3\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1] C:\Users\Dell\.gradle\caches\transforms-2\files-2.1\1bf2814c463a4817a28a864992fde1c9\jetified-lifecycle-viewmodel-ktx-2.3.1\AndroidManifest.xml:17:1-24:12
@@ -56,22 +56,22 @@ MERGED from [androidx.arch.core:core-runtime:2.1.0] C:\Users\Dell\.gradle\caches
 MERGED from [androidx.sqlite:sqlite-framework:2.1.0] C:\Users\Dell\.gradle\caches\transforms-2\files-2.1\bb4201c627f1006637f2ffbe1a6a64c1\sqlite-framework-2.1.0\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.sqlite:sqlite:2.1.0] C:\Users\Dell\.gradle\caches\transforms-2\files-2.1\13132af34a27c0070262e50eae8d96a5\sqlite-2.1.0\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.annotation:annotation-experimental:1.1.0] C:\Users\Dell\.gradle\caches\transforms-2\files-2.1\f08f9fa071d457ad0e903803edce27f7\jetified-annotation-experimental-1.1.0\AndroidManifest.xml:17:1-24:12
-INJECTED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:2:1-27:12
-INJECTED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:2:1-27:12
-INJECTED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:2:1-27:12
+INJECTED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:2:1-28:12
+INJECTED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:2:1-28:12
+INJECTED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:2:1-28:12
 	package
 		ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:4:5-37
 		INJECTED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml
 		INJECTED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml
 	android:versionName
 		INJECTED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml
-		ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:2:1-27:12
+		ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:2:1-28:12
 		INJECTED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml
 	xmlns:tools
 		ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:3:5-51
 	android:versionCode
 		INJECTED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml
-		ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:2:1-27:12
+		ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:2:1-28:12
 		INJECTED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml
 	xmlns:android
 		ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:2:11-69
@@ -79,8 +79,12 @@ uses-permission#android.permission.INTERNET
 ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:6:5-67
 	android:name
 		ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:6:22-64
+uses-permission#android.permission.ACCESS_NETWORK_STATE
+ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:7:5-79
+	android:name
+		ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:7:22-76
 application
-ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:8:5-25:19
+ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:9:5-26:19
 MERGED from [com.google.android.material:material:1.3.0] C:\Users\Dell\.gradle\caches\transforms-2\files-2.1\e4059e18456a7c18eeafd718ecbb92f5\material-1.3.0\AndroidManifest.xml:22:5-20
 MERGED from [com.google.android.material:material:1.3.0] C:\Users\Dell\.gradle\caches\transforms-2\files-2.1\e4059e18456a7c18eeafd718ecbb92f5\material-1.3.0\AndroidManifest.xml:22:5-20
 MERGED from [androidx.constraintlayout:constraintlayout:2.0.4] C:\Users\Dell\.gradle\caches\transforms-2\files-2.1\459511b78e8931fdf5c6a45ca3871427\constraintlayout-2.0.4\AndroidManifest.xml:9:5-20
@@ -94,35 +98,35 @@ MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\De
 	android:appComponentFactory
 		ADDED from [androidx.core:core:1.5.0] C:\Users\Dell\.gradle\caches\transforms-2\files-2.1\471c69a1bab935fbda97c57179c82197\core-1.5.0\AndroidManifest.xml:24:18-86
 	android:label
-		ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:12:9-41
+		ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:13:9-41
 	tools:ignore
-		ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:14:9-48
+		ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:15:9-48
 	android:icon
-		ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:11:9-45
+		ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:12:9-45
 	android:allowBackup
-		ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:10:9-36
+		ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:11:9-36
 	android:theme
-		ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:13:9-40
+		ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:14:9-40
 	android:name
-		ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:9:9-43
+		ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:10:9-43
 activity#com.handheld.upsizeuhf.UHFActivity
-ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:15:9-24:20
+ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:16:9-25:20
 	android:label
-		ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:18:13-45
+		ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:19:13-45
 	android:configChanges
-		ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:16:13-74
+		ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:17:13-74
 	android:name
-		ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:17:13-62
+		ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:18:13-62
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:19:13-23:29
+ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:20:13-24:29
 action#android.intent.action.MAIN
-ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:20:17-69
+ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:21:17-69
 	android:name
-		ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:20:25-66
+		ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:21:25-66
 category#android.intent.category.LAUNCHER
-ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:22:17-77
+ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:23:17-77
 	android:name
-		ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:22:27-74
+		ADDED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:23:27-74
 uses-sdk
 INJECTED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml

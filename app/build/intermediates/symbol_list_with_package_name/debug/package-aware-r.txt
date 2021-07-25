@@ -1699,8 +1699,10 @@ drawable ic_mtrl_chip_checked_circle
 drawable ic_mtrl_chip_close_circle
 drawable layout_border_radius
 drawable layout_border_radius_found
+drawable layout_border_radius_green
 drawable layout_border_radius_light_blue
 drawable layout_border_radius_red
+drawable layout_border_radius_red_error
 drawable layout_border_radius_selected
 drawable layout_border_radius_yellow
 drawable material_cursor_drawable
@@ -2427,6 +2429,8 @@ layout design_navigation_menu_item
 layout design_text_input_end_icon
 layout design_text_input_start_icon
 layout dialog_check_type
+layout dialog_error_message
+layout dialog_success_message
 layout dialog_user_signin
 layout dialog_warning_message
 layout itemcode_filter_listview
@@ -2704,6 +2708,7 @@ string character_counter_content_description
 string character_counter_overflowed_content_description
 string character_counter_pattern
 string check_label
+string checked_completed
 string china1Freq
 string china2Freq
 string chip_text
@@ -2740,6 +2745,8 @@ string current_setting
 string dakai_shebei
 string data_area
 string database_manage_text
+string database_server_offline
+string database_server_offline_solution
 string db_clear
 string db_compare
 string db_delete
@@ -2753,6 +2760,7 @@ string edittext_wallet_add
 string edittext_wallet_redu
 string enter_username_here
 string epc
+string error
 string error_icon_content_description
 string error_info
 string euFreq
@@ -3039,6 +3047,7 @@ string stop_find_card
 string stop_inventory
 string stop_operate_14443a
 string storage_box
+string success
 string sure
 string sure_kill
 string sure_to_delete_all_fingerprint_chara_

@@ -1,8 +1,8 @@
 1<?xml version="1.0" encoding="utf-8"?>
 2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
 3    package="com.handheld.upsizeuhf"
-4    android:versionCode="3"
-5    android:versionName="1" >
+4    android:versionCode="4"
+5    android:versionName="2" >
 6
 7    <uses-sdk
 8        android:minSdkVersion="17"
@@ -13,51 +13,54 @@
 11    <uses-permission android:name="android.permission.INTERNET" />
 11-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:6:5-67
 11-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:6:22-64
-12
-13    <application
-13-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:8:5-25:19
-14        android:name="com.handheld.upsizeuhf.CostumeApplication"
-14-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:9:9-43
-15        android:allowBackup="false"
-15-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:10:9-36
-16        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
-16-->[androidx.core:core:1.5.0] C:\Users\Dell\.gradle\caches\transforms-2\files-2.1\471c69a1bab935fbda97c57179c82197\core-1.5.0\AndroidManifest.xml:24:18-86
-17        android:debuggable="true"
-18        android:icon="@drawable/ic_launcher"
-18-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:11:9-45
-19        android:label="@string/app_name"
-19-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:12:9-41
-20        android:testOnly="true"
-21        android:theme="@style/AppTheme" >
-21-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:13:9-40
-22        <activity
-22-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:15:9-24:20
-23            android:name="com.handheld.upsizeuhf.UHFActivity"
-23-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:17:13-62
-24            android:configChanges="keyboardHidden|orientation|screenSize"
-24-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:16:13-74
-25            android:label="@string/app_name" >
-25-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:18:13-45
-26            <intent-filter>
-26-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:19:13-23:29
-27                <action android:name="android.intent.action.MAIN" />
-27-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:20:17-69
-27-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:20:25-66
-28
-29                <category android:name="android.intent.category.LAUNCHER" />
-29-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:22:17-77
-29-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:22:27-74
-30            </intent-filter>
-31        </activity>
-32
-33        <service
-33-->[androidx.room:room-runtime:2.3.0] C:\Users\Dell\.gradle\caches\transforms-2\files-2.1\b4edefa8975f870ad01586dc907404e0\room-runtime-2.3.0\AndroidManifest.xml:25:9-28:40
-34            android:name="androidx.room.MultiInstanceInvalidationService"
-34-->[androidx.room:room-runtime:2.3.0] C:\Users\Dell\.gradle\caches\transforms-2\files-2.1\b4edefa8975f870ad01586dc907404e0\room-runtime-2.3.0\AndroidManifest.xml:26:13-74
-35            android:directBootAware="true"
-35-->[androidx.room:room-runtime:2.3.0] C:\Users\Dell\.gradle\caches\transforms-2\files-2.1\b4edefa8975f870ad01586dc907404e0\room-runtime-2.3.0\AndroidManifest.xml:27:13-43
-36            android:exported="false" />
-36-->[androidx.room:room-runtime:2.3.0] C:\Users\Dell\.gradle\caches\transforms-2\files-2.1\b4edefa8975f870ad01586dc907404e0\room-runtime-2.3.0\AndroidManifest.xml:28:13-37
-37    </application>
-38
-39</manifest>
+12    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+12-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:7:5-79
+12-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:7:22-76
+13
+14    <application
+14-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:9:5-26:19
+15        android:name="com.handheld.upsizeuhf.CostumeApplication"
+15-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:10:9-43
+16        android:allowBackup="false"
+16-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:11:9-36
+17        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+17-->[androidx.core:core:1.5.0] C:\Users\Dell\.gradle\caches\transforms-2\files-2.1\471c69a1bab935fbda97c57179c82197\core-1.5.0\AndroidManifest.xml:24:18-86
+18        android:debuggable="true"
+19        android:icon="@drawable/ic_launcher"
+19-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:12:9-45
+20        android:label="@string/app_name"
+20-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:13:9-41
+21        android:testOnly="true"
+22        android:theme="@style/AppTheme" >
+22-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:14:9-40
+23        <activity
+23-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:16:9-25:20
+24            android:name="com.handheld.upsizeuhf.UHFActivity"
+24-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:18:13-62
+25            android:configChanges="keyboardHidden|orientation|screenSize"
+25-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:17:13-74
+26            android:label="@string/app_name" >
+26-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:19:13-45
+27            <intent-filter>
+27-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:20:13-24:29
+28                <action android:name="android.intent.action.MAIN" />
+28-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:21:17-69
+28-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:21:25-66
+29
+30                <category android:name="android.intent.category.LAUNCHER" />
+30-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:23:17-77
+30-->D:\Projects\CostumeManagementSystem\UpSizeUHF\app\src\main\AndroidManifest.xml:23:27-74
+31            </intent-filter>
+32        </activity>
+33
+34        <service
+34-->[androidx.room:room-runtime:2.3.0] C:\Users\Dell\.gradle\caches\transforms-2\files-2.1\b4edefa8975f870ad01586dc907404e0\room-runtime-2.3.0\AndroidManifest.xml:25:9-28:40
+35            android:name="androidx.room.MultiInstanceInvalidationService"
+35-->[androidx.room:room-runtime:2.3.0] C:\Users\Dell\.gradle\caches\transforms-2\files-2.1\b4edefa8975f870ad01586dc907404e0\room-runtime-2.3.0\AndroidManifest.xml:26:13-74
+36            android:directBootAware="true"
+36-->[androidx.room:room-runtime:2.3.0] C:\Users\Dell\.gradle\caches\transforms-2\files-2.1\b4edefa8975f870ad01586dc907404e0\room-runtime-2.3.0\AndroidManifest.xml:27:13-43
+37            android:exported="false" />
+37-->[androidx.room:room-runtime:2.3.0] C:\Users\Dell\.gradle\caches\transforms-2\files-2.1\b4edefa8975f870ad01586dc907404e0\room-runtime-2.3.0\AndroidManifest.xml:28:13-37
+38    </application>
+39
+40</manifest>
