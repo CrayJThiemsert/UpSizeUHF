@@ -74,6 +74,7 @@ import com.handheld.upsizeuhf.model.QueryService;
 import com.handheld.upsizeuhf.model.User;
 import com.handheld.upsizeuhf.ui.ActSceneRVAdapter;
 import com.handheld.upsizeuhf.ui.ActorRVAdapter;
+import com.handheld.upsizeuhf.ui.EPCTagRVAdapter;
 import com.handheld.upsizeuhf.ui.ItemCodeFilterRVAdapter;
 import com.handheld.upsizeuhf.ui.ItemCodeRVAdapter;
 import com.handheld.upsizeuhf.ui.ItemInfoRVAdapter;
@@ -110,12 +111,14 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     private View view2;
     private View view3;
     private View view4;
+    // Main layout
     private LinearLayout searchandcheck_layout;
     private LinearLayout byitemset_select_filter_layout;
     private LinearLayout byitemcode_select_filter_layout;
     private LinearLayout byitemset_queryresult_layout;
 
     private LinearLayout byitemcode_queryresult_layout;
+    private LinearLayout read_single_tag_layout;
     
     private RelativeLayout l1epc;
     private LinearLayout l2readandwrite;
@@ -144,6 +147,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     private boolean startFlag = false;
     private boolean scanItemSetFlag = false;
     private boolean scanItemCodeFlag = false;
+    private boolean scanSingleTagFlag = false;
     private UhfReader manager; // UHF manager,UHF Operating handle
 //	private ScreenStateReceiver screenReceiver;
     /******************************************/
@@ -171,8 +175,10 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     private int lockType;//
     private Button buttonBack;
     /******************************************/
-    private Button by_item_set_button;//set by item set button
-    private Button by_item_code_button;//set by item code button
+    private Button by_item_set_button;  //set by item set button
+    private Button by_item_code_button; //set by item code button
+    private Button read_single_tag_button;  // read single tag button
+    private Button write_single_tag_button;  // write single tag button
 
     private Button back_byitemset_button;//set by back to item set button
     private Button next_byitemset_button;//set by next to query result button
@@ -189,6 +195,12 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     private Button scan_itemcode_info_result_button;//set by next to search/scan button
     private Button clear_itemcode_info_result_button; // Clear query result list
     private Button check_itemcode_info_result_button; // Check query result list
+
+    // Single Tag screen
+    private Button back_read_single_tag_button;
+    private Button scan_read_single_tag_button;
+    private Button clear_read_single_tag_button;
+    private Button write_read_single_tag_button;
 
     private Button button1;//set button1
     private Button button2;//set button2
@@ -286,6 +298,9 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
 
     private RecyclerView item_info_result_rvlist;
     private ItemInfoRVAdapter itemInfoResultRVAdapter;
+
+    private RecyclerView read_single_tag_rvlist;
+    private EPCTagRVAdapter epcTagRVAdapter;
 
     private TextView total_item_info_textview;
     private TextView item_info_scanned_textview;
@@ -506,6 +521,9 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         scanItemCodeFlag = false;
         scan_itemcode_info_result_button.setText(R.string.scan);
 
+        scanSingleTagFlag = false;
+        scan_read_single_tag_button.setText(R.string.scan);
+
         manager.close();
         super.onPause();
         unregisterReceiver();
@@ -516,6 +534,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         startFlag = false;
         scanItemSetFlag = false;
         scanItemCodeFlag = false;
+        scanSingleTagFlag = false;
         runFlag = false;
         if (manager != null) {
             manager.close();
@@ -578,6 +597,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         byitemset_queryresult_layout = (LinearLayout) findViewById(R.id.byitemset_queryresult_layout);
 
         byitemcode_queryresult_layout = (LinearLayout) findViewById(R.id.byitemcode_queryresult_layout);
+        read_single_tag_layout = (LinearLayout) findViewById(R.id.read_single_tag_layout);
         
         l1epc = (RelativeLayout) findViewById(R.id.l1epc);
         l2readandwrite = (LinearLayout) findViewById(R.id.l2read);
@@ -979,6 +999,16 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         by_item_code_button.setOnClickListener(this);
         by_item_code_button.setBackgroundColor(getResources().getColor(R.color.colorGrey));
 
+        read_single_tag_button = (Button) findViewById(R.id.read_single_tag_button);
+        read_single_tag_button.setOnClickListener(this);
+        read_single_tag_button.setBackgroundColor(getResources().getColor(R.color.colorGrey));
+
+        write_single_tag_button = (Button) findViewById(R.id.write_single_tag_button);
+        write_single_tag_button.setOnClickListener(this);
+        write_single_tag_button.setBackgroundColor(getResources().getColor(R.color.colorGrey));
+
+
+
         back_byitemset_button = (Button) findViewById(R.id.back_byitemset_button);
         back_byitemset_button.setOnClickListener(this);
 
@@ -1014,6 +1044,18 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
 
         check_itemcode_info_result_button = (Button) findViewById(R.id.check_itemcode_info_result_button);
         check_itemcode_info_result_button.setOnClickListener(this);
+
+        back_read_single_tag_button = (Button) findViewById(R.id.back_read_single_tag_button);
+        back_read_single_tag_button.setOnClickListener(this);
+
+        scan_read_single_tag_button = (Button) findViewById(R.id.scan_read_single_tag_button);
+        scan_read_single_tag_button.setOnClickListener(this);
+
+        clear_read_single_tag_button = (Button) findViewById(R.id.clear_read_single_tag_button);
+        clear_read_single_tag_button.setOnClickListener(this);
+
+        write_read_single_tag_button = (Button) findViewById(R.id.write_read_single_tag_button);
+        write_read_single_tag_button.setOnClickListener(this);
 
         actor_name_rvlist = (RecyclerView)findViewById(R.id.actor_name_rvlist);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,RecyclerView.VERTICAL,false);
@@ -1055,6 +1097,10 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         item_info_result_rvlist = (RecyclerView)findViewById(R.id.item_info_result_rvlist);
         LinearLayoutManager itemInfoResultlinearLayoutManager = new LinearLayoutManager(this,RecyclerView.VERTICAL,false);
         item_info_result_rvlist.setLayoutManager(itemInfoResultlinearLayoutManager);
+
+        read_single_tag_rvlist = (RecyclerView)findViewById(R.id.read_single_tag_rvlist);
+        LinearLayoutManager readSingleTaglinearLayoutManager = new LinearLayoutManager(this,RecyclerView.VERTICAL,false);
+        read_single_tag_rvlist.setLayoutManager(readSingleTaglinearLayoutManager);
 
         total_item_info_textview = (TextView)findViewById(R.id.total_item_info_textview);
         item_info_scanned_textview = (TextView)findViewById(R.id.item_info_scanned_textview);
@@ -1455,7 +1501,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         public void run() {
             super.run();
             while (runFlag) {
-                if (startFlag || scanItemSetFlag || scanItemCodeFlag) {
+                if (startFlag || scanItemSetFlag || scanItemCodeFlag || scanSingleTagFlag) {
                     tagList = manager.inventoryRealTime(); //实时盘存
                     if (tagList != null && !tagList.isEmpty()) {
                         //播放提示音
@@ -1558,7 +1604,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                     // play sound
                     Util.play(1, 0);
                 } else if(scanItemSetFlag) {
-                    Log.d(TAG, "listMap.size()=" + listMap.size());
+                    Log.d(TAG, "scanItemSetFlag listMap.size()=" + listMap.size());
 
                     int scannedCount = 0;
                     for(int i = 0; i < mItemCodeArrayList.size(); i++) {
@@ -1592,7 +1638,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                     Util.play(1, 0);
 
                 } else if(scanItemCodeFlag) {
-                    Log.d(TAG, "listMap.size()=" + listMap.size());
+                    Log.d(TAG, "scanItemCodeFlag listMap.size()=" + listMap.size());
 
                     int scannedCount = 0;
                     for(int i = 0; i < mItemInfoArrayList.size(); i++) {
@@ -1622,6 +1668,40 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                     item_info_result_rvlist.setAdapter(itemInfoResultRVAdapter);
                     itemInfoResultRVAdapter.notifyDataSetChanged();
                     item_info_scanned_textview.setText(Integer.toString(scannedCount));
+
+                    Util.play(1, 0);
+
+                } else if(scanSingleTagFlag) {
+                    Log.d(TAG, "scanSingleTagFlag listMap.size()=" + listMap.size());
+
+                    int scannedCount = 0;
+                    for(int i = 0; i < mItemInfoArrayList.size(); i++) {
+                        Costume costume = mItemInfoArrayList.get(i);
+                        String epcBase = costume.epcHeader + costume.epcRun;
+                        Log.d(TAG, "epcBase=" + epcBase);
+                        for (int m = 0; m < listMap.size(); m++) {
+                            Map map = listMap.get(m);
+
+                            for (Object entry : map.entrySet()) {
+                                String key = ((Map.Entry<String, Object>) entry).getKey();
+                                Object value = ((Map.Entry<String, Object>) entry).getValue();
+                                // do something with key and/or tab
+                                Log.d(TAG, "key=" + key + " : value=" + value);
+                                if (key.equals("EPCRaw") && value.equals(epcBase)) {
+                                    costume.isFound = true;
+                                    mItemInfoArrayList.set(i, costume);
+                                    scannedCount++;
+
+                                }
+                            }
+                        }
+
+                    }
+
+                    epcTagRVAdapter = new EPCTagRVAdapter(mContext, mActivity, mItemInfoArrayList);
+                    read_single_tag_rvlist.setAdapter(epcTagRVAdapter);
+                    epcTagRVAdapter.notifyDataSetChanged();
+//                    item_info_scanned_textview.setText(Integer.toString(scannedCount));
 
                     Util.play(1, 0);
 
@@ -1800,6 +1880,22 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                 }
                 break;
 
+            case R.id.read_single_tag_button: {
+                Util.play(1, 0);
+                Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
+                animate.setAnimationListener(new ReadSingleTagButtonAnimationListener());
+                read_single_tag_button.startAnimation(animate);
+            }
+            break;
+
+            case R.id.write_single_tag_button: {
+                Util.play(1, 0);
+                Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
+                animate.setAnimationListener(new WriteSingleTagButtonAnimationListener());
+                write_single_tag_button.startAnimation(animate);
+            }
+            break;
+
             // Item Set Filter =================
             case R.id.back_byitemset_button: {
                 Util.play(1, 0);
@@ -1895,6 +1991,39 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                 Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
                 animate.setAnimationListener(new CheckItemCodeButtonAnimationListener());
                 check_itemcode_info_result_button.startAnimation(animate);
+            }
+            break;
+
+            // Single Tag
+            case R.id.back_read_single_tag_button: {
+                Util.play(1, 0);
+                Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
+                animate.setAnimationListener(new BackSingleTagButtonAnimationListener());
+                back_read_single_tag_button.startAnimation(animate);
+            }
+            break;
+
+            case R.id.scan_read_single_tag_button: {
+                Util.play(1, 0);
+                Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
+                animate.setAnimationListener(new ScanSingleTagButtonAnimationListener());
+                scan_read_single_tag_button.startAnimation(animate);
+            }
+            break;
+
+            case R.id.clear_read_single_tag_button: {
+                Util.play(1, 0);
+                Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
+                animate.setAnimationListener(new ClearSingleTagButtonAnimationListener());
+                clear_read_single_tag_button.startAnimation(animate);
+            }
+            break;
+
+            case R.id.write_read_single_tag_button: {
+                Util.play(1, 0);
+                Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
+                animate.setAnimationListener(new WriteReadSingleTagButtonAnimationListener());
+                write_read_single_tag_button.startAnimation(animate);
             }
             break;
             
@@ -2089,6 +2218,40 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
             SetVisible(byitemcode_select_filter_layout, textViewS1, viewS1);
 
             new LoadItemCodeThread().start();
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    }
+
+    private class ReadSingleTagButtonAnimationListener implements Animation.AnimationListener   {
+        @Override
+        public void onAnimationStart(Animation animation) {
+            SetVisible(read_single_tag_layout, textViewS1, viewS1);
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    }
+
+    private class WriteSingleTagButtonAnimationListener implements Animation.AnimationListener   {
+        @Override
+        public void onAnimationStart(Animation animation) {
+            SetVisible(read_single_tag_layout, textViewS1, viewS1);
         }
 
         @Override
@@ -2327,6 +2490,98 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         }
     }
 
+    private class BackSingleTagButtonAnimationListener implements Animation.AnimationListener   {
+        @Override
+        public void onAnimationStart(Animation animation) {
+            thread.interrupt();
+            scanSingleTagFlag = false;
+            scan_read_single_tag_button.setText(R.string.scan);
+
+            SetVisible(searchandcheck_layout, textViewS1, viewS1);
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    }
+
+    private class ScanSingleTagButtonAnimationListener implements Animation.AnimationListener   {
+        @Override
+        public void onAnimationStart(Animation animation) {
+            if (!scanSingleTagFlag) {
+                thread.start();
+                scanSingleTagFlag = true;
+                scan_read_single_tag_button.setText(R.string.stop);
+            } else {
+                thread.interrupt();
+                scanSingleTagFlag = false;
+                scan_read_single_tag_button.setText(R.string.scan);
+            }
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    }
+
+    private class ClearSingleTagButtonAnimationListener implements Animation.AnimationListener   {
+        @Override
+        public void onAnimationStart(Animation animation) {
+            thread.interrupt();
+            scanSingleTagFlag = false;
+            scan_read_single_tag_button.setText(R.string.scan);
+
+            // do no clear scan single rv list
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    }
+
+    private class WriteReadSingleTagButtonAnimationListener implements Animation.AnimationListener   {
+        @Override
+        public void onAnimationStart(Animation animation) {
+            thread.interrupt();
+            scanSingleTagFlag = false;
+            scan_read_single_tag_button.setText(R.string.scan);
+
+            // do no clear scan single rv list
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    }
+
     private class CheckItemSetButtonAnimationListener implements Animation.AnimationListener   {
         @Override
         public void onAnimationStart(Animation animation) {
@@ -2479,7 +2734,9 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
 
         byitemcode_select_filter_layout.setVisibility(View.GONE);
         byitemcode_queryresult_layout.setVisibility(View.GONE);
-        
+
+        read_single_tag_layout.setVisibility(View.GONE);
+
         l1epc.setVisibility(View.GONE);
         l2readandwrite.setVisibility(View.GONE);
         l3lockandkill.setVisibility(View.GONE);
@@ -2512,6 +2769,11 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
             if(layout == byitemcode_queryresult_layout) {
                 scanItemSetFlag = false;
                 scan_itemcode_info_result_button.setText(R.string.scan);
+            }
+
+            if(layout == read_single_tag_layout) {
+                scanSingleTagFlag = false;
+                scan_read_single_tag_button.setText(R.string.scan);
             }
 
             layout.setVisibility(View.VISIBLE);
@@ -2644,6 +2906,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
             } catch (JSONException e) {
                 success = 0;
                 e.printStackTrace();
+                Log.d(TAG, "Error while loading : "+e.getMessage());
                 loadErrorDialog("", getString(R.string.database_server_offline) + " " + path, getString(R.string.database_server_offline_solution));
             }
             return null;
@@ -2856,6 +3119,9 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                         by_item_set_button.setEnabled(false);
                         by_item_code_button.setEnabled(false);
 
+                        read_single_tag_button.setEnabled(false);
+                        write_single_tag_button.setEnabled(false);
+
 //                        hideProgressBar();
 //                        processDialog.dismiss();
                     }
@@ -2879,6 +3145,11 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                         by_item_code_button.setBackgroundColor(getResources().getColor(R.color.colorWhite));
                         by_item_set_button.setEnabled(true);
                         by_item_code_button.setEnabled(true);
+
+                        read_single_tag_button.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+                        write_single_tag_button.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+                        read_single_tag_button.setEnabled(true);
+                        write_single_tag_button.setEnabled(true);
 
                         isOnline = true;
                         showAppTitle();
@@ -3083,6 +3354,11 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                             by_item_code_button.setBackgroundColor(getResources().getColor(R.color.colorWhite));
                             by_item_set_button.setEnabled(true);
                             by_item_code_button.setEnabled(true);
+
+                            read_single_tag_button.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+                            write_single_tag_button.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+                            read_single_tag_button.setEnabled(true);
+                            write_single_tag_button.setEnabled(true);
                         }
                     });
 

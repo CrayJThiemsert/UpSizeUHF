@@ -558,4 +558,10 @@
     <string name="database_server_offline">Database Server cannot access</string>
 	<string name="database_server_offline_solution"><![CDATA[Please turn the wifi on and access to the same database server network.\n\nMake sure the \"Server IP\" is correct. (Goto menu Settings->More settings>>->Server IP)]]></string>
     <string name="error">Error</string>
+    <string name="read_single_tag_label">Read Single Tag</string>
+	<string name="write_single_tag_label">Write Single Tag</string>
+    <string name="write_label">Write</string>
+    <string name="found_tags">Found Tags</string>
+	<string name="tag_detail">Tag Detail</string>
+	<string name="rssi">rssi</string>
 </resources>
