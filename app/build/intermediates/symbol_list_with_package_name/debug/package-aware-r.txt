@@ -1863,6 +1863,7 @@ id back_byitemset_button
 id back_itemcode_info_result_button
 id back_itemset_info_result_button
 id back_playbox_button
+id back_read_single_tag_button
 id back_shipbox_button
 id back_storagebox_button
 id barrier
@@ -1927,6 +1928,7 @@ id chronometer
 id circle_center
 id clear_itemcode_info_result_button
 id clear_itemset_info_result_button
+id clear_read_single_tag_button
 id clear_text
 id clip_horizontal
 id clip_vertical
@@ -1992,6 +1994,7 @@ id enterAlways
 id enterAlwaysCollapsed
 id epc_header_textview
 id epc_run_textview
+id epctag_layout
 id exitUntilCollapsed
 id expand_activities_button
 id expanded_menu
@@ -2165,6 +2168,9 @@ id progress_circular
 id progress_horizontal
 id radio
 id ratio
+id read_single_tag_button
+id read_single_tag_layout
+id read_single_tag_rvlist
 id receive_txt
 id rectangles
 id relativeLayout21
@@ -2175,12 +2181,15 @@ id right_icon
 id right_side
 id rounded
 id row_index_key
+id rssi_read_single_tag_label
+id rssi_textview
 id save_non_transition_alpha
 id save_overlay_view
 id sawtooth
 id scale
 id scan_itemcode_info_result_button
 id scan_itemset_info_result_button
+id scan_read_single_tag_button
 id screen
 id scroll
 id scrollIndicatorDown
@@ -2260,6 +2269,12 @@ id tag_accessibility_actions
 id tag_accessibility_clickable_spans
 id tag_accessibility_heading
 id tag_accessibility_pane_title
+id tag_detail_actor_textview
+id tag_detail_actscene_textview
+id tag_detail_code_textview
+id tag_detail_number_textview
+id tag_detail_size_textview
+id tag_detail_type_textview
 id tag_on_apply_window_listener
 id tag_on_receive_content_listener
 id tag_on_receive_content_mime_types
@@ -2349,6 +2364,8 @@ id withText
 id withinBounds
 id wrap
 id wrap_content
+id write_read_single_tag_button
+id write_single_tag_button
 id zero_corner_chip
 integer abc_config_activityDefaultDur
 integer abc_config_activityShortDur
@@ -2433,6 +2450,7 @@ layout dialog_error_message
 layout dialog_success_message
 layout dialog_user_signin
 layout dialog_warning_message
+layout epctag_listview
 layout itemcode_filter_listview
 layout itemcode_listview
 layout iteminfo_listview
@@ -2782,6 +2800,7 @@ string fingerprint
 string fingerprint_1
 string fingerprint_2
 string fingerprint_big
+string found_tags
 string free_addressid_
 string freqNotNull
 string freqSetting
@@ -2973,6 +2992,7 @@ string read_fail_
 string read_fail_error
 string read_fail_return_null
 string read_page
+string read_single_tag_label
 string read_success_
 string readdata
 string receive_data
@@ -2988,6 +3008,7 @@ string reset_success_
 string return_fail_
 string return_success_
 string rfPower
+string rssi
 string scan
 string scan_initial
 string scan_label
@@ -3052,6 +3073,7 @@ string sure
 string sure_kill
 string sure_to_delete_all_fingerprint_chara_
 string table_finish
+string tag_detail
 string tezheng_bidui_android
 string the_unit_is_word_1word_2bytes
 string times
@@ -3083,7 +3105,9 @@ string write_data_button
 string write_fail_
 string write_failue_
 string write_hex
+string write_label
 string write_page
+string write_single_tag_label
 string write_success_
 string write_successful_
 string writedata

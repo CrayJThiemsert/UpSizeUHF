@@ -35,27 +35,22 @@ public class EPCTagRVAdapter extends RecyclerView.Adapter<EPCTagRVAdapter.EPCTag
     @Override
     public EPCTagViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.itemcode_listview, parent, false);
+                .inflate(R.layout.epctag_listview, parent, false);
         return new EPCTagViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(@NonNull EPCTagViewHolder holder, @SuppressLint("RecyclerView") int position) {
         Costume costume = mCostumeArrayList.get(holder.getAdapterPosition());
-        holder.code_textview.setText(costume.code);
-        holder.type_textview.setText(costume.type);
-        holder.size_textview.setText(costume.size);
-        holder.number_textview.setText(costume.codeNo);
         String epc = costume.epcHeader + costume.epcRun;
-//        epc = UhfUtils.Companion.separateEPCString(epc, " ", 4, 16);
+
         String epcTop = UhfUtils.Companion.separateEPCTopString(epc, " ", 4, 16);
         String epcBottom = UhfUtils.Companion.separateEPCBottomString(epc, " ", 4, 16);
 
         holder.epc_header_textview.setText(epcTop);
         holder.epc_run_textview.setText(epcBottom);
 
-        String currentBox = getCurrentBoxString(costume);
-        holder.current_box_textview.setText(currentBox);
+        holder.rssi_textview.setText(costume.size);
 
         holder.epc_header_textview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,7 +78,7 @@ public class EPCTagRVAdapter extends RecyclerView.Adapter<EPCTagRVAdapter.EPCTag
             }
         });
 
-        holder.current_box_textview.setOnClickListener(new View.OnClickListener() {
+        holder.rssi_textview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 row_index=position;
@@ -91,7 +86,7 @@ public class EPCTagRVAdapter extends RecyclerView.Adapter<EPCTagRVAdapter.EPCTag
             }
         });
 
-        holder.item_code_layout.setOnClickListener(new View.OnClickListener() {
+        holder.epctag_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 row_index=position;
@@ -100,12 +95,12 @@ public class EPCTagRVAdapter extends RecyclerView.Adapter<EPCTagRVAdapter.EPCTag
         });
 
         if(costume.isFound) {
-            holder.item_code_layout.setBackground(mContext.getResources().getDrawable(R.drawable.layout_border_radius_found));
+            holder.epctag_layout.setBackground(mContext.getResources().getDrawable(R.drawable.layout_border_radius_found));
         } else {
             if (row_index == position) {
-                holder.item_code_layout.setBackground(mContext.getResources().getDrawable(R.drawable.layout_border_radius_selected));
+                holder.epctag_layout.setBackground(mContext.getResources().getDrawable(R.drawable.layout_border_radius_selected));
             } else {
-                holder.item_code_layout.setBackground(mContext.getResources().getDrawable(R.drawable.layout_border_radius));
+                holder.epctag_layout.setBackground(mContext.getResources().getDrawable(R.drawable.layout_border_radius));
             }
         }
 
@@ -248,27 +243,19 @@ public class EPCTagRVAdapter extends RecyclerView.Adapter<EPCTagRVAdapter.EPCTag
 
     public class EPCTagViewHolder extends RecyclerView.ViewHolder{
 
-        TextView code_textview;
-        TextView type_textview;
-        TextView size_textview;
-        TextView number_textview;
         TextView epc_header_textview;
         TextView epc_run_textview;
-        TextView current_box_textview;
-        LinearLayout item_code_layout;
+        TextView rssi_textview;
+        LinearLayout epctag_layout;
 
         public EPCTagViewHolder(@NonNull View itemView) {
             super(itemView);
-            code_textview = (TextView)itemView.findViewById(R.id.code_textview);
-            type_textview = (TextView)itemView.findViewById(R.id.type_textview);
-            size_textview = (TextView)itemView.findViewById(R.id.size_textview);
-            number_textview = (TextView)itemView.findViewById(R.id.number_textview);
             epc_header_textview = (TextView)itemView.findViewById(R.id.epc_header_textview);
             epc_run_textview = (TextView)itemView.findViewById(R.id.epc_run_textview);
-            current_box_textview = (TextView)itemView.findViewById(R.id.current_box_textview);
-            item_code_layout = (LinearLayout)itemView.findViewById(R.id.item_code_layout);
+            rssi_textview = (TextView)itemView.findViewById(R.id.rssi_textview);
+            epctag_layout = (LinearLayout)itemView.findViewById(R.id.epctag_layout);
 
-            current_box_textview.setText("");
+            rssi_textview.setText("");
         }
     }
 }

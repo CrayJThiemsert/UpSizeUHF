@@ -1674,28 +1674,33 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                 } else if(scanSingleTagFlag) {
                     Log.d(TAG, "scanSingleTagFlag listMap.size()=" + listMap.size());
 
+                    mItemInfoArrayList = new ArrayList<Costume>();
+                    mItemInfoArrayList.clear();
                     int scannedCount = 0;
-                    for(int i = 0; i < mItemInfoArrayList.size(); i++) {
-                        Costume costume = mItemInfoArrayList.get(i);
-                        String epcBase = costume.epcHeader + costume.epcRun;
-                        Log.d(TAG, "epcBase=" + epcBase);
-                        for (int m = 0; m < listMap.size(); m++) {
-                            Map map = listMap.get(m);
+                    for (int m = 0; m < listMap.size(); m++) {
+                        Costume costume = new Costume();
+                        Map map = listMap.get(m);
 
-                            for (Object entry : map.entrySet()) {
-                                String key = ((Map.Entry<String, Object>) entry).getKey();
-                                Object value = ((Map.Entry<String, Object>) entry).getValue();
-                                // do something with key and/or tab
-                                Log.d(TAG, "key=" + key + " : value=" + value);
-                                if (key.equals("EPCRaw") && value.equals(epcBase)) {
-                                    costume.isFound = true;
-                                    mItemInfoArrayList.set(i, costume);
-                                    scannedCount++;
+                        for (Object entry : map.entrySet()) {
+                            String key = ((Map.Entry<String, Object>) entry).getKey();
+                            Object value = ((Map.Entry<String, Object>) entry).getValue();
+                            // do something with key and/or tab
+                            Log.d(TAG, "key=" + key + " : value=" + value);
+                            if (key.equals("RSSI")) {
+                                costume.size = value.toString();
+                            }
 
-                                }
+                            if (key.equals("EPCTop")) {
+                                costume.epcHeader = value.toString();
+                            }
+
+                            if (key.equals("EPCBottom")) {
+                                costume.epcRun = value.toString();
                             }
                         }
 
+                        mItemInfoArrayList.add(costume);
+                        scannedCount++;
                     }
 
                     epcTagRVAdapter = new EPCTagRVAdapter(mContext, mActivity, mItemInfoArrayList);
@@ -2546,6 +2551,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
             scan_read_single_tag_button.setText(R.string.scan);
 
             // do no clear scan single rv list
+            new RefreshEPCSingleTagThread().start();
         }
 
         @Override
@@ -2688,8 +2694,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     private void setOverflowShowingAlways() {
         try {
             ViewConfiguration config = ViewConfiguration.get(this);
-            Field menuKeyField = ViewConfiguration.class
-                    .getDeclaredField("sHasPermanentMenuKey");
+            Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
             menuKeyField.setAccessible(true);
             menuKeyField.setBoolean(config, false);
         } catch (Exception e) {
@@ -3321,6 +3326,29 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                         } else if(mCurrentSearchMode == Constants.ITEM_CODE_MODE) {
                             queryItemInfoBySelectedItemCode();
                         }
+                    }
+                });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    class RefreshEPCSingleTagThread extends Thread {
+        public void run() {
+            try {
+                runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        mItemInfoArrayList = new ArrayList<Costume>();
+                        mItemInfoArrayList.clear();
+
+                        epcTagRVAdapter = new EPCTagRVAdapter(mContext, mActivity, mItemInfoArrayList);
+                        read_single_tag_rvlist.setAdapter(epcTagRVAdapter);
+                        epcTagRVAdapter.notifyDataSetChanged();
+
                     }
                 });
 
