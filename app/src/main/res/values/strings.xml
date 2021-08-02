@@ -539,4 +539,6 @@
     <string name="found_tags">Found Tags</string>
 	<string name="tag_detail">Tag Detail</string>
 	<string name="rssi">rssi</string>
+	<string name="not_success">Not Success</string>
+	<string name="single_tag_settings_ready">Single Tag Settings is ready to use.</string>
 </resources>

@@ -545,9 +545,6 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     public void loadData() {
         showProgressBar();
         new ServiceQueryAsyncTask(mContext, mActivity, Constants.Companion.getCostumeAllQuery()).execute();
-
-
-
     }
 
     private void initView() {
@@ -1537,6 +1534,11 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                // If do single scan, then clear scan list every time
+                if(scanSingleTagFlag) {
+                    list.removeAll(listEPC);
+                }
+
                 // The epc for the first time
                 if (list.isEmpty()) {
                     EPC epcTag = new EPC();
@@ -1589,6 +1591,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                     listMap.add(map);
                 }
                 if(startFlag) {
+                    Log.d(TAG, "original listMap.size()=" + listMap.size());
                     listViewData.setAdapter(new SimpleAdapter(UHFActivity.this,
                             listMap, R.layout.listview_item, new String[]{"ID",
                             "EPCTop", "EPCBottom", "COUNT", "RSSI"}, new int[]{
@@ -2239,6 +2242,9 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     private class ReadSingleTagButtonAnimationListener implements Animation.AnimationListener   {
         @Override
         public void onAnimationStart(Animation animation) {
+            // do no clear scan single rv list
+            new RefreshEPCSingleTagThread().start();
+
             SetVisible(read_single_tag_layout, textViewS1, viewS1);
         }
 
@@ -2256,6 +2262,9 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     private class WriteSingleTagButtonAnimationListener implements Animation.AnimationListener   {
         @Override
         public void onAnimationStart(Animation animation) {
+            // do no clear scan single rv list
+            new RefreshEPCSingleTagThread().start();
+
             SetVisible(read_single_tag_layout, textViewS1, viewS1);
         }
 
@@ -2761,10 +2770,30 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         textView.setTextColor(getResources().getColor(R.color.tabSelect));
         view.setBackgroundColor(getResources().getColor(R.color.tabSelect));
         if (layout == null) {
+            // change sensitive back to normal setting
+            manager.setSensitivity(sensitive);
+
+            if (!manager.setOutputPower(power)) {
+                showToast(getString(R.string.not_success));
+            }
+
+
             l1epc.setVisibility(View.VISIBLE);
             startFlag = false;
             buttonStart.setText(R.string.inventory);
         } else {
+
+            if(layout == searchandcheck_layout ||
+                    layout == l2readandwrite ||
+                    layout == l3lockandkill ||
+                    layout == l4settings
+            ) {
+                // change sensitive back to normal setting
+                manager.setSensitivity(sensitive);
+                if (!manager.setOutputPower(power)) {
+                    showToast(getString(R.string.not_success));
+                }
+            }
 
             if(layout == byitemset_queryresult_layout) {
                 scanItemSetFlag = false;
@@ -2777,8 +2806,18 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
             }
 
             if(layout == read_single_tag_layout) {
+                // change sensitive to Very Low
+                manager.setSensitivity(Constants.VERY_LOW);
+
+                if (manager.setOutputPower(Constants.POWER_16)) {
+                    showToast(getString(R.string.single_tag_settings_ready));
+                } else {
+                    showToast(getString(R.string.not_success));
+                }
+
                 scanSingleTagFlag = false;
                 scan_read_single_tag_button.setText(R.string.scan);
+
             }
 
             layout.setVisibility(View.VISIBLE);

@@ -109,6 +109,18 @@ class Constants {
         const val TYPE_STORAGEBOX = "storagebox"
         const val TYPE_PLAYBOX = "playbox"
 
+        const val HIGH = 3
+        const val MID = 2
+        const val LOW = 1
+        const val VERY_LOW = 0
+
+        const val POWER_26 = 26
+        const val POWER_24 = 24
+        const val POWER_20 = 20
+        const val POWER_18 = 18
+        const val POWER_17 = 17
+        const val POWER_16 = 16
+
         fun getCostumeAllQuery() : QueryService {
             return COSTUME_All_QUERY
         }
