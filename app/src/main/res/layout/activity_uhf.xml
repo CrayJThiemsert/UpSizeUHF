@@ -1492,7 +1492,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
                             <TextView
-                                android:id="@+id/current_box_textview"
+                                android:id="@+id/tag_detail_current_box_textview"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Storage Box by Cray"
@@ -1506,7 +1506,7 @@
                                 android:orientation="vertical">
 
                                 <TextView
-                                    android:id="@+id/epc_header_textview"
+                                    android:id="@+id/tag_detail_epc_header_textview"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:text="@string/barcode"
@@ -1516,7 +1516,7 @@
                                     android:textFontWeight="500"
                                     android:fontFamily="@font/kanit_medium" />
                                 <TextView
-                                    android:id="@+id/epc_run_textview"
+                                    android:id="@+id/tag_detail_epc_run_textview"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:text="@string/barcode"

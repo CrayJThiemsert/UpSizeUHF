@@ -58,14 +58,12 @@ import androidx.core.widget.AutoSizeableTextView;
 import androidx.core.widget.TextViewCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Room;
 
 import cn.pda.serialport.Tools;
 
 import com.android.hdhe.uhf.reader.UhfReader;
 
 import com.android.hdhe.uhf.readerInterface.TagModel;
-import com.handheld.upsizeuhf.dao.CostumeDao;
 import com.handheld.upsizeuhf.database.CostumeRoomDatabase;
 import com.handheld.upsizeuhf.model.Actor;
 import com.handheld.upsizeuhf.model.Box;
@@ -325,6 +323,19 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     private String mSelectedActorFilter = "";
     private Costume mSelectedItemCodeFilter = new Costume();
 
+    private Costume mSingleScannedTag = new Costume();
+
+    // Single Tag Detail
+    private TextView tag_detail_actor_textview;
+    private TextView tag_detail_actscene_textview;
+    private TextView tag_detail_code_textview;
+    private TextView tag_detail_type_textview;
+    private TextView tag_detail_size_textview;
+    private TextView tag_detail_number_textview;
+    private TextView tag_detail_current_box_textview;
+    private TextView tag_detail_epc_header_textview;
+    private TextView tag_detail_epc_run_textview;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -544,6 +555,10 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
 
     public void loadData() {
         showProgressBar();
+
+        // clear single scanned tag
+        mSingleScannedTag = new Costume();
+
         new ServiceQueryAsyncTask(mContext, mActivity, Constants.Companion.getCostumeAllQuery()).execute();
     }
 
@@ -1103,6 +1118,26 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         item_info_scanned_textview = (TextView)findViewById(R.id.item_info_scanned_textview);
 
         mProgressBar = (ProgressBar)findViewById(R.id.progressBar);
+
+        tag_detail_actor_textview = (TextView)findViewById(R.id.tag_detail_actor_textview);
+        tag_detail_actscene_textview = (TextView)findViewById(R.id.tag_detail_actscene_textview);
+        tag_detail_code_textview = (TextView)findViewById(R.id.tag_detail_code_textview);
+        tag_detail_type_textview = (TextView)findViewById(R.id.tag_detail_type_textview);
+        tag_detail_size_textview = (TextView)findViewById(R.id.tag_detail_size_textview);
+        tag_detail_number_textview = (TextView)findViewById(R.id.tag_detail_number_textview);
+        tag_detail_current_box_textview = (TextView)findViewById(R.id.tag_detail_current_box_textview);
+        tag_detail_epc_header_textview = (TextView)findViewById(R.id.tag_detail_epc_header_textview);
+        tag_detail_epc_run_textview = (TextView)findViewById(R.id.tag_detail_epc_run_textview);
+
+        tag_detail_actor_textview.setText("");
+        tag_detail_actscene_textview.setText("");
+        tag_detail_code_textview.setText("");
+        tag_detail_type_textview.setText("");
+        tag_detail_size_textview.setText("");
+        tag_detail_number_textview.setText("");
+        tag_detail_current_box_textview.setText("");
+        tag_detail_epc_header_textview.setText("");
+        tag_detail_epc_run_textview.setText("");
 
     }
 
@@ -1710,6 +1745,14 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                     read_single_tag_rvlist.setAdapter(epcTagRVAdapter);
                     epcTagRVAdapter.notifyDataSetChanged();
 //                    item_info_scanned_textview.setText(Integer.toString(scannedCount));
+                    if(mItemInfoArrayList.size() > 0) {
+                        Costume singleScannedTag = mItemInfoArrayList.get(0);
+                        if(!singleScannedTag.epcHeader.trim().equalsIgnoreCase(mSingleScannedTag.epcHeader) && !singleScannedTag.epcRun.trim().equalsIgnoreCase(mSingleScannedTag.epcRun)) {
+                            mSingleScannedTag = singleScannedTag;
+                            displayTagCostumeDetail();
+                        }
+
+                    }
 
                     Util.play(1, 0);
 
@@ -1718,6 +1761,53 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
 
             }
         });
+    }
+
+    /**
+     * Match scanned epc to costume database and displat tag detail
+     */
+    private void displayTagCostumeDetail() {
+        tag_detail_actor_textview.setText("");
+        tag_detail_actscene_textview.setText("");
+        tag_detail_code_textview.setText("");
+        tag_detail_type_textview.setText("");
+        tag_detail_size_textview.setText("");
+        tag_detail_number_textview.setText("");
+        tag_detail_current_box_textview.setText("");
+        tag_detail_epc_header_textview.setText("");
+        tag_detail_epc_run_textview.setText("");
+
+        for (int i = 0; i < mCostumeArrayList.size(); i++) {
+            Costume costume = mCostumeArrayList.get(i);
+
+            if (costume.epcHeader.trim().equalsIgnoreCase(mSingleScannedTag.epcHeader.replace(" ", "").trim()) && costume.epcRun.trim().equalsIgnoreCase(mSingleScannedTag.epcRun.replace(" ", "").trim())) {
+                tag_detail_actor_textview.setText(costume.actor);
+                tag_detail_actscene_textview.setText(costume.actScence);
+                tag_detail_code_textview.setText(costume.code);
+                tag_detail_type_textview.setText(costume.type);
+                tag_detail_size_textview.setText(costume.size);
+                tag_detail_number_textview.setText(costume.codeNo);
+
+                tag_detail_epc_header_textview.setText(costume.epcHeader);
+                tag_detail_epc_run_textview.setText(costume.epcRun);
+
+                String currentBox = getCurrentBoxString(costume);
+                tag_detail_current_box_textview.setText(currentBox);
+
+            }
+        }
+    }
+
+    private String getCurrentBoxString(Costume costume) {
+        String result = "";
+        if(!costume.shipBox.equalsIgnoreCase("")) {
+            result = mActivity.getString(R.string.ship_box) + ": " + costume.shipBox;
+        } else if(!costume.storageBox.equalsIgnoreCase("")) {
+            result = mActivity.getString(R.string.storage_box) + ": " + costume.storageBox;
+        } else if(!costume.playBox.equalsIgnoreCase("")) {
+            result = mActivity.getString(R.string.play_box) + ": " + costume.playBox;
+        }
+        return result;
     }
 
     private String getTwoLineEPC(String epc) {
