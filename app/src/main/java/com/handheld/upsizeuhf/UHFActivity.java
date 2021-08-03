@@ -1129,15 +1129,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         tag_detail_epc_header_textview = (TextView)findViewById(R.id.tag_detail_epc_header_textview);
         tag_detail_epc_run_textview = (TextView)findViewById(R.id.tag_detail_epc_run_textview);
 
-        tag_detail_actor_textview.setText("");
-        tag_detail_actscene_textview.setText("");
-        tag_detail_code_textview.setText("");
-        tag_detail_type_textview.setText("");
-        tag_detail_size_textview.setText("");
-        tag_detail_number_textview.setText("");
-        tag_detail_current_box_textview.setText("");
-        tag_detail_epc_header_textview.setText("");
-        tag_detail_epc_run_textview.setText("");
+        clearTagDetail();
 
     }
 
@@ -1767,15 +1759,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
      * Match scanned epc to costume database and displat tag detail
      */
     private void displayTagCostumeDetail() {
-        tag_detail_actor_textview.setText("");
-        tag_detail_actscene_textview.setText("");
-        tag_detail_code_textview.setText("");
-        tag_detail_type_textview.setText("");
-        tag_detail_size_textview.setText("");
-        tag_detail_number_textview.setText("");
-        tag_detail_current_box_textview.setText("");
-        tag_detail_epc_header_textview.setText("");
-        tag_detail_epc_run_textview.setText("");
+        clearTagDetail();
 
         for (int i = 0; i < mCostumeArrayList.size(); i++) {
             Costume costume = mCostumeArrayList.get(i);
@@ -1796,6 +1780,18 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
 
             }
         }
+    }
+
+    private void clearTagDetail() {
+        tag_detail_actor_textview.setText("");
+        tag_detail_actscene_textview.setText("");
+        tag_detail_code_textview.setText("");
+        tag_detail_type_textview.setText("");
+        tag_detail_size_textview.setText("");
+        tag_detail_number_textview.setText("");
+        tag_detail_current_box_textview.setText("");
+        tag_detail_epc_header_textview.setText("");
+        tag_detail_epc_run_textview.setText("");
     }
 
     private String getCurrentBoxString(Costume costume) {
@@ -3477,6 +3473,8 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                         epcTagRVAdapter = new EPCTagRVAdapter(mContext, mActivity, mItemInfoArrayList);
                         read_single_tag_rvlist.setAdapter(epcTagRVAdapter);
                         epcTagRVAdapter.notifyDataSetChanged();
+
+                        clearTagDetail();
 
                     }
                 });
