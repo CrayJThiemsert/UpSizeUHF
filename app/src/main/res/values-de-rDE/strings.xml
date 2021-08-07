@@ -541,4 +541,7 @@
 	<string name="rssi">rssi</string>
     <string name="not_success">Not Success</string>
     <string name="single_tag_settings_ready">Single Tag Settings is ready to use.</string>
+    <string name="current_epc_code_on_tag">Current EPC code on scanned tag:</string>
+    <string name="suggested_writing_new_epc_code">Suggested Writing New EPC Code:</string>
+    <string name="enter_epc_code_here">Enter EPC code here</string>
 </resources>

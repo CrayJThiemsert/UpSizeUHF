@@ -81,6 +81,7 @@ import com.handheld.upsizeuhf.ui.dialog.ErrorMessageDialogFragment;
 import com.handheld.upsizeuhf.ui.dialog.SuccessMessageDialogFragment;
 import com.handheld.upsizeuhf.ui.dialog.UserSignInDialogFragment;
 import com.handheld.upsizeuhf.ui.dialog.WarningMessageDialogFragment;
+import com.handheld.upsizeuhf.ui.dialog.WriteSingleTagDialogFragment;
 import com.handheld.upsizeuhf.util.AnimationUtils;
 import com.handheld.upsizeuhf.util.Constants;
 import com.handheld.upsizeuhf.util.HttpConnectionService;
@@ -313,6 +314,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     WarningMessageDialogFragment warningMessageDialogFragment = new WarningMessageDialogFragment();
     SuccessMessageDialogFragment successMessageDialogFragment = new SuccessMessageDialogFragment();
     ErrorMessageDialogFragment errorMessageDialogFragment = new ErrorMessageDialogFragment();
+    WriteSingleTagDialogFragment writeSingleTagDialogFragment = new WriteSingleTagDialogFragment();
 
     public static CostumeRoomDatabase costumeRoomDatabase;
 
@@ -2669,6 +2671,9 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
             scan_read_single_tag_button.setText(R.string.scan);
 
             // do no clear scan single rv list
+            writeSingleTagDialogFragment = WriteSingleTagDialogFragment.Companion.newInstance("", "", mScannedFoundItemArrayList);
+
+            writeSingleTagDialogFragment.show(getFragmentManager(), "write_single_tag_fragment");
         }
 
         @Override
