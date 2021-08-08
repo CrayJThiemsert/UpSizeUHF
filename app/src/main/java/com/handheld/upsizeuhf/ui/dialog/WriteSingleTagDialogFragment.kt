@@ -1,35 +1,21 @@
 package com.handheld.upsizeuhf.ui.dialog
 
 import android.app.*
-import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.animation.Animation
-import android.view.animation.Animation.AnimationListener
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.handheld.upsizeuhf.R
 import com.handheld.upsizeuhf.UHFActivity
-import com.handheld.upsizeuhf.model.Box
-import com.handheld.upsizeuhf.model.Costume
-import com.handheld.upsizeuhf.model.QueryService
-import com.handheld.upsizeuhf.ui.BoxRVAdapter
+import com.handheld.upsizeuhf.model.EPC
 import com.handheld.upsizeuhf.util.AnimationUtils
-import com.handheld.upsizeuhf.util.Constants
-import com.handheld.upsizeuhf.util.Constants.Companion.getCheckedHistoryProcedure
-import com.handheld.upsizeuhf.util.HttpConnectionService
-import org.json.JSONArray
-import org.json.JSONException
-import org.json.JSONObject
-import java.util.*
+import com.handheld.upsizeuhf.util.UhfUtils.Companion.separateEPCString
 
 
 class WriteSingleTagDialogFragment : DialogFragment() {
@@ -40,6 +26,10 @@ class WriteSingleTagDialogFragment : DialogFragment() {
     private lateinit var mProgressBar: ProgressBar
 
     private lateinit var check_type_layout: LinearLayout
+    private lateinit var scanned_epc_textview: TextView
+
+    private lateinit var back_write_single_tag_button: Button
+    private lateinit var write_single_tag_button: Button
 
     interface ReloadCostumeListener {
         fun onFinishCheckedBoxDialog(msgBody: String)
@@ -52,7 +42,7 @@ class WriteSingleTagDialogFragment : DialogFragment() {
     lateinit var mByUser: String
 
     companion object {
-        private var costumeCheckedList: MutableList<Costume> = mutableListOf<Costume>()
+        private var mEPC: EPC = EPC()
 
         /**
          * Use this factory method to create a new instance of
@@ -64,7 +54,7 @@ class WriteSingleTagDialogFragment : DialogFragment() {
          */
         // TODO: Rename and change types and number of parameters
 
-        fun newInstance(param1: String, param2: String, costumeCheckedListParam: MutableList<Costume>) : WriteSingleTagDialogFragment   {
+        fun newInstance(param1: String, param2: String, epcParam: EPC) : WriteSingleTagDialogFragment   {
             val fragment = WriteSingleTagDialogFragment()
             val args = Bundle()
             args.putString("text", param1)
@@ -81,7 +71,7 @@ class WriteSingleTagDialogFragment : DialogFragment() {
             args.putString("email", "")
             fragment.arguments = args
 
-            costumeCheckedList = costumeCheckedListParam
+            mEPC = epcParam
             return fragment
         }
 
@@ -133,11 +123,52 @@ class WriteSingleTagDialogFragment : DialogFragment() {
         mProgressBar = view.findViewById(R.id.progressBar)
 
         check_type_layout = view.findViewById(R.id.check_type_layout)
+
+        scanned_epc_textview = view.findViewById(R.id.scanned_epc_textview)
+
+        back_write_single_tag_button = view.findViewById(R.id.back_write_single_tag_button)
+        write_single_tag_button = view.findViewById(R.id.write_single_tag_button)
+
         setEvents()
     }
 
     private fun setEvents() {
+        val epcScanned = separateEPCString(mEPC.epcRaw, " ", 4, 24)
+        scanned_epc_textview.setText(epcScanned)
 
+        back_write_single_tag_button.setOnClickListener(ClickButton(back_write_single_tag_button))
+
+    }
+
+    inner class ClickButton(back_button: Button) : View.OnClickListener{
+        lateinit var back_button: Button
+        init {
+            this.back_button = back_button
+        }
+
+        override fun onClick(p0: View?) {
+
+            val animate = AnimationUtils.getBounceAnimation(mActivity!!.applicationContext)
+
+            if(back_button === back_write_single_tag_button) {
+                animate.setAnimationListener(BackButtonAnimationListener(back_write_single_tag_button))
+                back_write_single_tag_button.startAnimation(animate)
+            }
+        }
+    }
+
+    inner class BackButtonAnimationListener(back_button: Button) : Animation.AnimationListener {
+        lateinit var back_button: Button
+        init {
+            this.back_button = back_button
+        }
+
+        override fun onAnimationStart(animation: Animation) {
+            dismiss()
+        }
+
+        override fun onAnimationEnd(animation: Animation) {}
+        override fun onAnimationRepeat(animation: Animation) {}
     }
 
     private fun setVisible(layout : LinearLayout) {

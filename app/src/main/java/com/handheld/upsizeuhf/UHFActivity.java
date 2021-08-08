@@ -338,6 +338,8 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     private TextView tag_detail_epc_header_textview;
     private TextView tag_detail_epc_run_textview;
 
+    com.handheld.upsizeuhf.model.EPC mEPCScanned = new com.handheld.upsizeuhf.model.EPC();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -1723,11 +1725,11 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                             }
 
                             if (key.equals("EPCTop")) {
-                                costume.epcHeader = value.toString();
+                                costume.epcHeader = value.toString().replace(" ", "");
                             }
 
                             if (key.equals("EPCBottom")) {
-                                costume.epcRun = value.toString();
+                                costume.epcRun = value.toString().replace(" ", "");
                             }
                         }
 
@@ -1774,8 +1776,16 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                 tag_detail_size_textview.setText(costume.size);
                 tag_detail_number_textview.setText(costume.codeNo);
 
-                tag_detail_epc_header_textview.setText(costume.epcHeader);
-                tag_detail_epc_run_textview.setText(costume.epcRun);
+                String epcRaw = costume.epcHeader + costume.epcRun;
+                String epcTop = UhfUtils.Companion.separateEPCTopString(epcRaw, " ", 4, 16);
+                String epcBottom = UhfUtils.Companion.separateEPCBottomString(epcRaw, " ", 4, 16);
+
+                tag_detail_epc_header_textview.setText(epcTop);
+                tag_detail_epc_run_textview.setText(epcBottom);
+
+                mEPCScanned.setEpcRaw(epcRaw);
+                mEPCScanned.setEpcHeader(costume.epcHeader);
+                mEPCScanned.setEpcRun(costume.epcRun);
 
                 String currentBox = getCurrentBoxString(costume);
                 tag_detail_current_box_textview.setText(currentBox);
@@ -2671,7 +2681,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
             scan_read_single_tag_button.setText(R.string.scan);
 
             // do no clear scan single rv list
-            writeSingleTagDialogFragment = WriteSingleTagDialogFragment.Companion.newInstance("", "", mScannedFoundItemArrayList);
+            writeSingleTagDialogFragment = WriteSingleTagDialogFragment.Companion.newInstance("", "", mEPCScanned);
 
             writeSingleTagDialogFragment.show(getFragmentManager(), "write_single_tag_fragment");
         }
