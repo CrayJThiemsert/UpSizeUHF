@@ -2186,8 +2186,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                 }
                 byte[] dataBytes = Tools.HexString2Bytes(writeData);
                 // dataLen = dataBytes/2 dataLen
-                boolean writeFlag = manager.writeTo6C(accessPassword, membank,
-                        addr, dataBytes.length / 2, dataBytes);
+                boolean writeFlag = manager.writeTo6C(accessPassword, membank, addr, dataBytes.length / 2, dataBytes);
                 if (writeFlag) {
                     editReadData.append(getString(R.string.write_successful_) + "\n");
                 } else {
@@ -2681,7 +2680,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
             scan_read_single_tag_button.setText(R.string.scan);
 
             // do no clear scan single rv list
-            writeSingleTagDialogFragment = WriteSingleTagDialogFragment.Companion.newInstance("", "", mEPCScanned);
+            writeSingleTagDialogFragment = WriteSingleTagDialogFragment.Companion.newInstance("", "", mEPCScanned, manager);
 
             writeSingleTagDialogFragment.show(getFragmentManager(), "write_single_tag_fragment");
         }

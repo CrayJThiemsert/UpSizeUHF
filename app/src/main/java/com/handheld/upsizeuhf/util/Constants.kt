@@ -86,6 +86,7 @@ class Constants {
 
         public val IMAGE_DIRECTORY = "/palmrescue"
 
+        // Call services
         const val COSTUME_All = 1
         const val ACTOR_All = 2
         const val ITEM_CODE_All = 3
@@ -93,6 +94,9 @@ class Constants {
         const val STORAGEBOX_All = 5
         const val PLAYBOX_All = 6
         const val CHECKED_HISTORY = 7
+        const val SUGGESTION_EPC = 8
+        const val UPDATE_CURRENT_EPCRUN = 9
+
         val COSTUME_All_QUERY : QueryService = QueryService(COSTUME_All, "/costume/costume/list/")
         val ACTOR_All_QUERY : QueryService = QueryService(ACTOR_All, "/costume/costume/actors/")
         val ITEM_CODE_All_QUERY : QueryService = QueryService(ITEM_CODE_All, "/costume/costume/itemcodes/")
@@ -101,6 +105,8 @@ class Constants {
         val PLAYBOX_All_QUERY : QueryService = QueryService(PLAYBOX_All, "/costume/costume/playboxes/")
 
         val CHECKED_HISTORY_PROCEDURE : QueryService = QueryService(CHECKED_HISTORY, "/costume/costume/checked/")
+        val SUGGESTION_EPC_PROCEDURE : QueryService = QueryService(SUGGESTION_EPC, "/costume/costume/suggestionepcrun/")
+        val UPDATE_CURRENT_EPCRUN_PROCEDURE : QueryService = QueryService(UPDATE_CURRENT_EPCRUN, "/costume/costume/updatecurrentepcrun/")
 
         const val ITEM_SET_MODE = 1
         const val ITEM_CODE_MODE = 2
@@ -147,6 +153,14 @@ class Constants {
 
         fun getCheckedHistoryProcedure() : QueryService {
             return CHECKED_HISTORY_PROCEDURE
+        }
+
+        fun getSuggestionEPCProcedure() : QueryService {
+            return SUGGESTION_EPC_PROCEDURE
+        }
+
+        fun getUpdatedCurrentEPCRunProcedure() : QueryService {
+            return UPDATE_CURRENT_EPCRUN_PROCEDURE
         }
     }
 }
