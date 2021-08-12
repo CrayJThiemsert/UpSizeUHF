@@ -110,6 +110,8 @@ class Constants {
 
         const val ITEM_SET_MODE = 1
         const val ITEM_CODE_MODE = 2
+        const val READ_SINGLE_TAG_MODE = 3
+        const val WRITE_SINGLE_TAG_MODE = 4
 
         const val TYPE_SHIPBOX = "shipbox"
         const val TYPE_STORAGEBOX = "storagebox"
@@ -126,6 +128,12 @@ class Constants {
         const val POWER_18 = 18
         const val POWER_17 = 17
         const val POWER_16 = 16
+
+        // Home Screen Type
+        const val SCREEN_TYPE_BY_ITEM_SET = 1
+        const val SCREEN_TYPE_BY_ITEM_CODE = 2
+        const val SCREEN_TYPE_READ_SINGLE_TAG = 3
+        const val SCREEN_TYPE_WRITE_SINGLE_TAG = 4
 
         fun getCostumeAllQuery() : QueryService {
             return COSTUME_All_QUERY

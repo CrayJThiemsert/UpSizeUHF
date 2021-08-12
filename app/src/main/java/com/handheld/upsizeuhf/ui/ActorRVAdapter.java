@@ -22,6 +22,7 @@ import com.handheld.upsizeuhf.UHFActivity;
 import com.handheld.upsizeuhf.Util;
 import com.handheld.upsizeuhf.model.Actor;
 import com.handheld.upsizeuhf.util.AnimationUtils;
+import com.handheld.upsizeuhf.util.Constants;
 
 import java.util.ArrayList;
 
@@ -35,10 +36,10 @@ public class ActorRVAdapter extends RecyclerView.Adapter<ActorRVAdapter.ActorVie
 
 
 
-    private int mCurrentItem=0;
+    private int mCurrentItem = 0;
     private boolean isClick = false;
     private ArrayList<Actor> mActorArrayList = new ArrayList<Actor>();
-
+    private int mScreenType = Constants.SCREEN_TYPE_BY_ITEM_SET;
 
     @Override
     public ActorViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -61,7 +62,7 @@ public class ActorRVAdapter extends RecyclerView.Adapter<ActorRVAdapter.ActorVie
                 notifyDataSetChanged();
 
                 UHFActivity uhfActivity = (UHFActivity)mActivity;
-                uhfActivity.addSelectedActor(actor.name);
+                uhfActivity.addSelectedActor(actor.name, mScreenType);
             }
         });
 
@@ -118,11 +119,12 @@ public class ActorRVAdapter extends RecyclerView.Adapter<ActorRVAdapter.ActorVie
 //        LinearLayout list_item_layout;
 //    }
 
-    public ActorRVAdapter(Context context, Activity activity, ArrayList<Actor> actors) {
+    public ActorRVAdapter(Context context, Activity activity, ArrayList<Actor> actors, int screenType) {
 //        super(context, R.layout.name_listview, actors);
         mContext = context;
         mActivity = activity;
         mActorArrayList = actors;
+        mScreenType = screenType;
     }
 
 
@@ -137,7 +139,7 @@ public class ActorRVAdapter extends RecyclerView.Adapter<ActorRVAdapter.ActorVie
         public void onAnimationStart(Animation animation) {
             Log.d(TAG, "animation selected name=" + actor.name);
             UHFActivity uhfActivity = (UHFActivity)mActivity;
-            uhfActivity.refreshActScene(actor.name);
+            uhfActivity.refreshActScene(actor.name, mScreenType);
         }
 
         @Override

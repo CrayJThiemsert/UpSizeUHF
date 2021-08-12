@@ -118,6 +118,8 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
 
     private LinearLayout byitemcode_queryresult_layout;
     private LinearLayout read_single_tag_layout;
+    private LinearLayout write_single_tag_1of3_layout;
+    private LinearLayout write_single_tag_2of3_layout;
     
     private RelativeLayout l1epc;
     private LinearLayout l2readandwrite;
@@ -201,6 +203,15 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     private Button clear_read_single_tag_button;
     private Button write_read_single_tag_button;
 
+    // Write Single Tag
+    private Button back_write_single_tag_1of3_button;
+    private Button next_write_single_tag_1of3_button;
+
+    private Button back_write_single_tag_2of3_button;
+
+    private TextView write_single_tag_2of3_selected_actor_textview;
+    private TextView write_single_tag_2of3_selected_actscene_textview;
+
     private Button button1;//set button1
     private Button button2;//set button2
     private Button button3;//set button3
@@ -265,6 +276,15 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     private RecyclerView actscene_name_rvlist;
     private ActSceneRVAdapter actsceneRVAdapter;
 
+    private RecyclerView write_single_tag_1of3_actor_name_rvlist;
+    private ActorRVAdapter actorWriteSingleTagRVAdapter;
+
+    private RecyclerView write_single_tag_1of3_actscene_name_rvlist;
+    private ActSceneRVAdapter actsceneWriteSingleTagRVAdapter;
+
+    private RecyclerView write_single_tag_2of3_item_code_rvlist;
+    private ItemCodeRVAdapter writeSingleTag2of3_itemCodeRVAdapter;
+
     private RecyclerView byitemset_item_code_rvlist;
     private ItemCodeRVAdapter byitemset_itemCodeRVAdapter;
 
@@ -276,6 +296,9 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
 
     private TextView total_items_textview;
     private TextView items_scanned_textview;
+
+    private TextView write_single_tag_2of3_total_items_textview;
+    private TextView write_single_tag_2of3_items_scanned_textview;
 
     // By Item Codes
     private RecyclerView byitemcode_filter_rvlist;
@@ -614,6 +637,8 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
 
         byitemcode_queryresult_layout = (LinearLayout) findViewById(R.id.byitemcode_queryresult_layout);
         read_single_tag_layout = (LinearLayout) findViewById(R.id.read_single_tag_layout);
+        write_single_tag_1of3_layout = (LinearLayout) findViewById(R.id.write_single_tag_1of3_layout);
+        write_single_tag_2of3_layout = (LinearLayout) findViewById(R.id.write_single_tag_2of3_layout);
         
         l1epc = (RelativeLayout) findViewById(R.id.l1epc);
         l2readandwrite = (LinearLayout) findViewById(R.id.l2read);
@@ -1061,6 +1086,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         check_itemcode_info_result_button = (Button) findViewById(R.id.check_itemcode_info_result_button);
         check_itemcode_info_result_button.setOnClickListener(this);
 
+        // Read Single Tag
         back_read_single_tag_button = (Button) findViewById(R.id.back_read_single_tag_button);
         back_read_single_tag_button.setOnClickListener(this);
 
@@ -1073,6 +1099,25 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         write_read_single_tag_button = (Button) findViewById(R.id.write_read_single_tag_button);
         write_read_single_tag_button.setOnClickListener(this);
 
+        // Write Single Tag 1of3
+        back_write_single_tag_1of3_button = (Button) findViewById(R.id.back_write_single_tag_1of3_button);
+        back_write_single_tag_1of3_button.setOnClickListener(this);
+
+        next_write_single_tag_1of3_button = (Button) findViewById(R.id.next_write_single_tag_1of3_button);
+        next_write_single_tag_1of3_button.setOnClickListener(this);
+
+        write_single_tag_1of3_actor_name_rvlist = (RecyclerView)findViewById(R.id.write_single_tag_1of3_actor_name_rvlist);
+        LinearLayoutManager writeActorlinearLayoutManager = new LinearLayoutManager(this,RecyclerView.VERTICAL,false);
+        write_single_tag_1of3_actor_name_rvlist.setLayoutManager(writeActorlinearLayoutManager);
+
+        write_single_tag_1of3_actscene_name_rvlist = (RecyclerView)findViewById(R.id.write_single_tag_1of3_actscene_name_rvlist);
+        LinearLayoutManager writeActscenelinearLayoutManager = new LinearLayoutManager(this,RecyclerView.VERTICAL,false);
+        write_single_tag_1of3_actscene_name_rvlist.setLayoutManager(writeActscenelinearLayoutManager);
+
+        // Write Single Tag 2of3
+        back_write_single_tag_2of3_button = (Button) findViewById(R.id.back_write_single_tag_2of3_button);
+        back_write_single_tag_2of3_button.setOnClickListener(this);
+
         actor_name_rvlist = (RecyclerView)findViewById(R.id.actor_name_rvlist);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,RecyclerView.VERTICAL,false);
         actor_name_rvlist.setLayoutManager(linearLayoutManager);
@@ -1080,6 +1125,8 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         actscene_name_rvlist = (RecyclerView)findViewById(R.id.actscene_name_rvlist);
         LinearLayoutManager actscenelinearLayoutManager = new LinearLayoutManager(this,RecyclerView.VERTICAL,false);
         actscene_name_rvlist.setLayoutManager(actscenelinearLayoutManager);
+
+
 
         // Item Set Query Result Layout or Scan
         selected_actor_textview = (TextView)findViewById(R.id.selected_actor_textview);
@@ -1133,6 +1180,20 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         tag_detail_epc_header_textview = (TextView)findViewById(R.id.tag_detail_epc_header_textview);
         tag_detail_epc_run_textview = (TextView)findViewById(R.id.tag_detail_epc_run_textview);
 
+        // Write Single Tag
+        write_single_tag_2of3_selected_actor_textview = (TextView)findViewById(R.id.write_single_tag_2of3_selected_actor_textview);
+        write_single_tag_2of3_selected_actscene_textview = (TextView)findViewById(R.id.write_single_tag_2of3_selected_actscene_textview);
+
+        write_single_tag_2of3_selected_actor_textview.setTypeface(UhfUtils.Companion.getFontKanitLightItalic());
+        write_single_tag_2of3_selected_actscene_textview.setTypeface(UhfUtils.Companion.getFontKanitLightItalic());
+
+        write_single_tag_2of3_item_code_rvlist = (RecyclerView)findViewById(R.id.write_single_tag_2of3_item_code_rvlist);
+        LinearLayoutManager writeSingleTag2of3itemCodelinearLayoutManager = new LinearLayoutManager(this,RecyclerView.VERTICAL,false);
+        write_single_tag_2of3_item_code_rvlist.setLayoutManager(writeSingleTag2of3itemCodelinearLayoutManager);
+
+        write_single_tag_2of3_total_items_textview = (TextView)findViewById(R.id.write_single_tag_2of3_total_items_textview);
+        write_single_tag_2of3_items_scanned_textview = (TextView)findViewById(R.id.write_single_tag_2of3_items_scanned_textview);
+
         clearTagDetail();
 
     }
@@ -1176,8 +1237,8 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         return result;
     }
 
-    public void refreshActScene(String actor) {
-        Log.d(TAG, "refreshActScene actor name=" + actor);
+    public void refreshActScene(String actor, int screenType) {
+        Log.d(TAG, "refreshActScene actor name=" + actor + " | screenType=" + screenType);
 
         // clear search and check data[selected actor, selected act scene]
         clearSearchandCheckData();
@@ -1195,19 +1256,42 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
             }
         }
 
-        actsceneRVAdapter = new ActSceneRVAdapter(mContext, mActivity, mActSceneArrayList);
-        actscene_name_rvlist.setAdapter(actsceneRVAdapter);
-        actsceneRVAdapter.notifyDataSetChanged();
+        switch (screenType) {
+            case Constants.SCREEN_TYPE_BY_ITEM_SET: {
+                actsceneRVAdapter = new ActSceneRVAdapter(mContext, mActivity, mActSceneArrayList);
+                actscene_name_rvlist.setAdapter(actsceneRVAdapter);
+                actsceneRVAdapter.notifyDataSetChanged();
 
-        if(mActSceneArrayList.size() == 1) {
-            Costume costume = (Costume) mActSceneArrayList.get(0);
-            addSelectedActScene(costume.actScence);
-            selected_actscene_textview.setText(costume.actScence);
-        } else {
-            selected_actscene_textview.setText("");
+                if(mActSceneArrayList.size() == 1) {
+                    Costume costume = (Costume) mActSceneArrayList.get(0);
+                    addSelectedActScene(costume.actScence);
+                    selected_actscene_textview.setText(costume.actScence);
+                } else {
+                    selected_actscene_textview.setText("");
+                }
+
+                processDialog.dismiss();
+                break;
+            }
+
+            case Constants.SCREEN_TYPE_WRITE_SINGLE_TAG: {
+                actsceneWriteSingleTagRVAdapter = new ActSceneRVAdapter(mContext, mActivity, mActSceneArrayList);
+                write_single_tag_1of3_actscene_name_rvlist.setAdapter(actsceneWriteSingleTagRVAdapter);
+                actsceneWriteSingleTagRVAdapter.notifyDataSetChanged();
+
+                if(mActSceneArrayList.size() == 1) {
+                    Costume costume = (Costume) mActSceneArrayList.get(0);
+                    addSelectedActScene(costume.actScence);
+                    write_single_tag_2of3_selected_actscene_textview.setText(costume.actScence);
+                } else {
+                    write_single_tag_2of3_selected_actscene_textview.setText("");
+                }
+
+                processDialog.dismiss();
+                break;
+            }
         }
 
-        processDialog.dismiss();
     }
 
     public void refreshItemCodeInfo(Costume itemCode) {
@@ -1304,8 +1388,20 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
      * Query Item Codes list by use selected actor and act, scene.
      */
     public void queryItemCodesBySelectedActorActScene() {
-        String actor = selected_actor_textview.getText().toString();
-        String actScene = selected_actscene_textview.getText().toString();
+        String actor = "";
+        String actScene = "";
+        switch (mCurrentSearchMode) {
+            case Constants.ITEM_SET_MODE: {
+                actor = selected_actor_textview.getText().toString();
+                actScene = selected_actscene_textview.getText().toString();
+                break;
+            }
+            case Constants.WRITE_SINGLE_TAG_MODE: {
+                actor = write_single_tag_2of3_selected_actor_textview.getText().toString();
+                actScene = write_single_tag_2of3_selected_actscene_textview.getText().toString();
+                break;
+            }
+        }
         Log.d(TAG, "query ItemCodes by actor=" + actor + " : act, scene=" + actScene);
 
         processDialog = new ProgressDialog(mContext);
@@ -1323,12 +1419,27 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
             }
         }
 
-        byitemset_itemCodeRVAdapter = new ItemCodeRVAdapter(mContext, mActivity, mItemCodeArrayList);
-        byitemset_item_code_rvlist.setAdapter(byitemset_itemCodeRVAdapter);
-        byitemset_itemCodeRVAdapter.notifyDataSetChanged();
+        switch (mCurrentSearchMode) {
+            case Constants.ITEM_SET_MODE: {
+                byitemset_itemCodeRVAdapter = new ItemCodeRVAdapter(mContext, mActivity, mItemCodeArrayList);
+                byitemset_item_code_rvlist.setAdapter(byitemset_itemCodeRVAdapter);
+                byitemset_itemCodeRVAdapter.notifyDataSetChanged();
 
-        items_scanned_textview.setText(Integer.toString(0));
-        total_items_textview.setText(Integer.toString(mItemCodeArrayList.size()));
+                items_scanned_textview.setText(Integer.toString(0));
+                total_items_textview.setText(Integer.toString(mItemCodeArrayList.size()));
+                break;
+            }
+            case Constants.WRITE_SINGLE_TAG_MODE: {
+                writeSingleTag2of3_itemCodeRVAdapter = new ItemCodeRVAdapter(mContext, mActivity, mItemCodeArrayList);
+                write_single_tag_2of3_item_code_rvlist.setAdapter(writeSingleTag2of3_itemCodeRVAdapter);
+                writeSingleTag2of3_itemCodeRVAdapter.notifyDataSetChanged();
+
+                write_single_tag_2of3_items_scanned_textview.setText(Integer.toString(0));
+                write_single_tag_2of3_total_items_textview.setText(Integer.toString(mItemCodeArrayList.size()));
+                break;
+            }
+        }
+
 
         processDialog.dismiss();
     }
@@ -1337,28 +1448,49 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
      * add only one name in this time, but open for the future more than one name
      * @param actorName
      */
-    public void addSelectedActor(String actorName) {
+    public void addSelectedActor(String actorName, int screenType) {
         mSelectedActorFilter = actorName;
         mSelectedActorArray.clear();
         mSelectedActorArray.add(actorName);
-        selected_actor_textview.setText(mSelectedActorArray.get(0).toString());
 
-        if(selected_actor_textview.getText().toString().length() > 76) {
-            selected_actor_textview.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
-        } else {
-            if (selected_actor_textview.getText().toString().length() > 55) {
-                selected_actor_textview.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-            } else {
-                if (selected_actor_textview.getText().toString().length() > 28) {
-                    selected_actor_textview.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+        switch (screenType) {
+            case Constants.SCREEN_TYPE_BY_ITEM_SET: {
+                selected_actor_textview.setText(mSelectedActorArray.get(0).toString());
+
+                if (selected_actor_textview.getText().toString().length() > 76) {
+                    selected_actor_textview.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
                 } else {
-                    selected_actor_textview.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
+                    if (selected_actor_textview.getText().toString().length() > 55) {
+                        selected_actor_textview.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                    } else {
+                        if (selected_actor_textview.getText().toString().length() > 28) {
+                            selected_actor_textview.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                        } else {
+                            selected_actor_textview.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
+                        }
+                    }
                 }
+                break;
+            }
+            case Constants.SCREEN_TYPE_WRITE_SINGLE_TAG: {
+                write_single_tag_2of3_selected_actor_textview.setText(mSelectedActorArray.get(0).toString());
+
+                if (write_single_tag_2of3_selected_actor_textview.getText().toString().length() > 76) {
+                    write_single_tag_2of3_selected_actor_textview.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+                } else {
+                    if (write_single_tag_2of3_selected_actor_textview.getText().toString().length() > 55) {
+                        write_single_tag_2of3_selected_actor_textview.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                    } else {
+                        if (write_single_tag_2of3_selected_actor_textview.getText().toString().length() > 28) {
+                            write_single_tag_2of3_selected_actor_textview.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                        } else {
+                            write_single_tag_2of3_selected_actor_textview.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
+                        }
+                    }
+                }
+                break;
             }
         }
-
-//        setAutoSizeTextTypeUniformWithConfiguration(selected_actor_textview, 12, 24, 2, TypedValue.COMPLEX_UNIT_SP);
-
 
         mSelectedActSceneArray.clear();
         selected_actscene_textview.setText("");
@@ -1468,7 +1600,9 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
 
         @Override
         protected Void doInBackground(Void... voids) {
-            refreshActScene(mSelectedActorFilter);
+            if(mCurrentSearchMode == Constants.ITEM_SET_MODE) {
+                refreshActScene(mSelectedActorFilter, Constants.SCREEN_TYPE_BY_ITEM_SET);
+            }
             return null;
         }
     }
@@ -1489,7 +1623,9 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
 
                     @Override
                     public void run() {
-                        refreshActScene(mSelectedActorFilter);
+                        if(mCurrentSearchMode == Constants.ITEM_SET_MODE) {
+                            refreshActScene(mSelectedActorFilter, Constants.SCREEN_TYPE_BY_ITEM_SET);
+                        }
                     }
                 });
 
@@ -1743,7 +1879,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
 //                    item_info_scanned_textview.setText(Integer.toString(scannedCount));
                     if(mItemInfoArrayList.size() > 0) {
                         Costume singleScannedTag = mItemInfoArrayList.get(0);
-                        if(!singleScannedTag.epcHeader.trim().equalsIgnoreCase(mSingleScannedTag.epcHeader) && !singleScannedTag.epcRun.trim().equalsIgnoreCase(mSingleScannedTag.epcRun)) {
+                        if(!singleScannedTag.epcHeader.trim().equalsIgnoreCase(mSingleScannedTag.epcHeader) || !singleScannedTag.epcRun.trim().equalsIgnoreCase(mSingleScannedTag.epcRun)) {
                             mSingleScannedTag = singleScannedTag;
                             displayTagCostumeDetail();
                         }
@@ -2100,11 +2236,11 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
             }
             break;
 
-            // Single Tag
+            // Read Single Tag
             case R.id.back_read_single_tag_button: {
                 Util.play(1, 0);
                 Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
-                animate.setAnimationListener(new BackSingleTagButtonAnimationListener());
+                animate.setAnimationListener(new BackReadSingleTagButtonAnimationListener());
                 back_read_single_tag_button.startAnimation(animate);
             }
             break;
@@ -2130,6 +2266,32 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                 Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
                 animate.setAnimationListener(new WriteReadSingleTagButtonAnimationListener());
                 write_read_single_tag_button.startAnimation(animate);
+            }
+            break;
+
+            // Write Single Tag 1of3
+            case R.id.back_write_single_tag_1of3_button: {
+                Util.play(1, 0);
+                Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
+                animate.setAnimationListener(new BackWriteSingleTag1of3ButtonAnimationListener());
+                back_write_single_tag_1of3_button.startAnimation(animate);
+            }
+            break;
+
+            case R.id.next_write_single_tag_1of3_button: {
+                Util.play(1, 0);
+                Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
+                animate.setAnimationListener(new NextWriteSingleTag1of3ButtonAnimationListener());
+                next_write_single_tag_1of3_button.startAnimation(animate);
+            }
+            break;
+
+            // Write Single Tag 2of3
+            case R.id.back_write_single_tag_2of3_button: {
+                Util.play(1, 0);
+                Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
+                animate.setAnimationListener(new BackWriteSingleTag2of3ButtonAnimationListener());
+                back_write_single_tag_2of3_button.startAnimation(animate);
             }
             break;
             
@@ -2298,7 +2460,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
 
             SetVisible(byitemset_select_filter_layout, textViewS1, viewS1);
             // Load Actor List
-            new LoadActorThread().start();
+            new LoadActorThread(byitemset_select_filter_layout).start();
 
         }
 
@@ -2359,10 +2521,13 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     private class WriteSingleTagButtonAnimationListener implements Animation.AnimationListener   {
         @Override
         public void onAnimationStart(Animation animation) {
-            // do no clear scan single rv list
-            new RefreshEPCSingleTagThread().start();
+            // Clear select actor
+            mSelectedActorFilter = "";
 
-            SetVisible(read_single_tag_layout, textViewS1, viewS1);
+            SetVisible(write_single_tag_1of3_layout, textViewS1, viewS1);
+
+            // Load Actor List
+            new LoadActorThread(write_single_tag_1of3_layout).start();
         }
 
         @Override
@@ -2601,7 +2766,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         }
     }
 
-    private class BackSingleTagButtonAnimationListener implements Animation.AnimationListener   {
+    private class BackReadSingleTagButtonAnimationListener implements Animation.AnimationListener   {
         @Override
         public void onAnimationStart(Animation animation) {
             thread.interrupt();
@@ -2609,6 +2774,72 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
             scan_read_single_tag_button.setText(R.string.scan);
 
             SetVisible(searchandcheck_layout, textViewS1, viewS1);
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    }
+
+    private class BackWriteSingleTag1of3ButtonAnimationListener implements Animation.AnimationListener   {
+        @Override
+        public void onAnimationStart(Animation animation) {
+            SetVisible(searchandcheck_layout, textViewS1, viewS1);
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    }
+
+    private class NextWriteSingleTag1of3ButtonAnimationListener implements Animation.AnimationListener   {
+        @Override
+        public void onAnimationStart(Animation animation) {
+            mCurrentSearchMode = Constants.WRITE_SINGLE_TAG_MODE;
+
+            String actor = write_single_tag_2of3_selected_actor_textview.getText().toString();
+            String actScene = write_single_tag_2of3_selected_actscene_textview.getText().toString();
+            Log.d(TAG, "query ItemCodes by actor=" + actor + " : act, scene=" + actScene);
+
+            if(actor.equalsIgnoreCase("") && actScene.equalsIgnoreCase("")) {
+                loadWarningDialog("", getString(R.string.actor_actscene_notfound), getString(R.string.actor_actscene_notfound_solution));
+            } else {
+                SetVisible(write_single_tag_2of3_layout, textViewS1, viewS1);
+                queryItemCodesBySelectedActorActScene();
+            }
+
+
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    }
+
+    private class BackWriteSingleTag2of3ButtonAnimationListener implements Animation.AnimationListener   {
+        @Override
+        public void onAnimationStart(Animation animation) {
+            SetVisible(write_single_tag_1of3_layout, textViewS1, viewS1);
         }
 
         @Override
@@ -2850,6 +3081,8 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         byitemcode_queryresult_layout.setVisibility(View.GONE);
 
         read_single_tag_layout.setVisibility(View.GONE);
+        write_single_tag_1of3_layout.setVisibility(View.GONE);
+        write_single_tag_2of3_layout.setVisibility(View.GONE);
 
         l1epc.setVisibility(View.GONE);
         l2readandwrite.setVisibility(View.GONE);
@@ -2905,7 +3138,8 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                 scan_itemcode_info_result_button.setText(R.string.scan);
             }
 
-            if(layout == read_single_tag_layout) {
+            if(layout == read_single_tag_layout ||
+                    layout == write_single_tag_2of3_layout) {
                 // change sensitive to Very Low
                 manager.setSensitivity(Constants.VERY_LOW);
 
@@ -3093,23 +3327,29 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
 //                                processDialog.dismiss();
                             }
                             break;
+                        // 12-Aug-2021 19:52:43 - Not used at the moment.
                         case Constants.ACTOR_All: {
-                                ArrayList<Actor> actorArrayList = new ArrayList<Actor>();
+                            ArrayList<Actor> actorArrayList = new ArrayList<Actor>();
 
-                                for (int i = 0; i < restfulJsonArray.length(); i++) {
-                                    try {
-                                        JSONObject jsonObject = restfulJsonArray.getJSONObject(i);
-                                        Actor actor = new Actor();
-                                        actor.name = jsonObject.getString("actor");
-                                        actorArrayList.add(actor);
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
+                            for (int i = 0; i < restfulJsonArray.length(); i++) {
+                                try {
+                                    JSONObject jsonObject = restfulJsonArray.getJSONObject(i);
+                                    Actor actor = new Actor();
+                                    actor.name = jsonObject.getString("actor");
+                                    actorArrayList.add(actor);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
                                 }
+                            }
 
-                                actorRVAdapter = new ActorRVAdapter(mContext, mActivity, actorArrayList);
-                                actor_name_rvlist.setAdapter(actorRVAdapter);
-                                actorRVAdapter.notifyDataSetChanged();
+                            actorRVAdapter = new ActorRVAdapter(mContext, mActivity, actorArrayList, Constants.SCREEN_TYPE_BY_ITEM_SET);
+                            actor_name_rvlist.setAdapter(actorRVAdapter);
+                            actorRVAdapter.notifyDataSetChanged();
+
+//                            actorWriteSingleTagRVAdapter = new ActorRVAdapter(mContext, mActivity, actorArrayList);
+//                            write_single_tag_1of3_actor_name_rvlist.setAdapter(actorWriteSingleTagRVAdapter);
+//                            actorWriteSingleTagRVAdapter.notifyDataSetChanged();
+
 
 //                                processDialog.dismiss();
                             }
@@ -3599,6 +3839,11 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     }
 
     class LoadActorThread extends Thread {
+        View layoutLocal;
+
+        public LoadActorThread(View layout) {
+            this.layoutLocal = layout;
+        }
 
         public void run() {
             System.out.println("thread is running...");
@@ -3609,23 +3854,41 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
 
                     @Override
                     public void run() {
-                        actorRVAdapter = new ActorRVAdapter(mContext, mActivity, mActorArrayList);
-                        actor_name_rvlist.setAdapter(actorRVAdapter);
-                        actorRVAdapter.notifyDataSetChanged();
+                        switch (layoutLocal.getId()) {
+                            case R.id.byitemset_select_filter_layout: {
+                                actorRVAdapter = new ActorRVAdapter(mContext, mActivity, mActorArrayList, Constants.SCREEN_TYPE_BY_ITEM_SET);
+                                actor_name_rvlist.setAdapter(actorRVAdapter);
+                                actorRVAdapter.notifyDataSetChanged();
 
-                        // Clear act, scence list
-                        mActSceneArrayList = new ArrayList<Costume>();
-                        actsceneRVAdapter = new ActSceneRVAdapter(mContext, mActivity, mActSceneArrayList);
-                        actscene_name_rvlist.setAdapter(actsceneRVAdapter);
-                        actsceneRVAdapter.notifyDataSetChanged();
+                                // Clear act, scence list
+                                mActSceneArrayList = new ArrayList<Costume>();
+                                actsceneRVAdapter = new ActSceneRVAdapter(mContext, mActivity, mActSceneArrayList);
+                                actscene_name_rvlist.setAdapter(actsceneRVAdapter);
+                                actsceneRVAdapter.notifyDataSetChanged();
+                            }
+                            break;
+
+                            case R.id.write_single_tag_1of3_layout: {
+                                actorWriteSingleTagRVAdapter = new ActorRVAdapter(mContext, mActivity, mActorArrayList, Constants.SCREEN_TYPE_WRITE_SINGLE_TAG);
+                                write_single_tag_1of3_actor_name_rvlist.setAdapter(actorWriteSingleTagRVAdapter);
+                                actorWriteSingleTagRVAdapter.notifyDataSetChanged();
+
+                                // Clear act, scence list
+                                mActSceneArrayList = new ArrayList<Costume>();
+                                actsceneWriteSingleTagRVAdapter = new ActSceneRVAdapter(mContext, mActivity, mActSceneArrayList);
+                                write_single_tag_1of3_actscene_name_rvlist.setAdapter(actsceneWriteSingleTagRVAdapter);
+                                actsceneWriteSingleTagRVAdapter.notifyDataSetChanged();
+                            }
+                            break;
+                        }
+
+
                     }
                 });
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
-
         }
     }
 

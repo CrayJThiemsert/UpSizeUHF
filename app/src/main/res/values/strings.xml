@@ -544,4 +544,6 @@
 	<string name="current_epc_code_on_tag">Current EPC code on scanned tag:</string>
 	<string name="suggested_writing_new_epc_code">Suggested Writing New EPC Code:</string>
 	<string name="enter_epc_code_here">Enter EPC code here</string>
+    <string name="select_act_1of3">Write Single Tag - 1/3 - Select Act</string>
+	<string name="select_item_2of3">Write Single Tag - 2 of 3 - Select Item</string>
 </resources>
