@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.handheld.upsizeuhf.R;
+import com.handheld.upsizeuhf.UHFActivity;
 import com.handheld.upsizeuhf.Util;
 import com.handheld.upsizeuhf.model.Costume;
 import com.handheld.upsizeuhf.util.Constants;
@@ -31,6 +32,7 @@ public class ItemCodeRVAdapter extends RecyclerView.Adapter<ItemCodeRVAdapter.It
     int row_index = -1;
 
     private ArrayList<Costume> mCostumeArrayList = new ArrayList<Costume>();
+    private int mScreenType = Constants.SCREEN_TYPE_BY_ITEM_SET;
 
     @Override
     public ItemCodeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -67,6 +69,9 @@ public class ItemCodeRVAdapter extends RecyclerView.Adapter<ItemCodeRVAdapter.It
                 Util.play(1, 0);
                 row_index=position;
                 notifyDataSetChanged();
+
+                UHFActivity uhfActivity = (UHFActivity)mActivity;
+                uhfActivity.addSelectedCostumeToWriteTag(costume, mScreenType);
             }
         });
 
@@ -80,6 +85,9 @@ public class ItemCodeRVAdapter extends RecyclerView.Adapter<ItemCodeRVAdapter.It
                 Util.play(1, 0);
                 row_index=position;
                 notifyDataSetChanged();
+
+                UHFActivity uhfActivity = (UHFActivity)mActivity;
+                uhfActivity.addSelectedCostumeToWriteTag(costume, mScreenType);
             }
         });
 
@@ -142,10 +150,11 @@ public class ItemCodeRVAdapter extends RecyclerView.Adapter<ItemCodeRVAdapter.It
         }
     }
 
-    public ItemCodeRVAdapter(Context context, Activity activity, ArrayList<Costume> costumes) {
+    public ItemCodeRVAdapter(Context context, Activity activity, ArrayList<Costume> costumes, int screenType) {
         mContext = context;
         mActivity = activity;
         mCostumeArrayList = costumes;
+        mScreenType = screenType;
     }
 
     private class NameAnimationListener implements Animation.AnimationListener   {

@@ -1604,7 +1604,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/write_single_tag_1of3_layout"
+            android:id="@+id/write_single_tag_1of4_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="top"
@@ -1632,7 +1632,7 @@
                         android:fontFamily="@font/kanit_medium"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:text="@string/select_act_1of3"/>
+                        android:text="@string/select_act_1of4"/>
 
                     <TextView
                         android:layout_width="match_parent"
@@ -1644,7 +1644,7 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:layout_width="match_parent"
                         android:layout_height="230dp"
-                        android:id="@+id/write_single_tag_1of3_actor_name_rvlist"/>
+                        android:id="@+id/write_single_tag_1of4_actor_name_rvlist"/>
                 </LinearLayout>
 
                 <Space
@@ -1670,7 +1670,7 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:layout_width="match_parent"
                         android:layout_height="230dp"
-                        android:id="@+id/write_single_tag_1of3_actscene_name_rvlist"/>
+                        android:id="@+id/write_single_tag_1of4_actscene_name_rvlist"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -1681,7 +1681,7 @@
                     android:gravity="center" >
 
                     <Button android:text="@string/back_label"
-                        android:id="@+id/back_write_single_tag_1of3_button"
+                        android:id="@+id/back_write_single_tag_1of4_button"
                         android:layout_width="160dp"
                         android:layout_height="100dp"
                         android:layout_gravity="center"
@@ -1696,7 +1696,7 @@
                         android:gravity="center" />
 
                     <Button android:text="@string/next_label"
-                        android:id="@+id/next_write_single_tag_1of3_button"
+                        android:id="@+id/next_write_single_tag_1of4_button"
                         android:layout_width="160dp"
                         android:layout_height="100dp"
                         android:layout_gravity="center"
@@ -1714,7 +1714,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/write_single_tag_2of3_layout"
+            android:id="@+id/write_single_tag_2of4_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="top"
@@ -1732,7 +1732,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:orientation="vertical"
-                    android:padding="8dp">
+                    android:padding="0dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -1749,7 +1749,7 @@
                             android:fontFamily="@font/kanit_medium"
                             android:textSize="18sp"
                             android:textStyle="bold"
-                            android:text="@string/select_item_2of3"/>
+                            android:text="@string/select_item_2of4"/>
 
                         <TextView
                             android:layout_width="match_parent"
@@ -1759,7 +1759,7 @@
                             android:text="@string/actor"/>
 
                         <TextView
-                            android:id="@+id/write_single_tag_2of3_selected_actor_textview"
+                            android:id="@+id/write_single_tag_2of4_selected_actor_textview"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textSize="22sp"
@@ -1775,7 +1775,7 @@
                             android:fontFamily="@font/kanit_light"
                             android:text="@string/actscene"/>
                         <TextView
-                            android:id="@+id/write_single_tag_2of3_selected_actscene_textview"
+                            android:id="@+id/write_single_tag_2of4_selected_actscene_textview"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textSize="22sp"
@@ -1800,11 +1800,11 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/colorPurpleLight"
+                            android:textColor="@color/colorOrangeYellow"
                             android:fontFamily="@font/kanit_medium"
                             android:textSize="18sp"
                             android:textStyle="bold"
-                            android:text="@string/itemcodes"/>
+                            android:text="@string/selected_an_itemcode"/>
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -1853,8 +1853,8 @@
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:layout_width="match_parent"
-                            android:layout_height="350dp"
-                            android:id="@+id/write_single_tag_2of3_item_code_rvlist"/>
+                            android:layout_height="340dp"
+                            android:id="@+id/write_single_tag_2of4_item_code_rvlist"/>
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -1869,7 +1869,7 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:id="@+id/write_single_tag_2of3_total_items_textview"
+                                    android:id="@+id/write_single_tag_2of4_total_items_textview"
                                     android:layout_weight="0.25"
                                     android:textColor="@color/colorOrangeGrey"
                                     android:fontFamily="@font/kanit_light"
@@ -1886,7 +1886,7 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:id="@+id/write_single_tag_2of3_items_scanned_textview"
+                                    android:id="@+id/write_single_tag_2of4_items_scanned_textview"
                                     android:layout_weight="0.25"
                                     android:textColor="@color/colorOrangeGrey"
                                     android:fontFamily="@font/kanit_light"
@@ -1915,7 +1915,315 @@
                     android:gravity="center" >
 
                     <Button android:text="@string/back_label"
-                        android:id="@+id/back_write_single_tag_2of3_button"
+                        android:id="@+id/back_write_single_tag_2of4_button"
+                        android:layout_width="160dp"
+                        android:layout_height="100dp"
+                        android:layout_gravity="center"
+
+                        android:background="@drawable/button_radius"
+                        android:textSize="24sp"
+                        android:textColor="@color/purple"
+                        android:layout_weight="0.5"
+                        android:layout_margin="16dp"
+
+                        android:singleLine="true"
+                        android:gravity="center" />
+
+                    <Button android:text="@string/next_label"
+                        android:id="@+id/next_write_single_tag_2of4_button"
+                        android:layout_width="160dp"
+                        android:layout_height="100dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/button_radius"
+                        android:textSize="24sp"
+                        android:textColor="@color/purple"
+                        android:layout_weight="0.5"
+                        android:layout_margin="16dp"
+
+                        android:singleLine="true"
+                        android:gravity="center" />
+
+                </LinearLayout>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/write_single_tag_3of4_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="top"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="top"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:orientation="vertical"
+                    android:padding="8dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="290dp"
+                        android:orientation="vertical"
+
+                        android:paddingTop="8dp"
+                        android:background="@drawable/layout_border_radius"
+                        android:gravity="top" >
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorPurpleLight"
+                            android:fontFamily="@font/kanit_medium"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:text="@string/prepare_target_tag"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorGold"
+                            android:fontFamily="@font/kanit_light"
+                            android:text="@string/actor"/>
+
+                        <TextView
+                            android:id="@+id/write_single_tag_3of4_tag_detail_actor_textview"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="22sp"
+                            android:textFontWeight="300"
+                            android:textColor="@color/colorWhite"
+                            android:text=""/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorGold"
+                            android:paddingTop="8dp"
+                            android:fontFamily="@font/kanit_light"
+                            android:text="@string/actscene"/>
+                        <TextView
+                            android:id="@+id/write_single_tag_3of4_tag_detail_actscene_textview"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="22sp"
+                            android:textFontWeight="300"
+                            android:textColor="@color/colorWhite"
+                            android:text=""/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <Space
+                                android:layout_width="80dp"
+                                android:layout_height="15dp" />
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.25"
+                                    android:textColor="@color/colorOrangeGrey"
+                                    android:fontFamily="@font/kanit_light"
+                                    android:textSize="16sp"
+                                    android:text="code"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.25"
+                                    android:textColor="@color/colorOrangeGrey"
+                                    android:fontFamily="@font/kanit_light"
+                                    android:textSize="16sp"
+                                    android:text="type"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.25"
+                                    android:textColor="@color/colorOrangeGrey"
+                                    android:fontFamily="@font/kanit_light"
+                                    android:textSize="16sp"
+                                    android:text="size"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.25"
+                                    android:textColor="@color/colorOrangeGrey"
+                                    android:fontFamily="@font/kanit_light"
+                                    android:textSize="16sp"
+                                    android:text="number"/>
+
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <Space
+                                android:layout_width="80dp"
+                                android:layout_height="15dp" />
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+                                <TextView
+                                    android:layout_width="25dp"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/write_single_tag_3of4_tag_detail_code_textview"
+                                    android:layout_weight="0.25"
+                                    android:textColor="@color/colorWhite"
+                                    android:fontFamily="@font/kanit_lightitalic"
+                                    android:textSize="16sp"
+                                    android:text="code"/>
+                                <TextView
+                                    android:layout_width="25dp"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/write_single_tag_3of4_tag_detail_type_textview"
+                                    android:layout_weight="0.25"
+                                    android:textColor="@color/colorWhite"
+                                    android:fontFamily="@font/kanit_lightitalic"
+                                    android:textSize="16sp"
+                                    android:text="type"/>
+                                <TextView
+                                    android:layout_width="25dp"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/write_single_tag_3of4_tag_detail_size_textview"
+                                    android:layout_weight="0.25"
+                                    android:textColor="@color/colorWhite"
+                                    android:fontFamily="@font/kanit_lightitalic"
+                                    android:textSize="16sp"
+                                    android:text="size"/>
+                                <TextView
+                                    android:layout_width="25dp"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/write_single_tag_3of4_tag_detail_number_textview"
+                                    android:layout_weight="0.25"
+                                    android:textColor="@color/colorWhite"
+                                    android:fontFamily="@font/kanit_lightitalic"
+                                    android:textSize="16sp"
+                                    android:text="number"/>
+
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:id="@+id/write_single_tag_3of4_tag_detail_current_box_textview"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Storage Box by Cray"
+                                android:layout_gravity="bottom"
+                                android:textColor="@color/colorOrangeGrey"/>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="3"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/write_single_tag_3of4_tag_detail_epc_header_textview"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/barcode"
+                                    android:textSize="20sp"
+                                    android:gravity="end"
+                                    android:textColor="@color/colorOrangeGrey"
+                                    android:textFontWeight="500"
+                                    android:fontFamily="@font/kanit_medium" />
+                                <TextView
+                                    android:id="@+id/write_single_tag_3of4_tag_detail_epc_run_textview"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/barcode"
+                                    android:textSize="22sp"
+                                    android:gravity="end"
+                                    android:textColor="@color/colorWhite"
+                                    android:textFontWeight="600"
+                                    android:textStyle="bold"
+                                    android:fontFamily="@font/kanit_semibold" />
+
+                            </LinearLayout>
+                            <Space
+                                android:layout_width="55dp"
+                                android:layout_height="15dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <Space
+                        android:layout_width="match_parent"
+                        android:layout_height="4dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingBottom="8dp"
+                        android:background="@drawable/layout_border_radius"
+                        android:gravity="top" >
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorOrangeRed"
+                            android:fontFamily="@font/kanit_medium"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:text="@string/target_tag_to_write"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <Space
+                                android:layout_width="80dp"
+                                android:layout_height="15dp" />
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.25"
+                                    android:gravity="right"
+                                    android:paddingEnd="20dp"
+                                    android:textColor="@color/colorOrangeGrey"
+                                    android:fontFamily="@font/kanit_light"
+                                    android:textSize="16sp"
+                                    android:text="@string/rssi"/>
+
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:layout_width="match_parent"
+                            android:layout_height="200dp"
+                            android:id="@+id/write_single_tag_3of4_read_single_tag_rvlist"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_alignParentBottom="true"
+                    android:gravity="center" >
+
+                    <Button android:text="@string/back_label"
+                        android:id="@+id/back_write_single_tag_3of4_button"
                         android:layout_width="0dp"
                         android:layout_height="100dp"
                         android:layout_gravity="center"
@@ -1930,7 +2238,7 @@
                         android:gravity="center" />
 
                     <Button android:text="@string/scan_label"
-                        android:id="@+id/scan_write_single_tag_2of3_button"
+                        android:id="@+id/scan_write_single_tag_3of4_button"
                         android:layout_width="0dp"
                         android:layout_height="100dp"
                         android:layout_gravity="center"
@@ -1944,7 +2252,7 @@
                         android:gravity="center" />
 
                     <Button android:text="@string/refresh"
-                        android:id="@+id/clear_write_single_tag_2of3_button"
+                        android:id="@+id/clear_write_single_tag_3of4_button"
                         android:layout_width="0dp"
                         android:layout_height="100dp"
                         android:layout_weight="0.2"
@@ -1956,7 +2264,7 @@
                         android:singleLine="true"
                         android:gravity="center" />
                     <Button android:text="@string/write_label"
-                        android:id="@+id/write_write_single_tag_2of3_button"
+                        android:id="@+id/write_write_single_tag_3of4_button"
                         android:layout_width="0dp"
                         android:layout_height="100dp"
                         android:layout_weight="0.2"
