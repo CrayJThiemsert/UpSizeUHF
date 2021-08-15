@@ -3,43 +3,52 @@ package com.handheld.upsizeuhf.ui.dialog
 import android.app.*
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.Window
 import android.view.animation.Animation
 import android.widget.*
 import cn.pda.serialport.Tools
 import com.android.hdhe.uhf.reader.UhfReader
 import com.handheld.upsizeuhf.R
 import com.handheld.upsizeuhf.UHFActivity
-import com.handheld.upsizeuhf.model.Box
 import com.handheld.upsizeuhf.model.EPC
 import com.handheld.upsizeuhf.model.QueryService
-import com.handheld.upsizeuhf.ui.BoxRVAdapter
 import com.handheld.upsizeuhf.util.AnimationUtils
 import com.handheld.upsizeuhf.util.Constants
 import com.handheld.upsizeuhf.util.HttpConnectionService
+import com.handheld.upsizeuhf.util.UhfUtils
+import com.handheld.upsizeuhf.util.UhfUtils.Companion.fontKanitSemiBold
+import com.handheld.upsizeuhf.util.UhfUtils.Companion.fontKanitSemiBoldItalic
 import com.handheld.upsizeuhf.util.UhfUtils.Companion.separateEPCString
 import kotlinx.android.synthetic.main.dialog_write_single_tag.*
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-import java.util.ArrayList
 import java.util.HashMap
+import android.view.WindowManager
+
+import android.util.DisplayMetrics
+import com.handheld.upsizeuhf.util.UhfUtils.Companion.fontKanitBoldItalic
+import com.handheld.upsizeuhf.util.UhfUtils.Companion.fontKanitLight
 
 
 class WriteSingleTagDialogFragment : DialogFragment() {
     private var TAG : String = this.javaClass.simpleName
     private var mActivity: UHFActivity? = null
 
-    var dialog_title: TextView? = null
     private lateinit var mProgressBar: ProgressBar
 
     private lateinit var check_type_layout: LinearLayout
     private lateinit var scanned_epc_textview: TextView
+    private lateinit var suggested_epc_code_caption_textview: TextView
     private lateinit var suggested_epc_code_edittext: EditText
+    private lateinit var dialog_title: TextView
+    private lateinit var current_epc_caption_textview: TextView
 
     private lateinit var back_write_single_tag_button: Button
     private lateinit var write_single_tag_button: Button
@@ -63,7 +72,8 @@ class WriteSingleTagDialogFragment : DialogFragment() {
         private val membank = 1 // EPC
         private val addr = 2 // begin address
 
-        private var mEPC: EPC = EPC()
+        private var mEPCScanned: EPC = EPC()
+        private var mEPCSelected: EPC = EPC()
         private var mSuggestionEPC: EPC = EPC()
 
         /**
@@ -76,7 +86,7 @@ class WriteSingleTagDialogFragment : DialogFragment() {
          */
         // TODO: Rename and change types and number of parameters
 
-        fun newInstance(param1: String, param2: String, epcParam: EPC, managerParam: UhfReader) : WriteSingleTagDialogFragment   {
+        fun newInstance(param1: String, param2: String, epcSelectedParam: EPC, epcScannedParam: EPC, managerParam: UhfReader) : WriteSingleTagDialogFragment   {
             val fragment = WriteSingleTagDialogFragment()
             val args = Bundle()
             args.putString("text", param1)
@@ -91,9 +101,11 @@ class WriteSingleTagDialogFragment : DialogFragment() {
             args.putString("role", "user")
             args.putBoolean("active", false)
             args.putString("email", "")
+
             fragment.arguments = args
 
-            mEPC = epcParam
+            mEPCSelected = epcSelectedParam
+            mEPCScanned = epcScannedParam
             manager = managerParam
 
             return fragment
@@ -130,6 +142,68 @@ class WriteSingleTagDialogFragment : DialogFragment() {
         val dialog = builder.create()
         dialog!!.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
+//        val displayRectangle = Rect()
+//        val window: Window = activity.window
+//
+//        window.getDecorView().getWindowVisibleDisplayFrame(displayRectangle)
+//
+////        dialog!!.window?.setLayout()
+//        dialog!!.window?.setLayout((displayRectangle.width() * 0.8f).toInt(), (displayRectangle.height() * 0.8f).toInt());
+
+//        // Get screen width and height in pixels
+//        // Get screen width and height in pixels
+//        val displayMetrics = DisplayMetrics()
+////        dialog.window..getDefaultDisplay().getMetrics(displayMetrics)
+//        // The absolute width of the available display size in pixels.
+//        // The absolute width of the available display size in pixels.
+//        val displayWidth = displayMetrics.widthPixels
+//        // The absolute height of the available display size in pixels.
+//        // The absolute height of the available display size in pixels.
+//        val displayHeight = displayMetrics.heightPixels
+//
+//        // Initialize a new window manager layout parameters
+//
+//        // Initialize a new window manager layout parameters
+//        val layoutParams = WindowManager.LayoutParams()
+//
+//        // Copy the alert dialog window attributes to new layout parameter instance
+//
+//        // Copy the alert dialog window attributes to new layout parameter instance
+//        layoutParams.copyFrom(dialog.window!!.attributes)
+//
+//        // Set the alert dialog window width and height
+//        // Set alert dialog width equal to screen width 90%
+//        // int dialogWindowWidth = (int) (displayWidth * 0.9f);
+//        // Set alert dialog height equal to screen height 90%
+//        // int dialogWindowHeight = (int) (displayHeight * 0.9f);
+//
+//        // Set alert dialog width equal to screen width 70%
+//
+//        // Set the alert dialog window width and height
+//        // Set alert dialog width equal to screen width 90%
+//        // int dialogWindowWidth = (int) (displayWidth * 0.9f);
+//        // Set alert dialog height equal to screen height 90%
+//        // int dialogWindowHeight = (int) (displayHeight * 0.9f);
+//
+//        // Set alert dialog width equal to screen width 70%
+//        val dialogWindowWidth = (displayWidth * 0.7f).toInt()
+//        // Set alert dialog height equal to screen height 70%
+//        // Set alert dialog height equal to screen height 70%
+//        val dialogWindowHeight = (displayHeight * 0.7f).toInt()
+//
+//        // Set the width and height for the layout parameters
+//        // This will bet the width and height of alert dialog
+//
+//        // Set the width and height for the layout parameters
+//        // This will bet the width and height of alert dialog
+//        layoutParams.width = dialogWindowWidth
+//        layoutParams.height = dialogWindowHeight
+//
+//        // Apply the newly created layout parameters to the alert dialog window
+//
+//        // Apply the newly created layout parameters to the alert dialog window
+//        dialog.window!!.attributes = layoutParams
+
         return dialog //builder.create()
     }
 
@@ -150,11 +224,23 @@ class WriteSingleTagDialogFragment : DialogFragment() {
 
         check_type_layout = view.findViewById(R.id.check_type_layout)
 
+        current_epc_caption_textview = view.findViewById(R.id.current_epc_caption_textview)
+
         scanned_epc_textview = view.findViewById(R.id.scanned_epc_textview)
+        suggested_epc_code_caption_textview = view.findViewById(R.id.suggested_epc_code_caption_textview)
         suggested_epc_code_edittext = view.findViewById(R.id.suggested_epc_code_edittext)
 
         back_write_single_tag_button = view.findViewById(R.id.back_write_single_tag_button)
         write_single_tag_button = view.findViewById(R.id.write_single_tag_button)
+
+
+        // Font setup
+        dialog_title.setTypeface(fontKanitBoldItalic)
+        current_epc_caption_textview.setTypeface(fontKanitLight)
+        suggested_epc_code_caption_textview.setTypeface(fontKanitLight)
+
+        scanned_epc_textview.setTypeface(fontKanitSemiBold)
+        suggested_epc_code_edittext.setTypeface(fontKanitSemiBold)
 
 //        setEvents()
         loadSuggestionEPCRun()
@@ -163,9 +249,9 @@ class WriteSingleTagDialogFragment : DialogFragment() {
     private fun loadSuggestionEPCRun() {
 //        Example path:
 //        http://192.168.1.101/costume/costume/suggestionepcrun/?readEPCHeader=E2801170000002
-        if(!mEPC.epcRaw.equals("")) {
+        if(!mEPCScanned.epcRaw.equals("")) {
             var procedure = Constants.getSuggestionEPCProcedure()
-            val epcHeader = mEPC.epcRaw?.substring(0, 19)
+            val epcHeader = mEPCScanned.epcRaw?.substring(0, 19)
             procedure.path = "/costume/costume/suggestionepcrun/" + "?readEPCHeader=" + epcHeader
 
             ServiceQueryAsyncTask(mActivity!!.applicationContext, mActivity!!, procedure).execute()
@@ -175,18 +261,27 @@ class WriteSingleTagDialogFragment : DialogFragment() {
     }
 
     private fun setEvents() {
-        if(!mEPC.epcRaw.equals("")) {
-            val epcScanned = separateEPCString(mEPC.epcRaw, " ", 4, 24)
+        if(!mEPCScanned.epcRaw.equals("")) {
+            val epcScanned = separateEPCString(mEPCScanned.epcRaw, " ", 4, 24)
             scanned_epc_textview.setText(epcScanned)
         } else {
             scanned_epc_textview.setText("")
         }
 
-        if(!mSuggestionEPC.epcRaw.equals("")) {
-            val epcSuggestion = separateEPCString(mSuggestionEPC.epcRaw, " ", 4, 24)
-            suggested_epc_code_edittext.setText(epcSuggestion)
+        if(!mEPCSelected.epcRaw.equals("")) {
+            suggested_epc_code_caption_textview.setText( getString(R.string.writing_existing_epc_code))
+
+            val epcSelected = separateEPCString(mEPCSelected.epcRaw, " ", 4, 24)
+            suggested_epc_code_edittext.setText(epcSelected)
         } else {
-            suggested_epc_code_edittext.setText("")
+            suggested_epc_code_caption_textview.setText( getString(R.string.suggested_writing_new_epc_code))
+
+            if (!mSuggestionEPC.epcRaw.equals("")) {
+                val epcSuggestion = separateEPCString(mSuggestionEPC.epcRaw, " ", 4, 24)
+                suggested_epc_code_edittext.setText(epcSuggestion)
+            } else {
+                suggested_epc_code_edittext.setText("")
+            }
         }
 
         back_write_single_tag_button.setOnClickListener(ClickButton(back_write_single_tag_button))
@@ -229,7 +324,7 @@ class WriteSingleTagDialogFragment : DialogFragment() {
     }
 
     private fun doWriteTag() {
-        manager.selectEPC(Tools.HexString2Bytes(mEPC.epcRaw))
+        manager.selectEPC(Tools.HexString2Bytes(mEPCScanned.epcRaw))
         if (accessPassword.size != 4) {
 //            showToast(getString(R.string.password_is_4_bytes))
             return

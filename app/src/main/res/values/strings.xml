@@ -551,4 +551,5 @@
 	<string name="target_tag_to_write">Target Tag to Write</string>
     <string name="costume_notselected">Item Not Selected Yet</string>
 	<string name="costume_notselected_solution">Please select a Costume Item before try again.</string>
+	<string name="writing_existing_epc_code">Writing an Existing EPC Code:</string>
 </resources>

@@ -215,6 +215,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     private Button back_write_single_tag_3of4_button;
     private Button scan_write_single_tag_3of4_button;
     private Button clear_write_single_tag_3of4_button;
+    private Button write_write_single_tag_3of4_button;
 
     private TextView write_single_tag_2of4_selected_actor_textview;
     private TextView write_single_tag_2of4_selected_actscene_textview;
@@ -1169,6 +1170,9 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         clear_write_single_tag_3of4_button = (Button) findViewById(R.id.clear_write_single_tag_3of4_button);
         clear_write_single_tag_3of4_button.setOnClickListener(this);
 
+        write_write_single_tag_3of4_button = (Button) findViewById(R.id.write_write_single_tag_3of4_button);
+        write_write_single_tag_3of4_button.setOnClickListener(this);
+
 
         // Item Set Query Result Layout or Scan
         selected_actor_textview = (TextView)findViewById(R.id.selected_actor_textview);
@@ -2017,6 +2021,22 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                         epcTagRVAdapter = new EPCTagRVAdapter(mContext, mActivity, mItemInfoArrayList);
                         write_single_tag_3of4_read_single_tag_rvlist.setAdapter(epcTagRVAdapter);
                         epcTagRVAdapter.notifyDataSetChanged();
+
+                        if(mItemInfoArrayList.size() > 0) {
+                            Costume singleScannedTag = mItemInfoArrayList.get(0);
+                            if(!singleScannedTag.epcHeader.trim().equalsIgnoreCase(mSingleScannedTag.epcHeader) || !singleScannedTag.epcRun.trim().equalsIgnoreCase(mSingleScannedTag.epcRun)) {
+                                mSingleScannedTag = singleScannedTag;
+                                String epcRaw = singleScannedTag.epcHeader + singleScannedTag.epcRun;
+                                String epcTop = UhfUtils.Companion.separateEPCTopString(epcRaw, " ", 4, 16);
+                                String epcBottom = UhfUtils.Companion.separateEPCBottomString(epcRaw, " ", 4, 16);
+
+
+                                mEPCScanned.setEpcRaw(epcRaw);
+                                mEPCScanned.setEpcHeader(singleScannedTag.epcHeader);
+                                mEPCScanned.setEpcRun(singleScannedTag.epcRun);
+                            }
+
+                        }
                     }
 
                     Util.play(1, 0);
@@ -2453,12 +2473,19 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                 break;
             }
 
-
             case R.id.clear_write_single_tag_3of4_button: {
                 Util.play(1, 0);
                 Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
                 animate.setAnimationListener(new ClearWriteSingleTag3of4ButtonAnimationListener());
                 clear_write_single_tag_3of4_button.startAnimation(animate);
+                break;
+            }
+
+            case R.id.write_write_single_tag_3of4_button: {
+                Util.play(1, 0);
+                Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
+                animate.setAnimationListener(new WriteWriteSingleTag3of4ButtonAnimationListener());
+                write_write_single_tag_3of4_button.startAnimation(animate);
                 break;
             }
 
@@ -2978,6 +3005,8 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         @Override
         public void onAnimationStart(Animation animation) {
             mCurrentSearchMode = Constants.WRITE_SINGLE_TAG_MODE;
+            mEPCSelected = new com.handheld.upsizeuhf.model.EPC();
+            mSelectedCostumeToWrite = new Costume();
 
             String actor = write_single_tag_2of4_selected_actor_textview.getText().toString();
             String actScene = write_single_tag_2of4_selected_actscene_textview.getText().toString();
@@ -2988,6 +3017,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
             } else {
                 SetVisible(write_single_tag_2of4_layout, textViewS1, viewS1);
                 queryItemCodesBySelectedActorActScene();
+
             }
 
 
@@ -3013,11 +3043,13 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
             String actScene = write_single_tag_2of4_selected_actscene_textview.getText().toString();
             Log.d(TAG, "query ItemCodes by actor=" + actor + " : act, scene=" + actScene);
 
-            if(mEPCSelected.getEpcRaw().trim().equals("")) {
+            if(mSelectedCostumeToWrite.code.equals("")) {
+//            if(mEPCSelected.getEpcRaw().trim().equals("")) {
                 loadWarningDialog("", getString(R.string.costume_notselected), getString(R.string.costume_notselected_solution));
             } else {
                 SetVisible(write_single_tag_3of4_layout, textViewS1, viewS1);
-
+                // do no clear scan single rv list
+                new RefreshEPCSingleTagThread().start();
             }
 
 
@@ -3039,6 +3071,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         public void onAnimationStart(Animation animation) {
             // Clear selected costume item
             mEPCSelected = new com.handheld.upsizeuhf.model.EPC();
+            mSelectedCostumeToWrite = new Costume();
 
             SetVisible(write_single_tag_1of4_layout, textViewS1, viewS1);
         }
@@ -3126,6 +3159,31 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         }
     }
 
+    private class WriteWriteSingleTag3of4ButtonAnimationListener implements Animation.AnimationListener   {
+        @Override
+        public void onAnimationStart(Animation animation) {
+            thread.interrupt();
+            scanWriteSingleTagFlag = false;
+            scan_write_single_tag_3of4_button.setText(R.string.scan);
+
+            // do no clear scan single rv list
+            writeSingleTagDialogFragment = WriteSingleTagDialogFragment.Companion.newInstance("", "", mEPCSelected, mEPCScanned, manager);
+
+            writeSingleTagDialogFragment.show(getFragmentManager(), "write_single_tag_fragment");
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    }
+
     private class ScanSingleTagButtonAnimationListener implements Animation.AnimationListener   {
         @Override
         public void onAnimationStart(Animation animation) {
@@ -3183,7 +3241,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
             scan_read_single_tag_button.setText(R.string.scan);
 
             // do no clear scan single rv list
-            writeSingleTagDialogFragment = WriteSingleTagDialogFragment.Companion.newInstance("", "", mEPCScanned, manager);
+            writeSingleTagDialogFragment = WriteSingleTagDialogFragment.Companion.newInstance("", "", mEPCSelected, mEPCScanned, manager);
 
             writeSingleTagDialogFragment.show(getFragmentManager(), "write_single_tag_fragment");
         }
