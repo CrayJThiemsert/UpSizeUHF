@@ -1585,6 +1585,7 @@
                         android:singleLine="true"
                         android:gravity="center" />
                     <Button android:text="@string/write_label"
+                        android:visibility="gone"
                         android:id="@+id/write_read_single_tag_button"
                         android:layout_width="0dp"
                         android:layout_height="100dp"

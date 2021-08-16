@@ -88,11 +88,12 @@ import com.handheld.upsizeuhf.util.HttpConnectionService;
 import com.handheld.upsizeuhf.util.RoomUtils;
 import com.handheld.upsizeuhf.util.UhfUtils;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class UHFActivity extends Activity implements OnClickListener, CheckTypeDialogFragment.ReloadCostumeListener {
+public class UHFActivity extends Activity implements OnClickListener, CheckTypeDialogFragment.ReloadCostumeListener, WriteSingleTagDialogFragment.ReloadScannedTagListener {
     private String TAG = this.getClass().getSimpleName();
     /****************** for view:**************************************/
     private LinearLayout ls1;
@@ -435,6 +436,11 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         // init sound pool
         Util.initSoundPool(this);
 
+        refreshItemSet();
+    }
+
+    private void refreshItemSet() {
+        new RefreshItemSetResultThread().start();
     }
 
     public String getCurrentUserName() {
@@ -1718,6 +1724,16 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         loadSuccessDialog("", getString(R.string.checked_completed), msgBody);
     }
 
+    @Override
+    public void onFinishWriteSingleTagDialog(@NotNull String msgBody) {
+        // reload costume item data for new epc case
+        loadData();
+
+        new RefreshEPCSingleTagThread().start();
+
+        addSelectedCostumeToWriteTag(mSelectedCostumeToWrite, Constants.WRITE_SINGLE_TAG_MODE);
+    }
+
     private class ReloadDataAsyncTask extends AsyncTask<Void, Void, Void> {
 
         @Override
@@ -1998,6 +2014,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                             if (key.equals("EPCBottom")) {
                                 costume.epcRun = value.toString().replace(" ", "");
                             }
+
                         }
 
                         mItemInfoArrayList.add(costume);
@@ -2011,10 +2028,10 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
 
                         if(mItemInfoArrayList.size() > 0) {
                             Costume singleScannedTag = mItemInfoArrayList.get(0);
-                            if(!singleScannedTag.epcHeader.trim().equalsIgnoreCase(mSingleScannedTag.epcHeader) || !singleScannedTag.epcRun.trim().equalsIgnoreCase(mSingleScannedTag.epcRun)) {
+//                            if(!singleScannedTag.epcHeader.trim().equalsIgnoreCase(mSingleScannedTag.epcHeader) || !singleScannedTag.epcRun.trim().equalsIgnoreCase(mSingleScannedTag.epcRun)) {
                                 mSingleScannedTag = singleScannedTag;
                                 displayTagCostumeDetail();
-                            }
+//                            }
 
                         }
                     } else if(scanWriteSingleTagFlag) {
@@ -2024,17 +2041,17 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
 
                         if(mItemInfoArrayList.size() > 0) {
                             Costume singleScannedTag = mItemInfoArrayList.get(0);
-                            if(!singleScannedTag.epcHeader.trim().equalsIgnoreCase(mSingleScannedTag.epcHeader) || !singleScannedTag.epcRun.trim().equalsIgnoreCase(mSingleScannedTag.epcRun)) {
+//                            if(!singleScannedTag.epcHeader.trim().equalsIgnoreCase(mSingleScannedTag.epcHeader) || !singleScannedTag.epcRun.trim().equalsIgnoreCase(mSingleScannedTag.epcRun)) {
                                 mSingleScannedTag = singleScannedTag;
                                 String epcRaw = singleScannedTag.epcHeader + singleScannedTag.epcRun;
-                                String epcTop = UhfUtils.Companion.separateEPCTopString(epcRaw, " ", 4, 16);
-                                String epcBottom = UhfUtils.Companion.separateEPCBottomString(epcRaw, " ", 4, 16);
+//                                String epcTop = UhfUtils.Companion.separateEPCTopString(epcRaw, " ", 4, 16);
+//                                String epcBottom = UhfUtils.Companion.separateEPCBottomString(epcRaw, " ", 4, 16);
 
 
                                 mEPCScanned.setEpcRaw(epcRaw);
                                 mEPCScanned.setEpcHeader(singleScannedTag.epcHeader);
                                 mEPCScanned.setEpcRun(singleScannedTag.epcRun);
-                            }
+//                            }
 
                         }
                     }
@@ -2054,10 +2071,15 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     private void displayTagCostumeDetail() {
         clearTagDetail();
 
+        String scannedEPCRaw = mSingleScannedTag.epcHeader + mSingleScannedTag.epcRun;
+        String scannedEPCHeader = scannedEPCRaw.substring(0, 19);
+        String scannedEPCRun = scannedEPCRaw.substring(19);
+
         for (int i = 0; i < mCostumeArrayList.size(); i++) {
             Costume costume = mCostumeArrayList.get(i);
 
-            if (costume.epcHeader.trim().equalsIgnoreCase(mSingleScannedTag.epcHeader.replace(" ", "").trim()) && costume.epcRun.trim().equalsIgnoreCase(mSingleScannedTag.epcRun.replace(" ", "").trim())) {
+//            if (costume.epcHeader.trim().equalsIgnoreCase(mSingleScannedTag.epcHeader.replace(" ", "").trim()) && costume.epcRun.trim().equalsIgnoreCase(mSingleScannedTag.epcRun.replace(" ", "").trim())) {
+            if (costume.epcHeader.trim().equalsIgnoreCase(scannedEPCHeader) && costume.epcRun.trim().equalsIgnoreCase(scannedEPCRun)) {
                 tag_detail_actor_textview.setText(costume.actor);
                 tag_detail_actscene_textview.setText(costume.actScence);
                 tag_detail_code_textview.setText(costume.code);
@@ -2696,6 +2718,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     private class ReadSingleTagButtonAnimationListener implements Animation.AnimationListener   {
         @Override
         public void onAnimationStart(Animation animation) {
+            mCurrentSearchMode = Constants.READ_SINGLE_TAG_MODE;
             // do no clear scan single rv list
             new RefreshEPCSingleTagThread().start();
 
@@ -2716,6 +2739,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     private class WriteSingleTagButtonAnimationListener implements Animation.AnimationListener   {
         @Override
         public void onAnimationStart(Animation animation) {
+            mCurrentSearchMode = Constants.WRITE_SINGLE_TAG_MODE;
             // Clear select actor
             mSelectedActorFilter = "";
 
@@ -3167,7 +3191,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
             scan_write_single_tag_3of4_button.setText(R.string.scan);
 
             // do no clear scan single rv list
-            writeSingleTagDialogFragment = WriteSingleTagDialogFragment.Companion.newInstance("", "", mEPCSelected, mEPCScanned, manager);
+            writeSingleTagDialogFragment = WriteSingleTagDialogFragment.Companion.newInstance("", "", mSelectedCostumeToWrite, mEPCSelected, mEPCScanned, manager);
 
             writeSingleTagDialogFragment.show(getFragmentManager(), "write_single_tag_fragment");
         }
@@ -3241,7 +3265,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
             scan_read_single_tag_button.setText(R.string.scan);
 
             // do no clear scan single rv list
-            writeSingleTagDialogFragment = WriteSingleTagDialogFragment.Companion.newInstance("", "", mEPCSelected, mEPCScanned, manager);
+            writeSingleTagDialogFragment = WriteSingleTagDialogFragment.Companion.newInstance("", "", mSelectedCostumeToWrite, mEPCSelected, mEPCScanned, manager);
 
             writeSingleTagDialogFragment.show(getFragmentManager(), "write_single_tag_fragment");
         }
@@ -3480,8 +3504,15 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                     showToast(getString(R.string.not_success));
                 }
 
-                scanSingleTagFlag = false;
-                scan_read_single_tag_button.setText(R.string.scan);
+                if(layout == read_single_tag_layout) {
+                    scanSingleTagFlag = false;
+                    scan_read_single_tag_button.setText(R.string.scan);
+                }
+
+                if(layout == write_single_tag_3of4_layout) {
+                    scanWriteSingleTagFlag = false;
+                    scan_write_single_tag_3of4_button.setText(R.string.scan);
+                }
 
             }
 
@@ -3719,15 +3750,10 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                                     new ImportLocalCostumeThread().start();
                                 } else {
                                     // load costume list from local database
-//                                    processDialog = new ProgressDialog(mContext);
-//                                    processDialog.setMessage("Please  Wait ... COSTUME_All");
-//                                    processDialog.setCancelable(false);
-//                                    processDialog.show();
                                     new LoadLocalCostumeThread().start();
                                 }
 
-//                                processDialog.dismiss();
-                                new ServiceQueryAsyncTask(mContext, mActivity, Constants.Companion.getShipBoxAllQuery()).execute();
+
 
                             }
                             break;
@@ -3876,7 +3902,9 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                 e.printStackTrace();
             }
 
-            new RefreshItemSetResultThread().start();
+            new ServiceQueryAsyncTask(mContext, mActivity, Constants.Companion.getShipBoxAllQuery()).execute();
+
+
         }
     }
 

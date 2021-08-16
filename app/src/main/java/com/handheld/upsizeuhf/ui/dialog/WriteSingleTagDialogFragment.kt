@@ -3,36 +3,28 @@ package com.handheld.upsizeuhf.ui.dialog
 import android.app.*
 import android.content.Context
 import android.graphics.Color
-import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.view.Window
 import android.view.animation.Animation
 import android.widget.*
 import cn.pda.serialport.Tools
 import com.android.hdhe.uhf.reader.UhfReader
 import com.handheld.upsizeuhf.R
 import com.handheld.upsizeuhf.UHFActivity
+import com.handheld.upsizeuhf.model.Costume
 import com.handheld.upsizeuhf.model.EPC
 import com.handheld.upsizeuhf.model.QueryService
-import com.handheld.upsizeuhf.util.AnimationUtils
-import com.handheld.upsizeuhf.util.Constants
-import com.handheld.upsizeuhf.util.HttpConnectionService
-import com.handheld.upsizeuhf.util.UhfUtils
 import com.handheld.upsizeuhf.util.UhfUtils.Companion.fontKanitSemiBold
-import com.handheld.upsizeuhf.util.UhfUtils.Companion.fontKanitSemiBoldItalic
 import com.handheld.upsizeuhf.util.UhfUtils.Companion.separateEPCString
-import kotlinx.android.synthetic.main.dialog_write_single_tag.*
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.HashMap
-import android.view.WindowManager
 
-import android.util.DisplayMetrics
+import com.handheld.upsizeuhf.util.*
 import com.handheld.upsizeuhf.util.UhfUtils.Companion.fontKanitBoldItalic
 import com.handheld.upsizeuhf.util.UhfUtils.Companion.fontKanitLight
 
@@ -53,11 +45,11 @@ class WriteSingleTagDialogFragment : DialogFragment() {
     private lateinit var back_write_single_tag_button: Button
     private lateinit var write_single_tag_button: Button
 
-    interface ReloadCostumeListener {
-        fun onFinishCheckedBoxDialog(msgBody: String)
+    interface ReloadScannedTagListener {
+        fun onFinishWriteSingleTagDialog(msgBody: String)
     }
 
-    public lateinit var reloadCostumeListener: ReloadCostumeListener
+    public lateinit var reloadScannedTagListener: ReloadScannedTagListener
 
     lateinit var mScannedFoundList: String
     lateinit var mBoxType: String
@@ -76,6 +68,8 @@ class WriteSingleTagDialogFragment : DialogFragment() {
         private var mEPCSelected: EPC = EPC()
         private var mSuggestionEPC: EPC = EPC()
 
+        private var mSelectedCostumeToWrite: Costume = Costume()
+
         /**
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.
@@ -86,7 +80,7 @@ class WriteSingleTagDialogFragment : DialogFragment() {
          */
         // TODO: Rename and change types and number of parameters
 
-        fun newInstance(param1: String, param2: String, epcSelectedParam: EPC, epcScannedParam: EPC, managerParam: UhfReader) : WriteSingleTagDialogFragment   {
+        fun newInstance(param1: String, param2: String, costume: Costume, epcSelectedParam: EPC, epcScannedParam: EPC, managerParam: UhfReader) : WriteSingleTagDialogFragment   {
             val fragment = WriteSingleTagDialogFragment()
             val args = Bundle()
             args.putString("text", param1)
@@ -104,6 +98,7 @@ class WriteSingleTagDialogFragment : DialogFragment() {
 
             fragment.arguments = args
 
+            mSelectedCostumeToWrite = costume
             mEPCSelected = epcSelectedParam
             mEPCScanned = epcScannedParam
             manager = managerParam
@@ -260,6 +255,20 @@ class WriteSingleTagDialogFragment : DialogFragment() {
         }
     }
 
+    private fun updateCurrentEPCRun() {
+//        Example path:
+//        http://192.168.1.101/costume/costume/updatecurrentepcrun/?uid=293&epcHeader=E280689400004010056&epcRun=7DD45
+        val epcRaw: String = suggested_epc_code_edittext.getText().toString().replace(" ", "")
+        if(!epcRaw.equals("") && mSelectedCostumeToWrite.uid != null) {
+            var procedure = Constants.getUpdatedCurrentEPCRunProcedure()
+            val epcHeader = epcRaw?.substring(0, 19)
+            val epcRun = epcRaw?.substring(19)
+            procedure.path = "/costume/costume/updatecurrentepcrun/" + "?uid=" + mSelectedCostumeToWrite.uid + "&epcHeader=" + epcHeader + "&epcRun=" + epcRun
+
+            ServiceQueryAsyncTask(mActivity!!.applicationContext, mActivity!!, procedure).execute()
+        }
+    }
+
     private fun setEvents() {
         if(!mEPCScanned.epcRaw.equals("")) {
             val epcScanned = separateEPCString(mEPCScanned.epcRaw, " ", 4, 24)
@@ -330,13 +339,15 @@ class WriteSingleTagDialogFragment : DialogFragment() {
             return
         }
 
-        val writeData: String = suggested_epc_code_edittext.getText().toString()
+        val writeData: String = suggested_epc_code_edittext.getText().toString().replace(" ", "")
         if (writeData.length % 4 != 0 || writeData == "") {
 //            showToast(getString(R.string.the_unit_is_word_1word_2bytes))
+            DialogUtils.showWarningDialog(mActivity!!, mActivity!!.getString(R.string.write_tag_failed), mActivity!!.getString(R.string.the_unit_is_word_1word_2bytes), mActivity!!.getString(R.string.the_unit_is_word_1word_2bytes_solution))
             return
         }
         if (!UHFActivity.isNumeric(writeData)) {
 //            showToast(getString(R.string.write_hex))
+            DialogUtils.showWarningDialog(mActivity!!, mActivity!!.getString(R.string.write_tag_failed), mActivity!!.getString(R.string.write_hex), mActivity!!.getString(R.string.write_hex_solution))
             return
         }
 
@@ -345,8 +356,11 @@ class WriteSingleTagDialogFragment : DialogFragment() {
         val writeFlag = manager.writeTo6C(accessPassword, membank, addr, dataBytes.size / 2, dataBytes)
         if (writeFlag) {
 //            getString(R.string.write_successful_)
+            updateCurrentEPCRun()
+
         } else {
 //            getString(R.string.write_failue_)
+            DialogUtils.showErrorDialog(mActivity!!, mActivity!!.getString(R.string.write_tag_failed), mActivity!!.getString(R.string.write_failue_), mActivity!!.getString(R.string.contact_tech_support))
         }
     }
 
@@ -388,20 +402,11 @@ class WriteSingleTagDialogFragment : DialogFragment() {
     }
 
     private fun sendBackResult() {
-//        val listener = this as ReloadCostumeListener?
-        Log.d(TAG, "Scanned found Costume Uid list=" + mScannedFoundList)
-        Log.d(TAG, "selected box type=" + mBoxType)
-//        Log.d(TAG, "selected box=" + mCheckedBox.toString())
-        Log.d(TAG, "byUser=" + mByUser)
+        var msgBody = ""
 
-        var msgBody = "Checked item id: " + mScannedFoundList + "\n"// +
-//                "in " + mBoxType + ": " + mCheckedBox.name + "\n" +
-//                "by " + mByUser
+        reloadScannedTagListener = activity as ReloadScannedTagListener
+        reloadScannedTagListener.onFinishWriteSingleTagDialog(msgBody)
 
-        reloadCostumeListener = activity as ReloadCostumeListener
-        reloadCostumeListener.onFinishCheckedBoxDialog(msgBody)
-
-//        listener!!.onFinishCheckedBoxDialog()
         dismiss()
     }
 
@@ -448,8 +453,24 @@ class WriteSingleTagDialogFragment : DialogFragment() {
                         }
 
                         Constants.UPDATE_CURRENT_EPCRUN -> {
-//                            ReloadCostumesThread().start()
-                            sendBackResult()
+                            var i = 0
+                            while (i < restfulJsonArray!!.length()) {
+                                try {
+                                    val jsonObject: JSONObject = restfulJsonArray!!.getJSONObject(i)
+                                    var value = jsonObject.getString("value")
+                                    Log.d(TAG, "current currentEPCRunNo=" + value)
+
+                                } catch (e: JSONException) {
+                                    e.printStackTrace()
+                                }
+                                i++
+                            }
+                            if(i > 0) {
+                                DialogUtils.showSuccessDialog(mActivity!!, mActivity!!.getString(R.string.write_single_tag_label), mActivity!!.getString(R.string.write_successful_), mActivity!!.getString(R.string.verify_write_tag))
+                                sendBackResult()
+                            } else {
+                                DialogUtils.showErrorDialog(mActivity!!, mActivity!!.getString(R.string.write_tag_failed), mActivity!!.getString(R.string.write_failue_), mActivity!!.getString(R.string.contact_tech_support))
+                            }
 
                         }
                     }
@@ -478,6 +499,8 @@ class WriteSingleTagDialogFragment : DialogFragment() {
             } catch (e: JSONException) {
                 success = 0
                 e.printStackTrace()
+
+                DialogUtils.showErrorDialog(mActivity!!, mActivity!!.getString(R.string.write_tag_failed), mActivity!!.getString(R.string.write_failue_), mActivity!!.getString(R.string.contact_tech_support))
             }
             return null
         }

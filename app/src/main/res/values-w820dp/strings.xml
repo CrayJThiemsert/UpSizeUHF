@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="write_tag_failed">Write Tag Failed</string>
+    <string name="the_unit_is_word_1word_2bytes_solution">Please correct the EPC data and try again.</string>
+</resources>

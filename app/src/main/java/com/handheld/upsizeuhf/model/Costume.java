@@ -3,7 +3,7 @@ package com.handheld.upsizeuhf.model;
 import androidx.annotation.NonNull;
 
 public class Costume {
-    public int uid;
+    public int uid = -1;
     public String runningNo;
     public String actor;
     public String actScence;

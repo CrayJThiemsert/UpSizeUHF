@@ -83,7 +83,7 @@ public class HttpConnectionService {
                 if (null != br) {
                     while ((line = br.readLine()) != null) {
                         response += line;
-                        Log.d("HttpConnectionService", "output: " + line);
+//                        Log.d("HttpConnectionService", "output: " + line);
                     }
                 }
             } catch (IOException e) {
