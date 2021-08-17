@@ -46,7 +46,7 @@ class WriteSingleTagDialogFragment : DialogFragment() {
     private lateinit var write_single_tag_button: Button
 
     interface ReloadScannedTagListener {
-        fun onFinishWriteSingleTagDialog(msgBody: String)
+        fun onFinishWriteSingleTagDialog(msgBody: Int)
     }
 
     public lateinit var reloadScannedTagListener: ReloadScannedTagListener
@@ -402,7 +402,7 @@ class WriteSingleTagDialogFragment : DialogFragment() {
     }
 
     private fun sendBackResult() {
-        var msgBody = ""
+        var msgBody = mSelectedCostumeToWrite.uid
 
         reloadScannedTagListener = activity as ReloadScannedTagListener
         reloadScannedTagListener.onFinishWriteSingleTagDialog(msgBody)

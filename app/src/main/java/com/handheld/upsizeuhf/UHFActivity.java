@@ -1533,33 +1533,39 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
      * @param screenType
      */
     public void addSelectedCostumeToWriteTag(Costume costume, int screenType) {
-        mSelectedCostumeToWrite = costume;
+
+        for(int i = 0; i < mCostumeArrayList.size(); i++) {
+            Costume ct = mCostumeArrayList.get(i);
+            if(ct.uid == costume.uid) {
+                mSelectedCostumeToWrite = ct;
+            }
+        }
 
         switch (screenType) {
             case Constants.WRITE_SINGLE_TAG_MODE: {
-                if(costume.epcHeader.trim().equals("")) {
+                if(mSelectedCostumeToWrite.epcHeader.trim().equals("")) {
                     mEPCSelected = new com.handheld.upsizeuhf.model.EPC();
                     write_single_tag_3of4_tag_detail_epc_header_textview.setText("");
                     write_single_tag_3of4_tag_detail_epc_run_textview.setText("");
                 } else {
-                    String epcRaw = costume.epcHeader + costume.epcRun;
+                    String epcRaw = mSelectedCostumeToWrite.epcHeader + mSelectedCostumeToWrite.epcRun;
                     String epcTop = UhfUtils.Companion.separateEPCTopString(epcRaw, " ", 4, 16);
                     String epcBottom = UhfUtils.Companion.separateEPCBottomString(epcRaw, " ", 4, 16);
 
                     mEPCSelected.setEpcRaw(epcRaw);
-                    mEPCSelected.setEpcHeader(costume.epcHeader);
-                    mEPCSelected.setEpcRun(costume.epcRun);
+                    mEPCSelected.setEpcHeader(mSelectedCostumeToWrite.epcHeader);
+                    mEPCSelected.setEpcRun(mSelectedCostumeToWrite.epcRun);
 
                     write_single_tag_3of4_tag_detail_epc_header_textview.setText(epcTop);
                     write_single_tag_3of4_tag_detail_epc_run_textview.setText(epcBottom);
                 }
 
-                write_single_tag_3of4_tag_detail_code_textview.setText(!costume.code.trim().equals("") ? costume.code : "");
-                write_single_tag_3of4_tag_detail_type_textview.setText(!costume.type.trim().equals("") ? costume.type : "");
-                write_single_tag_3of4_tag_detail_size_textview.setText(!costume.size.trim().equals("") ? costume.size : "");
-                write_single_tag_3of4_tag_detail_number_textview.setText(!costume.codeNo.trim().equals("") ? costume.codeNo : "");
+                write_single_tag_3of4_tag_detail_code_textview.setText(!mSelectedCostumeToWrite.code.trim().equals("") ? mSelectedCostumeToWrite.code : "");
+                write_single_tag_3of4_tag_detail_type_textview.setText(!mSelectedCostumeToWrite.type.trim().equals("") ? mSelectedCostumeToWrite.type : "");
+                write_single_tag_3of4_tag_detail_size_textview.setText(!mSelectedCostumeToWrite.size.trim().equals("") ? mSelectedCostumeToWrite.size : "");
+                write_single_tag_3of4_tag_detail_number_textview.setText(!mSelectedCostumeToWrite.codeNo.trim().equals("") ? mSelectedCostumeToWrite.codeNo : "");
 
-                String currentBox = getCurrentBoxString(costume);
+                String currentBox = getCurrentBoxString(mSelectedCostumeToWrite);
                 write_single_tag_3of4_tag_detail_current_box_textview.setText(currentBox);
                 break;
             }
@@ -1725,13 +1731,12 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     }
 
     @Override
-    public void onFinishWriteSingleTagDialog(@NotNull String msgBody) {
+    public void onFinishWriteSingleTagDialog(@NotNull int msgBody) {
+        mSelectedCostumeToWrite.uid = msgBody;
         // reload costume item data for new epc case
-        loadData();
+        new ServiceQueryAsyncTask(mContext, mActivity, Constants.Companion.getCostumeAllQuery()).execute();
 
         new RefreshEPCSingleTagThread().start();
-
-        addSelectedCostumeToWriteTag(mSelectedCostumeToWrite, Constants.WRITE_SINGLE_TAG_MODE);
     }
 
     private class ReloadDataAsyncTask extends AsyncTask<Void, Void, Void> {
@@ -3120,6 +3125,8 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
             scan_write_single_tag_3of4_button.setText(R.string.scan);
 
             SetVisible(write_single_tag_2of4_layout, textViewS1, viewS1);
+
+            queryItemCodesBySelectedActorActScene();
         }
 
         @Override
@@ -3753,6 +3760,9 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                                     new LoadLocalCostumeThread().start();
                                 }
 
+                                if(mSelectedCostumeToWrite.uid > -1 && mCurrentSearchMode == Constants.WRITE_SINGLE_TAG_MODE) {
+                                    addSelectedCostumeToWriteTag(mSelectedCostumeToWrite, Constants.WRITE_SINGLE_TAG_MODE);
+                                }
 
 
                             }
