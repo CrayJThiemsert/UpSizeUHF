@@ -2744,14 +2744,21 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     private class WriteSingleTagButtonAnimationListener implements Animation.AnimationListener   {
         @Override
         public void onAnimationStart(Animation animation) {
-            mCurrentSearchMode = Constants.WRITE_SINGLE_TAG_MODE;
-            // Clear select actor
-            mSelectedActorFilter = "";
+            if(isOnline) {
+                mCurrentSearchMode = Constants.WRITE_SINGLE_TAG_MODE;
+                // Clear select actor
+                mSelectedActorFilter = "";
 
-            SetVisible(write_single_tag_1of4_layout, textViewS1, viewS1);
+                SetVisible(write_single_tag_1of4_layout, textViewS1, viewS1);
 
-            // Load Actor List
-            new LoadActorThread(write_single_tag_1of4_layout).start();
+                // Load Actor List
+                new LoadActorThread(write_single_tag_1of4_layout).start();
+            } else {
+                loadWarningDialog("", getString(R.string.database_server_offline), getString(R.string.database_server_offline_solution));
+
+                write_single_tag_button.setBackgroundColor(getResources().getColor(R.color.colorGrey));
+                write_single_tag_button.setEnabled(false);
+            }
         }
 
         @Override
