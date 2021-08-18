@@ -84,6 +84,7 @@ import com.handheld.upsizeuhf.ui.dialog.WarningMessageDialogFragment;
 import com.handheld.upsizeuhf.ui.dialog.WriteSingleTagDialogFragment;
 import com.handheld.upsizeuhf.util.AnimationUtils;
 import com.handheld.upsizeuhf.util.Constants;
+import com.handheld.upsizeuhf.util.DialogUtils;
 import com.handheld.upsizeuhf.util.HttpConnectionService;
 import com.handheld.upsizeuhf.util.RoomUtils;
 import com.handheld.upsizeuhf.util.UhfUtils;
@@ -3200,14 +3201,18 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     private class WriteWriteSingleTag3of4ButtonAnimationListener implements Animation.AnimationListener   {
         @Override
         public void onAnimationStart(Animation animation) {
-            thread.interrupt();
-            scanWriteSingleTagFlag = false;
-            scan_write_single_tag_3of4_button.setText(R.string.scan);
+            if(mEPCScanned.getEpcRaw().equals("")) {
+                DialogUtils.Companion.showWarningDialog(UHFActivity.this, getString(R.string.warning), getString(R.string.target_scanned_tag_not_found), getString(R.string.target_scanned_tag_not_found_solution));
+            } else {
+                thread.interrupt();
+                scanWriteSingleTagFlag = false;
+                scan_write_single_tag_3of4_button.setText(R.string.scan);
 
-            // do no clear scan single rv list
-            writeSingleTagDialogFragment = WriteSingleTagDialogFragment.Companion.newInstance("", "", mSelectedCostumeToWrite, mEPCSelected, mEPCScanned, manager);
+                // do no clear scan single rv list
+                writeSingleTagDialogFragment = WriteSingleTagDialogFragment.Companion.newInstance("", "", mSelectedCostumeToWrite, mEPCSelected, mEPCScanned, manager);
 
-            writeSingleTagDialogFragment.show(getFragmentManager(), "write_single_tag_fragment");
+                writeSingleTagDialogFragment.show(getFragmentManager(), "write_single_tag_fragment");
+            }
         }
 
         @Override

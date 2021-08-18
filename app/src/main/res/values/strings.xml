@@ -557,4 +557,6 @@
 	<string name="write_hex_solution">Please correct epc data to hex code and try again.</string>
 	<string name="verify_write_tag">Please verify wrote tag by try to read it again.</string>
 	<string name="contact_tech_support">Please contact the technical support.</string>
+	<string name="target_scanned_tag_not_found">The target scanned tag not found.</string>
+	<string name="target_scanned_tag_not_found_solution">Please scanned the target tag to write by press \"SCAN\" button.</string>
 </resources>
