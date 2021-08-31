@@ -569,7 +569,7 @@
     <string name="current_epc_code_on_tag">Current EPC code on scanned tag:</string>
     <string name="suggested_writing_new_epc_code">Suggested Writing New EPC Code:</string>
     <string name="enter_epc_code_here">Enter EPC code here</string>
-    <string name="select_act_1of4">Write Single Tag - 1/4 - Select Act</string>
+    <string name="select_act_1of4">Write Single Tag - 1 of 4 - Select Act</string>
     <string name="select_item_2of4">Write Single Tag - 2 of 4 - Select Item</string>
     <string name="selected_an_itemcode">Please selected an item to write EPC process</string>
     <string name="prepare_target_tag">Write Single Tag - 3 of 4 - Prepare Target Tag</string>
@@ -584,4 +584,8 @@
 	<string name="contact_tech_support">Please contact the technical support.</string>
     <string name="target_scanned_tag_not_found">The target scanned tag not found.</string>
 	<string name="target_scanned_tag_not_found_solution">Please scanned the target tag to write by press \"SCAN\" button.</string>
+    <string name="search_single_tag_label">Search Single Tag</string>
+    <string name="search_target_tag">Search Single Tag - 3 of 3 - Searching</string>
+    <string name="search_select_act_1of3">Search Single Tag - 1 of 3 - Select Act</string>
+	<string name="search_select_act_2of3">Search Single Tag - 2 of 3 - Select Item</string>
 </resources>

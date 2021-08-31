@@ -112,6 +112,7 @@ class Constants {
         const val ITEM_CODE_MODE = 2
         const val READ_SINGLE_TAG_MODE = 3
         const val WRITE_SINGLE_TAG_MODE = 4
+        const val SEARCH_SINGLE_TAG_MODE = 5
 
         const val TYPE_SHIPBOX = "shipbox"
         const val TYPE_STORAGEBOX = "storagebox"
