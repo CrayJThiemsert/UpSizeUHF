@@ -100,6 +100,7 @@ dependencies {
     })
     androidTestImplementation "androidx.test.ext:junit:$rootProject.androidxJunitVersion"
 
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.23'
 
 
 }

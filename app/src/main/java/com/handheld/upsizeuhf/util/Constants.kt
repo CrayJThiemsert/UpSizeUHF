@@ -114,6 +114,14 @@ class Constants {
         const val WRITE_SINGLE_TAG_MODE = 4
         const val SEARCH_SINGLE_TAG_MODE = 5
 
+        const val READYTOSCAN_SEARCH_RESULT = 0
+        const val SCANNOTFOUND_SEARCH_RESULT = 1
+        const val SCANFOUNDSOMETHING_SEARCH_RESULT = 2
+        const val SCANFOUNDCLOSERRANGE_SEARCH_RESULT = 3
+
+        const val SEARCH_NOT_FOUND = 0
+        const val SEARCH_FOUND = 1
+
         const val TYPE_SHIPBOX = "shipbox"
         const val TYPE_STORAGEBOX = "storagebox"
         const val TYPE_PLAYBOX = "playbox"

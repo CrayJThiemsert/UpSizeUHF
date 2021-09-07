@@ -588,4 +588,6 @@
     <string name="search_target_tag">Search Single Tag - 3 of 3 - Searching</string>
     <string name="search_select_act_1of3">Search Single Tag - 1 of 3 - Select Act</string>
 	<string name="search_select_act_2of3">Search Single Tag - 2 of 3 - Select Item</string>
+    <string name="dash">-</string>
+    <string name="search_single_tag_settings_ready">Search Single Tag Settings is ready to use.</string>
 </resources>
