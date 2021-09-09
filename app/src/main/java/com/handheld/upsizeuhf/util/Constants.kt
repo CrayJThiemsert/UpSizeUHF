@@ -119,6 +119,8 @@ class Constants {
         const val SCANFOUNDSOMETHING_SEARCH_RESULT = 2
         const val SCANFOUNDCLOSERRANGE_SEARCH_RESULT = 3
 
+        const val RSSI_CHANGING_POINT = 49
+
         const val SEARCH_NOT_FOUND = 0
         const val SEARCH_FOUND = 1
 

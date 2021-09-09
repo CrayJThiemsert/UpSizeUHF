@@ -2577,7 +2577,7 @@
                             android:fontFamily="@font/kanit_medium"
                             android:textSize="18sp"
                             android:textStyle="bold"
-                            android:text="@string/target_tag_to_write"/>
+                            android:text="@string/power_status"/>
 
 <!--                        <LinearLayout-->
 <!--                            android:layout_width="match_parent"-->

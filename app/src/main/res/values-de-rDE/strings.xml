@@ -546,7 +546,7 @@
     <string name="enter_epc_code_here">Enter EPC code here</string>
     <string name="select_act_1of4">Write Single Tag - 1 of 4 - Select Act</string>
     <string name="select_item_2of4">Write Single Tag - 2 of 4 - Select Item</string>
-    <string name="selected_an_itemcode">Please selected an item to write EPC process</string>
+    <string name="selected_an_itemcode">Please selected an item before go to the next process</string>
 	<string name="prepare_target_tag">Write Single Tag - 3 of 4 - Prepare Target Tag</string>
 	<string name="target_tag_to_write">Target Tag to Write</string>
     <string name="costume_notselected">Item Not Selected Yet</string>
@@ -565,4 +565,5 @@
 	<string name="search_select_act_2of3">Search Single Tag - 2 of 3 - Select Item</string>
     <string name="dash">-</string>
     <string name="search_single_tag_settings_ready">Search Single Tag Settings is ready to use.</string>
+    <string name="power_status">Power Status...</string>
 </resources>

@@ -270,7 +270,10 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     {
         listSearchPower = new ArrayList<Integer>(Arrays.asList(
                 Integer.valueOf(Constants.POWER_26)
+                , Integer.valueOf(Constants.POWER_24)
                 , Integer.valueOf(Constants.POWER_20)
+                , Integer.valueOf(Constants.POWER_18)
+                , Integer.valueOf(Constants.POWER_17)
                 , Integer.valueOf(Constants.POWER_16)
         ));
     }
@@ -2058,6 +2061,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
             public void run() {
                 // If do single scan, then clear scan list every time
                 if(scanSingleTagFlag || scanWriteSingleTagFlag || scanSearchSingleTagFlag) {
+                    Log.d(TAG, "removeAll: scanSingleTagFlag=" + scanSingleTagFlag + " : scanWriteSingleTagFlag=" + scanWriteSingleTagFlag + " : scanSearchSingleTagFlag=" + scanSearchSingleTagFlag);
                     list.removeAll(listEPC);
                 }
 
@@ -2112,6 +2116,9 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                     idcount++;
                     listMap.add(map);
                 }
+                Log.d(TAG, "list.size()=" + list.size());
+                Log.d(TAG, "listepc.size()=" + listepc.size());
+                Log.d(TAG, "listMap.size()=" + listMap.size());
                 if(startFlag) {
                     Log.d(TAG, "original listMap.size()=" + listMap.size());
                     listViewData.setAdapter(new SimpleAdapter(UHFActivity.this,
@@ -2145,6 +2152,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                                 // do something with key and/or tab
                                 Log.d(TAG, "key=" + key + " : value=" + value);
                                 if (key.equals("EPCRaw") && value.equals(epcBase)) {
+                                    Log.d(TAG, "isFound=true");
                                     costume.isFound = true;
                                     mItemCodeArrayList.set(i, costume);
                                     scannedCount++;
@@ -2260,7 +2268,9 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                                 mEPCScanned.setEpcHeader(singleScannedTag.epcHeader);
                                 mEPCScanned.setEpcRun(singleScannedTag.epcRun);
 //                            }
-                            Util.play(1, 0);
+                            if(mEPCSelected.getEpcRaw().equalsIgnoreCase(mEPCScanned.getEpcRaw())) {
+                                Util.play(1, 0);
+                            }
                         }
                     } else if(scanSearchSingleTagFlag) {
 
@@ -2275,10 +2285,15 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                             mEPCScanned.setEpcHeader(singleScannedTag.epcHeader);
                             mEPCScanned.setEpcRun(singleScannedTag.epcRun);
 
-                            search_single_tag_3of3_tag_detail_rssi_textview.setText(singleScannedTag.size);
-                            displayScanResultGif(Integer.parseInt(singleScannedTag.size));
-                            Util.play(1, 0);
+                            if(mEPCSelected.getEpcRaw().equalsIgnoreCase(mEPCScanned.getEpcRaw())) {
+                                search_single_tag_3of3_tag_detail_rssi_textview.setText(singleScannedTag.size);
+                                displayScanResultGif(Integer.parseInt(singleScannedTag.size));
+                                Util.play(1, 0);
+                            }
                         } else {
+                            search_single_tag_3of3_tag_detail_rssi_textview.setText(getString(R.string.dash));
+                            mSearchFound = Constants.SEARCH_NOT_FOUND;
+                            mSearchResult = Constants.SCANNOTFOUND_SEARCH_RESULT;
                             displayScanResultGif(0);
                         }
                     }
@@ -2294,7 +2309,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         rssi = Math.abs(rssi);
         Log.d(TAG, "abs rssi=" + rssi);
 
-        if (rssi < 50) {
+        if (rssi < Constants.RSSI_CHANGING_POINT) {
             if(rssi == 0) {
                 if(mSearchResult != Constants.SCANNOTFOUND_SEARCH_RESULT) {
                     scan_progress_gifview.setImageResource(R.drawable.scannotfound);
@@ -2306,7 +2321,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                     mSearchResult = Constants.SCANFOUNDCLOSERRANGE_SEARCH_RESULT;
                 }
             }
-        } else if (rssi > 50) {
+        } else if (rssi > Constants.RSSI_CHANGING_POINT) {
             if(mSearchResult != Constants.SCANFOUNDSOMETHING_SEARCH_RESULT) {
                 scan_progress_gifview.setImageResource(R.drawable.scanfoundsomething);
                 mSearchResult = Constants.SCANFOUNDSOMETHING_SEARCH_RESULT;
@@ -2326,20 +2341,32 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                             // Try to stop scan thread before set the new power value.
                             thread.interrupt();
 
-                            scan_area_title_textview.setText("Power " + mCurrentSearchPower + "dBm - done!");
+                            if ((mCurrentSearchPowerIndex) == (listSearchPower.size() - 1)) {
+                                scan_area_title_textview.setText("Power " + mCurrentSearchPower + "dBm - reach lowest limit power!");
+                            } else {
+                                scan_area_title_textview.setText("Power " + mCurrentSearchPower + "dBm - timeup!");
+                            }
                             search_single_tag_3of3_tag_detail_rssi_textview.setText(getString(R.string.dash));
 
-                            // Reduce power one step every 3 second
+                            // Reduce power one step every 10 second
                             if ((mCurrentSearchPowerIndex + 1) <= (listSearchPower.size() - 1)) {
                                 mCurrentSearchPowerIndex = mCurrentSearchPowerIndex + 1;
                                 mCurrentSearchPower = listSearchPower.get(mCurrentSearchPowerIndex).intValue();
-                                if (manager.setOutputPower(mCurrentSearchPower)) {
-                                    scan_area_title_textview.setText("Power " + mCurrentSearchPower + "dBm");
-                                    thread.start();
+                                scan_area_title_textview.setText("Power " + mCurrentSearchPower + "dBm - is setting...");
+                                mSearchFound = Constants.SEARCH_NOT_FOUND;
 
+                                if (manager.setOutputPower(mCurrentSearchPower)) {
+                                    scan_area_title_textview.setText("Power " + mCurrentSearchPower + "dBm - setup!");
+                                } else {
+                                    scan_area_title_textview.setText("Power " + mCurrentSearchPower + "dBm - setup failed?!, please try to stop/scan again.");
                                 }
+
+                                thread.start();
+
+                            } else {
+                                thread.start();
                             }
-                            mSearchFound = Constants.SEARCH_NOT_FOUND;
+
                         }
                     }.start();
                 }
@@ -3436,6 +3463,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                         break;
                     }
                     case Constants.SEARCH_SINGLE_TAG_MODE: {
+                        scan_area_title_textview.setText(getString(R.string.power_status));
                         SetVisible(search_single_tag_3of3_layout, textViewS1, viewS1);
                         break;
                     }
