@@ -2356,7 +2356,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                                 mSearchFound = Constants.SEARCH_NOT_FOUND;
 
                                 if (manager.setOutputPower(mCurrentSearchPower)) {
-                                    scan_area_title_textview.setText("Power " + mCurrentSearchPower + "dBm - setup!");
+                                    scan_area_title_textview.setText("Power " + mCurrentSearchPower + "dBm - ready!");
                                 } else {
                                     scan_area_title_textview.setText("Power " + mCurrentSearchPower + "dBm - setup failed?!, please try to stop/scan again.");
                                 }
@@ -3586,9 +3586,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                 search_single_tag_3of3_tag_detail_rssi_textview.setText(getString(R.string.dash));
                 mCurrentSearchPower = listSearchPower.get(mCurrentSearchPowerIndex).intValue();
                 if (manager.setOutputPower(mCurrentSearchPower)) {
-                    scan_area_title_textview.setText("Power "+mCurrentSearchPower + "dBm");
-//                    showToast(getString(R.string.search_single_tag_settings_ready));
-
+                    scan_area_title_textview.setText("Power " + mCurrentSearchPower + "dBm - ready!");
                     // Start scanning
                     thread.start();
                     scanSearchSingleTagFlag = true;
@@ -3598,8 +3596,10 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
 
 
                 } else {
+                    scan_area_title_textview.setText("Power " + mCurrentSearchPower + "dBm - setup failed?!, please try to stop/scan again.");
                     showToast(getString(R.string.not_success));
                 }
+
             } else {
                 // Stop scanning
                 thread.interrupt();
