@@ -263,6 +263,9 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     private TextView search_single_tag_3of3_tag_detail_current_box_textview;
 
     private TextView search_single_tag_3of3_tag_detail_rssi_textview;
+    private TextView scan_area_message_textview;
+    private TextView scanned_epc_textview;
+    private TextView scanned_rssi_textview;
 
     private GifImageView scan_progress_gifview;
 
@@ -1373,6 +1376,15 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         search_single_tag_3of3_tag_detail_rssi_textview = (TextView)findViewById(R.id.search_single_tag_3of3_tag_detail_rssi_textview);
         search_single_tag_3of3_tag_detail_rssi_textview.setTypeface(UhfUtils.Companion.getFontKanitSemiBoldItalic());
 
+        scan_area_message_textview= (TextView)findViewById(R.id.scan_area_message_textview);
+        scan_area_message_textview.setTypeface(UhfUtils.Companion.getFontKanitSemiBold());
+
+        scanned_epc_textview = (TextView)findViewById(R.id.scanned_epc_textview);
+        scanned_epc_textview.setTypeface(UhfUtils.Companion.getFontKanitBoldItalic());
+
+        scanned_rssi_textview = (TextView)findViewById(R.id.scanned_rssi_textview);
+        scanned_rssi_textview.setTypeface(UhfUtils.Companion.getFontKanitSemiBoldItalic());
+
         scan_progress_gifview = (GifImageView) findViewById(R.id.scan_progress_gifview);
 
         scan_area_title_textview = (TextView)findViewById(R.id.scan_area_title_textview);
@@ -2248,6 +2260,12 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                                 mSingleScannedTag = singleScannedTag;
                                 displayTagCostumeDetail();
 //                            }
+                            String epcRaw = singleScannedTag.epcHeader + singleScannedTag.epcRun;
+                            mEPCScanned.setEpcRaw(epcRaw);
+                            mEPCScanned.setEpcHeader(singleScannedTag.epcHeader);
+                            mEPCScanned.setEpcRun(singleScannedTag.epcRun);
+
+                            Util.play(1, 0);
 
                         }
                     } else if(scanWriteSingleTagFlag) {
@@ -2287,11 +2305,15 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
 
                             if(mEPCSelected.getEpcRaw().equalsIgnoreCase(mEPCScanned.getEpcRaw())) {
                                 search_single_tag_3of3_tag_detail_rssi_textview.setText(singleScannedTag.size);
+                                scanned_epc_textview.setText(UhfUtils.Companion.separateEPCString(epcRaw, " ", 4, 16));
+                                scanned_rssi_textview.setText(singleScannedTag.size);
                                 displayScanResultGif(Integer.parseInt(singleScannedTag.size));
                                 Util.play(1, 0);
                             }
                         } else {
                             search_single_tag_3of3_tag_detail_rssi_textview.setText(getString(R.string.dash));
+                            scanned_epc_textview.setText(getString(R.string.dash));
+                            scanned_rssi_textview.setText(getString(R.string.dash));
                             mSearchFound = Constants.SEARCH_NOT_FOUND;
                             mSearchResult = Constants.SCANNOTFOUND_SEARCH_RESULT;
                             displayScanResultGif(0);
@@ -2334,6 +2356,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                         public void onTick(long millisUntilFinished) {
 //                        mTextField.setText("seconds remaining: " + millisUntilFinished / 1000);
                             scan_area_title_textview.setText("Power " + mCurrentSearchPower + "dBm - " + millisUntilFinished / 1000);
+                            scan_area_message_textview.setText(getString(R.string.dash));
                         }
 
                         public void onFinish() {
@@ -2342,23 +2365,30 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                             thread.interrupt();
 
                             if ((mCurrentSearchPowerIndex) == (listSearchPower.size() - 1)) {
-                                scan_area_title_textview.setText("Power " + mCurrentSearchPower + "dBm - reach lowest limit power!");
+                                scan_area_title_textview.setText("Power " + mCurrentSearchPower + "dBm");
+                                scan_area_message_textview.setText("reach lowest limit power!");
                             } else {
-                                scan_area_title_textview.setText("Power " + mCurrentSearchPower + "dBm - timeup!");
+                                scan_area_title_textview.setText("Power " + mCurrentSearchPower + "dBm");
+                                scan_area_message_textview.setText("timeup!");
                             }
                             search_single_tag_3of3_tag_detail_rssi_textview.setText(getString(R.string.dash));
+                            scanned_rssi_textview.setText(getString(R.string.dash));
+                            scanned_epc_textview.setText(getString(R.string.dash));
 
                             // Reduce power one step every 10 second
                             if ((mCurrentSearchPowerIndex + 1) <= (listSearchPower.size() - 1)) {
                                 mCurrentSearchPowerIndex = mCurrentSearchPowerIndex + 1;
                                 mCurrentSearchPower = listSearchPower.get(mCurrentSearchPowerIndex).intValue();
-                                scan_area_title_textview.setText("Power " + mCurrentSearchPower + "dBm - is setting...");
+                                scan_area_title_textview.setText("Power " + mCurrentSearchPower + "dBm");
+                                scan_area_message_textview.setText("is setting...");
                                 mSearchFound = Constants.SEARCH_NOT_FOUND;
 
                                 if (manager.setOutputPower(mCurrentSearchPower)) {
-                                    scan_area_title_textview.setText("Power " + mCurrentSearchPower + "dBm - ready!");
+                                    scan_area_title_textview.setText("Power " + mCurrentSearchPower + "dBm");
+                                    scan_area_message_textview.setText("ready!");
                                 } else {
-                                    scan_area_title_textview.setText("Power " + mCurrentSearchPower + "dBm - setup failed?!, please try to stop/scan again.");
+                                    scan_area_title_textview.setText("Power " + mCurrentSearchPower + "dBm");
+                                    scan_area_message_textview.setText("setup failed?!, please try to stop/scan again.");
                                 }
 
                                 thread.start();
@@ -3464,6 +3494,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                     }
                     case Constants.SEARCH_SINGLE_TAG_MODE: {
                         scan_area_title_textview.setText(getString(R.string.power_status));
+                        scan_area_message_textview.setText(getString(R.string.dash));
                         SetVisible(search_single_tag_3of3_layout, textViewS1, viewS1);
                         break;
                     }
@@ -3584,9 +3615,12 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                 // Set full scale scanning power
                 mCurrentSearchPowerIndex = 0;
                 search_single_tag_3of3_tag_detail_rssi_textview.setText(getString(R.string.dash));
+                scanned_epc_textview.setText(getString(R.string.dash));
+                scanned_rssi_textview.setText(getString(R.string.dash));
                 mCurrentSearchPower = listSearchPower.get(mCurrentSearchPowerIndex).intValue();
                 if (manager.setOutputPower(mCurrentSearchPower)) {
-                    scan_area_title_textview.setText("Power " + mCurrentSearchPower + "dBm - ready!");
+                    scan_area_title_textview.setText("Power " + mCurrentSearchPower + "dBm");
+                    scan_area_message_textview.setText("ready!");
                     // Start scanning
                     thread.start();
                     scanSearchSingleTagFlag = true;
@@ -3596,7 +3630,8 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
 
 
                 } else {
-                    scan_area_title_textview.setText("Power " + mCurrentSearchPower + "dBm - setup failed?!, please try to stop/scan again.");
+                    scan_area_title_textview.setText("Power " + mCurrentSearchPower + "dBm");
+                    scan_area_message_textview.setText("setup failed?!, please try to stop/scan again.");
                     showToast(getString(R.string.not_success));
                 }
 

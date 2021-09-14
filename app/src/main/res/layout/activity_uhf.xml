@@ -2331,7 +2331,7 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="290dp"
+                        android:layout_height="255dp"
                         android:orientation="vertical"
 
                         android:paddingTop="8dp"
@@ -2514,14 +2514,15 @@
                                     android:fontFamily="@font/kanit_semibold" />
 
                             </LinearLayout>
-                            <Space
-                                android:layout_width="55dp"
-                                android:layout_height="15dp" />
+<!--                            <Space-->
+<!--                                android:layout_width="55dp"-->
+<!--                                android:layout_height="15dp" />-->
                         </LinearLayout>
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            android:visibility="gone">
                             <Space
                                 android:layout_width="80dp"
                                 android:layout_height="15dp" />
@@ -2569,15 +2570,32 @@
                         android:background="@drawable/layout_border_radius_black"
                         android:gravity="top" >
 
-                        <TextView
-                            android:id="@+id/scan_area_title_textview"
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/colorOrangeRed"
-                            android:fontFamily="@font/kanit_medium"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
-                            android:text="@string/power_status"/>
+                            android:orientation="horizontal">
+                            <TextView
+                                android:id="@+id/scan_area_title_textview"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/colorOrangeRed"
+                                android:fontFamily="@font/kanit_medium"
+                                android:layout_weight="0.20"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                android:text="@string/power_status"/>
+                            <TextView
+                                android:id="@+id/scan_area_message_textview"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/colorOrangeRed"
+                                android:fontFamily="@font/kanit_medium"
+                                android:layout_weight="0.20"
+                                android:gravity="right"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                android:text="@string/power_status"/>
+                        </LinearLayout>
 
 <!--                        <LinearLayout-->
 <!--                            android:layout_width="match_parent"-->
@@ -2612,6 +2630,50 @@
                             android:src="@drawable/readytoscan"
 
                              />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:id="@+id/scanned_epc_textview"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/colorOrangeRed"
+                                android:fontFamily="@font/kanit_medium"
+                                android:layout_weight="0.90"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                android:text="@string/epc"/>
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:paddingEnd="10dp"
+                                    android:textColor="@color/colorOrangeGrey"
+                                    android:fontFamily="@font/kanit_light"
+                                    android:textSize="16sp"
+                                    android:gravity="right"
+
+                                    android:text="@string/rssi"/>
+                                <TextView
+                                    android:id="@+id/scanned_rssi_textview"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/colorOrangeRed"
+                                    android:fontFamily="@font/kanit_medium"
+                                    android:layout_weight="0.10"
+                                    android:gravity="right"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold"
+                                    android:text="@string/rssi"/>
+                            </LinearLayout>
+
+                        </LinearLayout>
+
 
                     </LinearLayout>
 
