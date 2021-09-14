@@ -2717,6 +2717,7 @@
 
                     <Button android:text="@string/refresh"
                         android:id="@+id/clear_search_single_tag_3of3_button"
+                        android:visibility="gone"
                         android:layout_width="0dp"
                         android:layout_height="100dp"
                         android:layout_weight="0.2"
