@@ -133,6 +133,8 @@ class Constants {
         const val LOW = 1
         const val VERY_LOW = 0
 
+        const val POWER_30 = 30
+        const val POWER_28 = 28
         const val POWER_26 = 26
         const val POWER_24 = 24
         const val POWER_20 = 20

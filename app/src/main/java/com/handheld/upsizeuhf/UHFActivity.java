@@ -151,6 +151,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     private ArrayList<String> listepc = new ArrayList<String>();
     private ArrayAdapter<String> arr_adapter;
     private ArrayList<Map<String, Object>> listMap;
+    private int mScannedCount = 0;
     private boolean runFlag = true;
     private boolean startFlag = false;
     private boolean scanItemSetFlag = false;
@@ -272,7 +273,8 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     private ArrayList<Integer> listSearchPower;
     {
         listSearchPower = new ArrayList<Integer>(Arrays.asList(
-                Integer.valueOf(Constants.POWER_26)
+                Integer.valueOf(Constants.POWER_30)
+                , Integer.valueOf(Constants.POWER_28)
                 , Integer.valueOf(Constants.POWER_24)
                 , Integer.valueOf(Constants.POWER_20)
                 , Integer.valueOf(Constants.POWER_18)
@@ -610,13 +612,18 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         textView_title_config = (TextView) findViewById(R.id.textview_title_config);
         textView_title_config.setText("Port:com" + 13
                 + ";Power:" + powerString);
-        manager = UhfReader.getInstance();
-        if (manager == null) {
-            textVersion.setText(getString(R.string.serialport_init_fail_));
-            setButtonClickable(buttonClear, false);
-            setButtonClickable(buttonStart, false);
-            return;
+        try {
+            manager = UhfReader.getInstance();
+            if (manager == null) {
+                textVersion.setText(getString(R.string.serialport_init_fail_));
+                setButtonClickable(buttonClear, false);
+                setButtonClickable(buttonStart, false);
+                return;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
@@ -626,8 +633,10 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         registerReceiver();
 
 //		Log.e("", "value" + power);
-        manager.setOutputPower(power);
-        manager.setWorkArea(area);
+        if (manager == null) {
+            manager.setOutputPower(power);
+            manager.setWorkArea(area);
+        }
 //		byte[] version_bs = manager.getFirmware();
 //		if (version_bs!=null){
 //			textView_title_config.append("("+new String(version_bs)+")");
@@ -2027,19 +2036,24 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                     if (tagList != null && !tagList.isEmpty()) {
                         //播放提示音
 //                        Util.play(1, 0);
-                        for (TagModel tag : tagList) {
-                            if (tag == null) {
-                                String epcStr = "";
+                        try{
+                            for (TagModel tag : tagList) {
+                                if (tag == null) {
+                                    String epcStr = "";
 //								String epcStr = new String(epc);
-                                addToList(listEPC, epcStr, (byte) -1);
-                            } else {
-                                String epcStr = Tools.Bytes2HexString(tag.getmEpcBytes(), tag.getmEpcBytes().length);
+                                    addToList(listEPC, epcStr, (byte) -1);
+                                } else {
+                                    String epcStr = Tools.Bytes2HexString(tag.getmEpcBytes(), tag.getmEpcBytes().length);
 //								String epcStr = new String(epc);
-                                byte rssi = tag.getmRssi();
-                                addToList(listEPC, epcStr, rssi);
-                            }
+                                    byte rssi = tag.getmRssi();
+                                    addToList(listEPC, epcStr, rssi);
+                                }
 
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
+
                     } else {
                         try {
                             runOnUiThread(new Runnable() {
@@ -2072,8 +2086,8 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
             @Override
             public void run() {
                 // If do single scan, then clear scan list every time
-                if(scanSingleTagFlag || scanWriteSingleTagFlag || scanSearchSingleTagFlag) {
-                    Log.d(TAG, "removeAll: scanSingleTagFlag=" + scanSingleTagFlag + " : scanWriteSingleTagFlag=" + scanWriteSingleTagFlag + " : scanSearchSingleTagFlag=" + scanSearchSingleTagFlag);
+                if(scanItemSetFlag || scanItemCodeFlag || scanSingleTagFlag || scanWriteSingleTagFlag || scanSearchSingleTagFlag) {
+//                    Log.d(TAG, "removeAll: scanSingleTagFlag=" + scanSingleTagFlag + " : scanWriteSingleTagFlag=" + scanWriteSingleTagFlag + " : scanSearchSingleTagFlag=" + scanSearchSingleTagFlag);
                     list.removeAll(listEPC);
                 }
 
@@ -2128,11 +2142,11 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                     idcount++;
                     listMap.add(map);
                 }
-                Log.d(TAG, "list.size()=" + list.size());
-                Log.d(TAG, "listepc.size()=" + listepc.size());
-                Log.d(TAG, "listMap.size()=" + listMap.size());
+//                Log.d(TAG, "list.size()=" + list.size());
+//                Log.d(TAG, "listepc.size()=" + listepc.size());
+//                Log.d(TAG, "listMap.size()=" + listMap.size());
                 if(startFlag) {
-                    Log.d(TAG, "original listMap.size()=" + listMap.size());
+//                    Log.d(TAG, "original listMap.size()=" + listMap.size());
                     listViewData.setAdapter(new SimpleAdapter(UHFActivity.this,
                             listMap, R.layout.listview_item, new String[]{"ID",
                             "EPCTop", "EPCBottom", "COUNT", "RSSI"}, new int[]{
@@ -2148,13 +2162,13 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                     // play sound
                     Util.play(1, 0);
                 } else if(scanItemSetFlag) {
-                    Log.d(TAG, "scanItemSetFlag listMap.size()=" + listMap.size());
+//                    Log.d(TAG, "scanItemSetFlag listMap.size()=" + listMap.size());
 
-                    int scannedCount = 0;
+                    mScannedCount = 0;
                     for(int i = 0; i < mItemCodeArrayList.size(); i++) {
                         Costume costume = mItemCodeArrayList.get(i);
                         String epcBase = costume.epcHeader + costume.epcRun;
-                        Log.d(TAG, "epcBase=" + epcBase);
+//                        Log.d(TAG, "epcBase=" + epcBase);
                         for (int m = 0; m < listMap.size(); m++) {
                             Map map = listMap.get(m);
 
@@ -2162,15 +2176,20 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                                 String key = ((Map.Entry<String, Object>) entry).getKey();
                                 Object value = ((Map.Entry<String, Object>) entry).getValue();
                                 // do something with key and/or tab
-                                Log.d(TAG, "key=" + key + " : value=" + value);
+//                                Log.d(TAG, "key=" + key + " : value=" + value);
                                 if (key.equals("EPCRaw") && value.equals(epcBase)) {
-                                    Log.d(TAG, "isFound=true");
+//                                    Log.d(TAG, "isFound=true");
                                     costume.isFound = true;
                                     mItemCodeArrayList.set(i, costume);
-                                    scannedCount++;
+
+                                    Util.play(1, 0);
 
                                 }
                             }
+                        }
+
+                        if(costume.isFound) {
+                            mScannedCount++;
                         }
 
                     }
@@ -2178,18 +2197,16 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                     byitemset_itemCodeRVAdapter = new ItemCodeRVAdapter(mContext, mActivity, mItemCodeArrayList, Constants.ITEM_SET_MODE);
                     byitemset_item_code_rvlist.setAdapter(byitemset_itemCodeRVAdapter);
                     byitemset_itemCodeRVAdapter.notifyDataSetChanged();
-                    items_scanned_textview.setText(Integer.toString(scannedCount));
-
-                    Util.play(1, 0);
+                    items_scanned_textview.setText(Integer.toString(mScannedCount));
 
                 } else if(scanItemCodeFlag) {
-                    Log.d(TAG, "scanItemCodeFlag listMap.size()=" + listMap.size());
+//                    Log.d(TAG, "scanItemCodeFlag listMap.size()=" + listMap.size());
 
-                    int scannedCount = 0;
+                    mScannedCount = 0;
                     for(int i = 0; i < mItemInfoArrayList.size(); i++) {
                         Costume costume = mItemInfoArrayList.get(i);
                         String epcBase = costume.epcHeader + costume.epcRun;
-                        Log.d(TAG, "epcBase=" + epcBase);
+//                        Log.d(TAG, "epcBase=" + epcBase);
                         for (int m = 0; m < listMap.size(); m++) {
                             Map map = listMap.get(m);
 
@@ -2197,14 +2214,17 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                                 String key = ((Map.Entry<String, Object>) entry).getKey();
                                 Object value = ((Map.Entry<String, Object>) entry).getValue();
                                 // do something with key and/or tab
-                                Log.d(TAG, "key=" + key + " : value=" + value);
+//                                Log.d(TAG, "key=" + key + " : value=" + value);
                                 if (key.equals("EPCRaw") && value.equals(epcBase)) {
                                     costume.isFound = true;
                                     mItemInfoArrayList.set(i, costume);
-                                    scannedCount++;
-
+                                    Util.play(1, 0);
                                 }
                             }
+                        }
+
+                        if(costume.isFound) {
+                            mScannedCount++;
                         }
 
                     }
@@ -2212,16 +2232,14 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                     itemInfoResultRVAdapter = new ItemInfoRVAdapter(mContext, mActivity, mItemInfoArrayList);
                     item_info_result_rvlist.setAdapter(itemInfoResultRVAdapter);
                     itemInfoResultRVAdapter.notifyDataSetChanged();
-                    item_info_scanned_textview.setText(Integer.toString(scannedCount));
-
-                    Util.play(1, 0);
+                    item_info_scanned_textview.setText(Integer.toString(mScannedCount));
 
                 } else if(scanSingleTagFlag || scanWriteSingleTagFlag || scanSearchSingleTagFlag) {
-                    Log.d(TAG, "scanSingleTagFlag || scanWriteSingleTagFlag || scanSearchSingleTagFlag listMap.size()=" + listMap.size());
+//                    Log.d(TAG, "scanSingleTagFlag || scanWriteSingleTagFlag || scanSearchSingleTagFlag listMap.size()=" + listMap.size());
 
                     mItemInfoArrayList = new ArrayList<Costume>();
                     mItemInfoArrayList.clear();
-                    int scannedCount = 0;
+
                     for (int m = 0; m < listMap.size(); m++) {
                         Costume costume = new Costume();
                         Map map = listMap.get(m);
@@ -2230,7 +2248,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                             String key = ((Map.Entry<String, Object>) entry).getKey();
                             Object value = ((Map.Entry<String, Object>) entry).getValue();
                             // do something with key and/or tab
-                            Log.d(TAG, "key=" + key + " : value=" + value);
+//                            Log.d(TAG, "key=" + key + " : value=" + value);
                             if (key.equals("RSSI")) {
                                 costume.size = value.toString();
                             }
@@ -2246,7 +2264,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                         }
 
                         mItemInfoArrayList.add(costume);
-                        scannedCount++;
+
                     }
 
                     if(scanSingleTagFlag) {
@@ -2487,14 +2505,14 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         String resultStr = "";
         if(data != null) {
             String result = data;
-            Log.d(TAG, "data=" + data);
+//            Log.d(TAG, "data=" + data);
             StringBuffer buffer = new StringBuffer();
             for(int i = 0; i < result.length(); i++) {
 
-                Log.d(TAG, "i=" + i);
-                Log.d(TAG, "result=" + result);
+//                Log.d(TAG, "i=" + i);
+//                Log.d(TAG, "result=" + result);
 //                Log.d(TAG, "result.substring(i, 1)=" + result.substring(i, 1));
-                Log.d(TAG, "result.charAt(i)=" + result.charAt(i));
+//                Log.d(TAG, "result.charAt(i)=" + result.charAt(i));
 //                buffer.append(result.substring(i, 1));
                 buffer.append(result.charAt(i));
 //                if(i < result.length() - 1) {
@@ -2506,7 +2524,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                     buffer.append("\n");
                 }
 
-                Log.d(TAG, "buffer=" + buffer.toString());
+//                Log.d(TAG, "buffer=" + buffer.toString());
             }
             resultStr = buffer.toString();
         }
@@ -2518,14 +2536,14 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         String resultStr = "";
         if(data != null) {
             String result = data;
-            Log.d(TAG, "data=" + data);
+//            Log.d(TAG, "data=" + data);
             StringBuffer buffer = new StringBuffer();
             for(int i = 0; i < result.length(); i++) {
 
-                Log.d(TAG, "i=" + i);
-                Log.d(TAG, "result=" + result);
+//                Log.d(TAG, "i=" + i);
+//                Log.d(TAG, "result=" + result);
 //                Log.d(TAG, "result.substring(i, 1)=" + result.substring(i, 1));
-                Log.d(TAG, "result.charAt(i)=" + result.charAt(i));
+//                Log.d(TAG, "result.charAt(i)=" + result.charAt(i));
 //                buffer.append(result.substring(i, 1));
                 buffer.append(result.charAt(i));
 //                if(i < result.length() - 1) {
@@ -2538,7 +2556,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                     break;
                 }
 
-                Log.d(TAG, "buffer=" + buffer.toString());
+//                Log.d(TAG, "buffer=" + buffer.toString());
             }
             resultStr = buffer.toString();
         }
@@ -2550,7 +2568,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         String resultStr = "";
         if(data != null) {
             String result = data;
-            Log.d(TAG, "data=" + data);
+//            Log.d(TAG, "data=" + data);
             StringBuffer buffer = new StringBuffer();
             for(int i = 0; i < result.length(); i++) {
 
@@ -2558,10 +2576,10 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
 
                 if(numPerLine > 0 && ((i + 1) > numPerLine) && (i < result.length())) {
 //                    buffer.append("\n");
-                    Log.d(TAG, "i=" + i);
-                    Log.d(TAG, "result=" + result);
+//                    Log.d(TAG, "i=" + i);
+//                    Log.d(TAG, "result=" + result);
 //                Log.d(TAG, "result.substring(i, 1)=" + result.substring(i, 1));
-                    Log.d(TAG, "result.charAt(i)=" + result.charAt(i));
+//                    Log.d(TAG, "result.charAt(i)=" + result.charAt(i));
 //                buffer.append(result.substring(i, 1));
                     buffer.append(result.charAt(i));
 //                if(i < result.length() - 1) {
@@ -2570,7 +2588,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                     }
                 }
 
-                Log.d(TAG, "buffer=" + buffer.toString());
+//                Log.d(TAG, "buffer=" + buffer.toString());
             }
             resultStr = buffer.toString();
         }
@@ -3309,6 +3327,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         public void onAnimationStart(Animation animation) {
             if (!scanItemSetFlag) {
                 thread.start();
+                mScannedCount = 0;
                 scanItemSetFlag = true;
                 scan_itemset_info_result_button.setText(R.string.stop);
             } else {
@@ -3342,6 +3361,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         public void onAnimationStart(Animation animation) {
             if (!scanItemCodeFlag) {
                 thread.start();
+                mScannedCount = 0;
                 scanItemCodeFlag = true;
                 scan_itemcode_info_result_button.setText(R.string.stop);
             } else {
@@ -3585,6 +3605,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         public void onAnimationStart(Animation animation) {
             if (!scanWriteSingleTagFlag) {
                 thread.start();
+                mScannedCount = 0;
                 scanWriteSingleTagFlag = true;
                 scan_write_single_tag_3of4_button.setText(R.string.stop);
             } else {
@@ -3623,6 +3644,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                     scan_area_message_textview.setText("ready!");
                     // Start scanning
                     thread.start();
+                    mScannedCount = 0;
                     scanSearchSingleTagFlag = true;
                     scan_search_single_tag_3of3_button.setText(R.string.stop);
                     scan_progress_gifview.setImageResource(R.drawable.scannotfound);

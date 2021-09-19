@@ -71,13 +71,13 @@ abstract class UhfUtils {
             var resultStr = ""
             if (data != null) {
                 val result: String = data
-                Log.d(TAG, "data=$data")
+//                Log.d(TAG, "data=$data")
                 val buffer = StringBuffer()
                 for (i in 0 until result.length) {
-                    Log.d(TAG, "i=$i")
-                    Log.d(TAG, "result=$result")
+//                    Log.d(TAG, "i=$i")
+//                    Log.d(TAG, "result=$result")
                     //                Log.d(TAG, "result.substring(i, 1)=" + result.substring(i, 1));
-                    Log.d(TAG, "result.charAt(i)=" + result[i])
+//                    Log.d(TAG, "result.charAt(i)=" + result[i])
                     //                buffer.append(result.substring(i, 1));
                     buffer.append(result[i])
                     //                if(i < result.length() - 1) {
@@ -87,7 +87,7 @@ abstract class UhfUtils {
                     if (numPerLine > 0 && (i + 1) % numPerLine == 0 && i < result.length - 1) {
                         buffer.append("\n")
                     }
-                    Log.d(TAG, "buffer=$buffer")
+//                    Log.d(TAG, "buffer=$buffer")
                 }
                 resultStr = buffer.toString()
             }
@@ -98,13 +98,13 @@ abstract class UhfUtils {
             var resultStr = ""
             if (data != null) {
                 val result: String = data
-                Log.d(TAG, "data=$data")
+//                Log.d(TAG, "data=$data")
                 val buffer = StringBuffer()
                 for (i in 0 until result.length) {
-                    Log.d(TAG, "i=$i")
-                    Log.d(TAG, "result=$result")
+//                    Log.d(TAG, "i=$i")
+//                    Log.d(TAG, "result=$result")
                     //                Log.d(TAG, "result.substring(i, 1)=" + result.substring(i, 1));
-                    Log.d(TAG, "result.charAt(i)=" + result[i])
+//                    Log.d(TAG, "result.charAt(i)=" + result[i])
                     //                buffer.append(result.substring(i, 1));
                     buffer.append(result[i])
                     //                if(i < result.length() - 1) {
@@ -115,7 +115,7 @@ abstract class UhfUtils {
 //                    buffer.append("\n");
                         break
                     }
-                    Log.d(TAG, "buffer=$buffer")
+//                    Log.d(TAG, "buffer=$buffer")
                 }
                 resultStr = buffer.toString()
             }
@@ -126,15 +126,15 @@ abstract class UhfUtils {
             var resultStr = ""
             if (data != null) {
                 val result: String = data
-                Log.d(TAG, "data=$data")
+//                Log.d(TAG, "data=$data")
                 val buffer = StringBuffer()
                 for (i in 0 until result.length) {
                     if (numPerLine > 0 && i + 1 > numPerLine && i < result.length) {
 //                    buffer.append("\n");
-                        Log.d(TAG, "i=$i")
-                        Log.d(TAG, "result=$result")
+//                        Log.d(TAG, "i=$i")
+//                        Log.d(TAG, "result=$result")
                         //                Log.d(TAG, "result.substring(i, 1)=" + result.substring(i, 1));
-                        Log.d(TAG, "result.charAt(i)=" + result[i])
+//                        Log.d(TAG, "result.charAt(i)=" + result[i])
                         //                buffer.append(result.substring(i, 1));
                         buffer.append(result[i])
                         //                if(i < result.length() - 1) {
@@ -142,7 +142,7 @@ abstract class UhfUtils {
                             buffer.append(separator)
                         }
                     }
-                    Log.d(TAG, "buffer=$buffer")
+//                    Log.d(TAG, "buffer=$buffer")
                 }
                 resultStr = buffer.toString()
             }
