@@ -1,16 +1,33 @@
 {
     "logs": [
         {
-            "outputFile": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-w820dp-v13\\values-w820dp-v13.xml",
+            "outputFile": "C:\\Users\\crayj\\StudioProjects\\UpSizeUHF\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-w820dp-v13\\values-w820dp-v13.xml",
             "map": [
                 {
-                    "source": "D:\\Projects\\CostumeManagementSystem\\UpSizeUHF\\app\\src\\main\\res\\values-w820dp\\dimens.xml",
+                    "source": "C:\\Users\\crayj\\StudioProjects\\UpSizeUHF\\app\\src\\main\\res\\values-w820dp\\strings.xml",
+                    "from": {
+                        "startLines": "3,2",
+                        "startColumns": "4,4",
+                        "startOffsets": "120,57",
+                        "endColumns": "109,61",
+                        "endOffsets": "225,114"
+                    },
+                    "to": {
+                        "startLines": "3,4",
+                        "startColumns": "4,4",
+                        "startOffsets": "113,223",
+                        "endColumns": "109,61",
+                        "endOffsets": "218,280"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\crayj\\StudioProjects\\UpSizeUHF\\app\\src\\main\\res\\values-w820dp\\dimens.xml",
                     "from": {
                         "startLines": "7",
                         "startColumns": "4",
-                        "startOffsets": "310",
+                        "startOffsets": "312",
                         "endColumns": "57",
-                        "endOffsets": "363"
+                        "endOffsets": "365"
                     },
                     "to": {
                         "startLines": "2",

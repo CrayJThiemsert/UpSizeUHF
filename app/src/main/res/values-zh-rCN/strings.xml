@@ -591,4 +591,12 @@
     <string name="dash">-</string>
     <string name="search_single_tag_settings_ready">Search Single Tag Settings is ready to use.</string>
     <string name="power_status">Power Status...</string>
+    <string name="select_by_item_filter">Select By Item Filter</string>
+    <string name="work_with_single_tag">Work With Single Tag</string>
+    <string name="bulk_scan">Bulk Scan</string>
+    <string name="overall_scan">Overall Scan</string>
+    <string name="items">items</string>
+	<string name="view">View</string>
+    <string name="found">found</string>
+    <string name="bulk_scan_view">Bulk Scan View</string>
 </resources>

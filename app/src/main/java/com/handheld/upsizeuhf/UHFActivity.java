@@ -4,13 +4,16 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -58,6 +61,7 @@ import androidx.annotation.NonNull;
 //import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.AutoSizeableTextView;
 import androidx.core.widget.TextViewCompat;
+import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -83,6 +87,7 @@ import com.handheld.upsizeuhf.ui.dialog.CheckTypeDialogFragment;
 import com.handheld.upsizeuhf.ui.dialog.ErrorMessageDialogFragment;
 import com.handheld.upsizeuhf.ui.dialog.SuccessMessageDialogFragment;
 import com.handheld.upsizeuhf.ui.dialog.UserSignInDialogFragment;
+import com.handheld.upsizeuhf.ui.dialog.ViewBulkScanDialogFragment;
 import com.handheld.upsizeuhf.ui.dialog.WarningMessageDialogFragment;
 import com.handheld.upsizeuhf.ui.dialog.WriteSingleTagDialogFragment;
 import com.handheld.upsizeuhf.util.AnimationUtils;
@@ -127,6 +132,8 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     private LinearLayout write_single_tag_2of4_layout;
     private LinearLayout write_single_tag_3of4_layout;
     private LinearLayout search_single_tag_3of3_layout;
+
+    private LinearLayout bulk_scan_layout;
     
     private RelativeLayout l1epc;
     private LinearLayout l2readandwrite;
@@ -159,6 +166,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     private boolean scanSingleTagFlag = false;
     private boolean scanWriteSingleTagFlag = false;
     private boolean scanSearchSingleTagFlag = false;
+    private boolean scanBulkScanFlag = false;
     private UhfReader manager; // UHF manager,UHF Operating handle
 //	private ScreenStateReceiver screenReceiver;
     /******************************************/
@@ -191,6 +199,8 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     private Button read_single_tag_button;  // read single tag button
     private Button write_single_tag_button;  // write single tag button
     private Button search_single_tag_button;  // search single tag button
+    private Button bulk_scan_button;    //  bulk scan button
+
 
     private Button back_byitemset_button;//set by back to item set button
     private Button next_byitemset_button;//set by next to query result button
@@ -267,6 +277,14 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     private TextView scan_area_message_textview;
     private TextView scanned_epc_textview;
     private TextView scanned_rssi_textview;
+    
+    // Bulk Scan
+    private TextView found_number_textview;
+    private Button scan_bulk_scan_button; // set by next to search/scan button
+    private Button back_bulk_scan_button; // set by back to select condition button
+    private Button clear_bulk_scan_button; // Clear query result list
+    private Button view_bulk_scan_button; // View scaned result list
+
 
     private GifImageView scan_progress_gifview;
 
@@ -334,6 +352,9 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     ArrayList<Costume> mItemCodeArrayList = new ArrayList<Costume>();
     ArrayList<Costume> mItemInfoArrayList = new ArrayList<Costume>();
     ArrayList<Costume> mScannedFoundItemArrayList = new ArrayList<Costume>();
+
+    HashMap<String,Costume> mCostumeHashMap = new HashMap<String,Costume>();
+    HashMap<String,Costume> mCountHashMap = new HashMap<String,Costume>();
 
     // For CheckTypeDialog
     ArrayList<Box> mShipBoxArrayList = new ArrayList<Box>();
@@ -417,6 +438,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     SuccessMessageDialogFragment successMessageDialogFragment = new SuccessMessageDialogFragment();
     ErrorMessageDialogFragment errorMessageDialogFragment = new ErrorMessageDialogFragment();
     WriteSingleTagDialogFragment writeSingleTagDialogFragment = new WriteSingleTagDialogFragment();
+    ViewBulkScanDialogFragment viewBulkScanDialogFragment = new ViewBulkScanDialogFragment();
 
     public static CostumeRoomDatabase costumeRoomDatabase;
 
@@ -521,6 +543,41 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
 //        }
         userSignInDialogFragment = UserSignInDialogFragment.Companion.newInstance("", "");
         userSignInDialogFragment.show(getFragmentManager(), "user_signin_fragment");
+    }
+
+    private void loadViewBulkScanDialog() {
+
+        Log.d(TAG, "Found mItemCodeArrayList.size()="+mItemCodeArrayList.size());
+        mScannedFoundItemArrayList = filterOnlyScannedFound(mItemCodeArrayList);
+
+        Log.d(TAG, "Found mScannedFoundItemArrayList.size()="+mScannedFoundItemArrayList.size());
+//        if(mScannedFoundItemArrayList.size() > 0) {
+            if(isOnline) {
+                // Getting Collection of values from HashMap
+                Collection<Costume> values = mCountHashMap.values();
+
+                // Creating an ArrayList of values
+                ArrayList<Costume> countListOfValues = new ArrayList<Costume>(values);
+
+                viewBulkScanDialogFragment = ViewBulkScanDialogFragment.Companion.newInstance("", "", countListOfValues);
+
+
+
+                viewBulkScanDialogFragment.show(getFragmentManager(), "view_bulk_scan_fragment");
+
+//                FragmentTransaction ft = getFragmentManager().beginTransaction();
+//                DialogFragment newFragment = ViewBulkScanDialogFragment.Companion.newInstance("", "", mScannedFoundItemArrayList);
+//
+
+//                ft.add(R.id.embedded, newFragment);
+//                ft.commit();
+            } else {
+                loadWarningDialog("", getString(R.string.database_server_offline), getString(R.string.database_server_offline_solution));
+            }
+
+//        } else {
+//            loadWarningDialog("", getString(R.string.costume_notfound), getString(R.string.costume_notfound_solution));
+//        }
     }
 
     private void loadCheckTypeUI(int mode) {
@@ -663,6 +720,9 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         scanSearchSingleTagFlag = false;
         scan_search_single_tag_3of3_button.setText(R.string.scan);
 
+        scanBulkScanFlag = false;
+        scan_bulk_scan_button.setText(R.string.scan);
+
         manager.close();
         super.onPause();
         unregisterReceiver();
@@ -676,6 +736,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         scanSingleTagFlag = false;
         scanWriteSingleTagFlag = false;
         scanSearchSingleTagFlag = false;
+        scanBulkScanFlag = false;
         runFlag = false;
         if (manager != null) {
             manager.close();
@@ -744,6 +805,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         write_single_tag_2of4_layout = (LinearLayout) findViewById(R.id.write_single_tag_2of4_layout);
         write_single_tag_3of4_layout = (LinearLayout) findViewById(R.id.write_single_tag_3of4_layout);
         search_single_tag_3of3_layout = (LinearLayout) findViewById(R.id.search_single_tag_3of3_layout);
+        bulk_scan_layout = (LinearLayout) findViewById(R.id.bulk_scan_layout);
         
         l1epc = (RelativeLayout) findViewById(R.id.l1epc);
         l2readandwrite = (LinearLayout) findViewById(R.id.l2read);
@@ -1157,6 +1219,10 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         search_single_tag_button.setOnClickListener(this);
         search_single_tag_button.setBackgroundColor(getResources().getColor(R.color.colorGrey));
 
+        bulk_scan_button = (Button) findViewById(R.id.bulk_scan_button);
+        bulk_scan_button.setOnClickListener(this);
+        bulk_scan_button.setBackgroundColor(getResources().getColor(R.color.colorGrey));
+
         back_byitemset_button = (Button) findViewById(R.id.back_byitemset_button);
         back_byitemset_button.setOnClickListener(this);
 
@@ -1258,6 +1324,21 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
 
         clear_search_single_tag_3of3_button = (Button) findViewById(R.id.clear_search_single_tag_3of3_button);
         clear_search_single_tag_3of3_button.setOnClickListener(this);
+        
+        // Bulk Scan
+        back_bulk_scan_button = (Button) findViewById(R.id.back_bulk_scan_button);
+        back_bulk_scan_button.setOnClickListener(this);
+
+        scan_bulk_scan_button = (Button) findViewById(R.id.scan_bulk_scan_button);
+        scan_bulk_scan_button.setOnClickListener(this);
+
+        clear_bulk_scan_button = (Button) findViewById(R.id.clear_bulk_scan_button);
+        clear_bulk_scan_button.setOnClickListener(this);
+
+        view_bulk_scan_button = (Button) findViewById(R.id.view_bulk_scan_button);
+        view_bulk_scan_button.setOnClickListener(this);
+
+        found_number_textview = (TextView)findViewById(R.id.found_number_textview);
 
         // Item Set Query Result Layout or Scan
         selected_actor_textview = (TextView)findViewById(R.id.selected_actor_textview);
@@ -2031,7 +2112,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         public void run() {
             super.run();
             while (runFlag) {
-                if (startFlag || scanItemSetFlag || scanItemCodeFlag || scanSingleTagFlag || scanWriteSingleTagFlag || scanSearchSingleTagFlag) {
+                if (startFlag || scanItemSetFlag || scanItemCodeFlag || scanSingleTagFlag || scanWriteSingleTagFlag || scanSearchSingleTagFlag || scanBulkScanFlag) {
                     tagList = manager.inventoryRealTime(); //实时盘存
                     if (tagList != null && !tagList.isEmpty()) {
                         //播放提示音
@@ -2086,7 +2167,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
             @Override
             public void run() {
                 // If do single scan, then clear scan list every time
-                if(scanItemSetFlag || scanItemCodeFlag || scanSingleTagFlag || scanWriteSingleTagFlag || scanSearchSingleTagFlag) {
+                if(scanItemSetFlag || scanItemCodeFlag || scanSingleTagFlag || scanWriteSingleTagFlag || scanSearchSingleTagFlag ) {
 //                    Log.d(TAG, "removeAll: scanSingleTagFlag=" + scanSingleTagFlag + " : scanWriteSingleTagFlag=" + scanWriteSingleTagFlag + " : scanSearchSingleTagFlag=" + scanSearchSingleTagFlag);
                     list.removeAll(listEPC);
                 }
@@ -2141,6 +2222,17 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                     map.put("RSSI", epcdata.getRssi());
                     idcount++;
                     listMap.add(map);
+
+                    if(scanBulkScanFlag) {
+//                        Log.d(TAG, "epcdata.getEpc()=" + epcdata.getEpc());
+                        if(mCostumeHashMap.containsKey(epcdata.getEpc())) {
+                            if(!mCountHashMap.containsKey(epcdata.getEpc())) {
+                                Log.d(TAG, "epcdata.getEpc()=" + epcdata.getEpc());
+                                mCountHashMap.put(epcdata.getEpc(), mCostumeHashMap.get(epcdata.getEpc()));
+                                new CountBulkScanThread().start();
+                            }
+                        }
+                    }
                 }
 //                Log.d(TAG, "list.size()=" + list.size());
 //                Log.d(TAG, "listepc.size()=" + listepc.size());
@@ -2203,7 +2295,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
 //                    Log.d(TAG, "scanItemCodeFlag listMap.size()=" + listMap.size());
 
                     mScannedCount = 0;
-                    for(int i = 0; i < mItemInfoArrayList.size(); i++) {
+                    for (int i = 0; i < mItemInfoArrayList.size(); i++) {
                         Costume costume = mItemInfoArrayList.get(i);
                         String epcBase = costume.epcHeader + costume.epcRun;
 //                        Log.d(TAG, "epcBase=" + epcBase);
@@ -2223,7 +2315,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                             }
                         }
 
-                        if(costume.isFound) {
+                        if (costume.isFound) {
                             mScannedCount++;
                         }
 
@@ -2233,6 +2325,46 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                     item_info_result_rvlist.setAdapter(itemInfoResultRVAdapter);
                     itemInfoResultRVAdapter.notifyDataSetChanged();
                     item_info_scanned_textview.setText(Integer.toString(mScannedCount));
+                } else if(scanBulkScanFlag) {
+////                    Log.d(TAG, "scanItemSetFlag listMap.size()=" + listMap.size());
+//
+//                    mScannedCount = 0;
+////                    for(int i = 0; i < mItemCodeArrayList.size(); i++) {
+////                        Costume costume = mItemCodeArrayList.get(i);
+////                        String epcBase = costume.epcHeader + costume.epcRun;
+//////                        Log.d(TAG, "epcBase=" + epcBase);
+//                        for (int m = 0; m < listMap.size(); m++) {
+//                            Map map = listMap.get(m);
+//
+//                            for (Object entry : map.entrySet()) {
+//                                String key = ((Map.Entry<String, Object>) entry).getKey();
+//                                Object value = ((Map.Entry<String, Object>) entry).getValue();
+//                                // do something with key and/or tab
+////                                Log.d(TAG, "key=" + key + " : value=" + value);
+////                                if (key.equals("EPCRaw") && value.equals(epcBase)) {
+//////                                    Log.d(TAG, "isFound=true");
+////                                    costume.isFound = true;
+////                                    mItemCodeArrayList.set(i, costume);
+//
+//                                    mScannedCount++;
+//                                    found_number_textview.setText(String.valueOf(mScannedCount));
+//
+//                                    Util.play(1, 0);
+//
+////                                }
+//                            }
+//                        }
+
+//                        if(costume.isFound) {
+
+//                        }
+
+//                    }
+
+//                    byitemset_itemCodeRVAdapter = new ItemCodeRVAdapter(mContext, mActivity, mItemCodeArrayList, Constants.ITEM_SET_MODE);
+//                    byitemset_item_code_rvlist.setAdapter(byitemset_itemCodeRVAdapter);
+//                    byitemset_itemCodeRVAdapter.notifyDataSetChanged();
+//                    items_scanned_textview.setText(Integer.toString(mScannedCount));
 
                 } else if(scanSingleTagFlag || scanWriteSingleTagFlag || scanSearchSingleTagFlag) {
 //                    Log.d(TAG, "scanSingleTagFlag || scanWriteSingleTagFlag || scanSearchSingleTagFlag listMap.size()=" + listMap.size());
@@ -2338,8 +2470,6 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                         }
                     }
                 }
-
-
             }
         });
     }
@@ -2679,6 +2809,14 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
             }
             break;
 
+            case R.id.bulk_scan_button: {
+                Util.play(1, 0);
+                Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
+                animate.setAnimationListener(new BulkScanButtonAnimationListener(v));
+                bulk_scan_button.startAnimation(animate);
+            }
+            break;
+
             // Item Set Filter =================
             case R.id.back_byitemset_button: {
                 Util.play(1, 0);
@@ -2901,8 +3039,40 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                 clear_search_single_tag_3of3_button.startAnimation(animate);
                 break;
             }
-
             
+            // Bulk Scan
+            case R.id.back_bulk_scan_button: {
+                Util.play(1, 0);
+                Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
+                animate.setAnimationListener(new BackBulkScanButtonAnimationListener());
+                back_bulk_scan_button.startAnimation(animate);
+            }
+            break;
+
+            case R.id.scan_bulk_scan_button: {
+                Util.play(1, 0);
+                Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
+                animate.setAnimationListener(new ScanBulkScanButtonAnimationListener());
+                scan_bulk_scan_button.startAnimation(animate);
+            }
+            break;
+
+            case R.id.clear_bulk_scan_button: {
+                Util.play(1, 0);
+                Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
+                animate.setAnimationListener(new ClearBulkScanButtonAnimationListener());
+                clear_bulk_scan_button.startAnimation(animate);
+            }
+            break;
+
+            case R.id.view_bulk_scan_button: {
+                Util.play(1, 0);
+                Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
+                animate.setAnimationListener(new ViewBulkScanButtonAnimationListener());
+                view_bulk_scan_button.startAnimation(animate);
+            }
+            break;
+
             // Original inventory
             case R.id.button_start:
                 if (!startFlag) {
@@ -3164,6 +3334,41 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
 
                 search_single_tag_button.setBackgroundColor(getResources().getColor(R.color.colorGrey));
                 search_single_tag_button.setEnabled(false);
+            }
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    }
+
+    private class BulkScanButtonAnimationListener implements Animation.AnimationListener   {
+        View view;
+        public BulkScanButtonAnimationListener(View v) {
+            view = v;
+        }
+
+        @Override
+        public void onAnimationStart(Animation animation) {
+            if(isOnline) {
+                // Clear select actor
+                mSelectedActorFilter = "";
+
+                SetVisible(bulk_scan_layout, textViewS1, viewS1);
+
+//                // Load Actor List
+//                new LoadActorThread(bulk_scan_layout).start();
+            } else {
+                loadWarningDialog("", getString(R.string.database_server_offline), getString(R.string.database_server_offline_solution));
+
+                bulk_scan_button.setBackgroundColor(getResources().getColor(R.color.colorGrey));
+                bulk_scan_button.setEnabled(false);
             }
         }
 
@@ -3600,6 +3805,32 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         }
     }
 
+    private class BackBulkScanButtonAnimationListener implements Animation.AnimationListener   {
+
+        @Override
+        public void onAnimationStart(Animation animation) {
+            thread.interrupt();
+
+            scanBulkScanFlag = false;
+            scan_bulk_scan_button.setText(R.string.scan);
+
+            clearBulkScanCountNumber();
+
+            SetVisible(searchandcheck_layout, textViewS1, viewS1);
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    }
+
     private class ScanWriteSingleTag3of4ButtonAnimationListener implements Animation.AnimationListener   {
         @Override
         public void onAnimationStart(Animation animation) {
@@ -3707,6 +3938,58 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         }
     }
 
+    private class ClearBulkScanButtonAnimationListener implements Animation.AnimationListener   {
+        @Override
+        public void onAnimationStart(Animation animation) {
+            thread.interrupt();
+            scanBulkScanFlag = false;
+            scan_bulk_scan_button.setText(R.string.scan);
+
+            clearBulkScanCountNumber();
+
+//            queryItemCodesBySelectedActorActScene();
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    }
+
+    private void clearBulkScanCountNumber() {
+        mScannedCount = 0;
+        mCountHashMap.clear();
+        found_number_textview.setText(String.valueOf(mScannedCount));
+    }
+
+    private class ViewBulkScanButtonAnimationListener implements Animation.AnimationListener   {
+        @Override
+        public void onAnimationStart(Animation animation) {
+            thread.interrupt();
+            scanItemCodeFlag = false;
+            scan_bulk_scan_button.setText(R.string.scan);
+
+            loadViewBulkScanDialog();
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    }
+
     private class ClearWriteSingleTag3of4ButtonAnimationListener implements Animation.AnimationListener   {
         @Override
         public void onAnimationStart(Animation animation) {
@@ -3770,6 +4053,35 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                 thread.interrupt();
                 scanSingleTagFlag = false;
                 scan_read_single_tag_button.setText(R.string.scan);
+            }
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    }
+
+    private class ScanBulkScanButtonAnimationListener implements Animation.AnimationListener   {
+        @Override
+        public void onAnimationStart(Animation animation) {
+            if (!scanBulkScanFlag) {
+                thread.start();
+                mScannedCount = 0;
+                mCountHashMap.clear();
+                scanBulkScanFlag = true;
+
+                scan_bulk_scan_button.setText(R.string.stop);
+            } else {
+                thread.interrupt();
+                scanBulkScanFlag = false;
+                scan_bulk_scan_button.setText(R.string.scan);
             }
         }
 
@@ -3939,7 +4251,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     private void setOverflowShowingAlways() {
         try {
             ViewConfiguration config = ViewConfiguration.get(this);
-            Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
+            @SuppressLint("SoonBlockedPrivateApi") Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
             menuKeyField.setAccessible(true);
             menuKeyField.setBoolean(config, false);
         } catch (Exception e) {
@@ -3991,6 +4303,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         write_single_tag_3of4_layout.setVisibility(View.GONE);
         
         search_single_tag_3of3_layout.setVisibility(View.GONE);
+        bulk_scan_layout.setVisibility(View.GONE);
 
         l1epc.setVisibility(View.GONE);
         l2readandwrite.setVisibility(View.GONE);
@@ -4044,6 +4357,11 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
             if(layout == byitemcode_queryresult_layout) {
                 scanItemSetFlag = false;
                 scan_itemcode_info_result_button.setText(R.string.scan);
+            }
+
+            if(layout == bulk_scan_layout) {
+                scanItemSetFlag = false;
+                scan_bulk_scan_button.setText(R.string.scan);
             }
 
             if(layout == read_single_tag_layout ||
@@ -4281,6 +4599,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                             break;
                         case Constants.COSTUME_All: {
                                 mCostumeArrayList = new ArrayList<Costume>();
+                                mCostumeHashMap.clear();
 
                                 for (int i = 0; i < restfulJsonArray.length(); i++) {
                                     try {
@@ -4299,12 +4618,21 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                                         costume.shipBox = jsonObject.getString("shipBox");
                                         costume.storageBox = jsonObject.getString("storageBox");
                                         costume.playBox = jsonObject.getString("playBox");
+
                                         mCostumeArrayList.add(costume);
+                                        String key = costume.epcHeader + costume.epcRun;
+//                                        Log.d(TAG, "key=" + key);
+                                        if(!costume.epcHeader.equals("") && !costume.epcRun.equals("")) {
+                                            mCostumeHashMap.put(key, costume);
+                                        }
+
+
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
                                 }
                                 Log.d(TAG, "mCostumeArrayList.size()=" + mCostumeArrayList.size());
+                                Log.d(TAG, "### mCostumeHashMap.size()=" + mCostumeHashMap.size());
 
                                 if (mCostumeArrayList.size() > 0) {
                                     Log.d(TAG, "importLocalCostumeDB...");
@@ -4457,9 +4785,11 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                         read_single_tag_button.setBackgroundColor(getResources().getColor(R.color.colorWhite));
                         write_single_tag_button.setBackgroundColor(getResources().getColor(R.color.colorWhite));
                         search_single_tag_button.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+                        bulk_scan_button.setBackgroundColor(getResources().getColor(R.color.colorWhite));
                         read_single_tag_button.setEnabled(true);
                         write_single_tag_button.setEnabled(true);
                         search_single_tag_button.setEnabled(true);
+                        bulk_scan_button.setEnabled(true);
 
                         isOnline = true;
                         showAppTitle();
@@ -4621,6 +4951,25 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         }
     }
 
+    class CountBulkScanThread extends Thread {
+        public void run() {
+            try {
+                runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        mScannedCount++;
+                        Log.d(TAG, "mScannedCount=" + mScannedCount);
+                        found_number_textview.setText(String.valueOf(mScannedCount));
+                    }
+                });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     class RefreshItemSetResultThread extends Thread {
         public void run() {
             try {
@@ -4710,8 +5059,10 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                             read_single_tag_button.setBackgroundColor(getResources().getColor(R.color.colorWhite));
                             write_single_tag_button.setBackgroundColor(getResources().getColor(R.color.colorWhite));
                             search_single_tag_button.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+                            bulk_scan_button.setBackgroundColor(getResources().getColor(R.color.colorWhite));
                             read_single_tag_button.setEnabled(true);
                             search_single_tag_button.setEnabled(true);
+                            bulk_scan_button.setEnabled(true);
                         }
                     });
 

@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/alertDialog"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/layout_border_radius"
+    android:orientation="vertical">
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:visibility="invisible"
+        android:layout_width="457dp"
+        android:layout_height="wrap_content"
+        android:elevation="31dp"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"/>
+
+    <RelativeLayout
+        android:id="@+id/topPanel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/dialog_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/kanit_semibold"
+            android:gravity="center"
+            android:paddingStart="16dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="@string/bulk_scan_view"
+            android:textColor="@color/colorPurpleLight"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_below="@+id/dialog_title"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/holo_blue_dark" />
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/topPanel" >
+        <LinearLayout
+            android:id="@+id/view_bulk_scan_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="0dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorGold"
+                    android:layout_weight="0.3"
+                    android:textSize="22sp"
+                    android:fontFamily="@font/kanit_light"
+                    android:text="@string/found"
+                    android:gravity="center"/>
+                <TextView
+                    android:id="@+id/view_found_number_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.3"
+                    android:textSize="72sp"
+                    android:textFontWeight="300"
+                    android:textColor="@color/colorWhite"
+                    android:text="0"
+                    android:gravity="center"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.3"
+
+                    android:textSize="22sp"
+                    android:textFontWeight="300"
+                    android:textColor="@color/colorWhite"
+                    android:text="@string/items"
+                    android:gravity="center"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <Space
+                        android:layout_width="80dp"
+                        android:layout_height="15dp" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.25"
+                            android:textColor="@color/colorOrangeGrey"
+                            android:fontFamily="@font/kanit_light"
+                            android:textSize="16sp"
+                            android:text="code"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.25"
+                            android:textColor="@color/colorOrangeGrey"
+                            android:fontFamily="@font/kanit_light"
+                            android:textSize="16sp"
+                            android:text="type"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.25"
+                            android:textColor="@color/colorOrangeGrey"
+                            android:fontFamily="@font/kanit_light"
+                            android:textSize="16sp"
+                            android:text="size"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.25"
+                            android:textColor="@color/colorOrangeGrey"
+                            android:fontFamily="@font/kanit_light"
+                            android:textSize="16sp"
+                            android:text="number"/>
+
+                    </LinearLayout>
+                </LinearLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="520dp"
+
+                    android:id="@+id/view_bulk_scan_result_rvlist"/>
+            </LinearLayout>
+
+        </LinearLayout>
+    </FrameLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:gravity="center">
+        <Button
+            android:id="@+id/back_view_bulk_scan_button"
+            android:layout_width="180dp"
+            android:layout_height="100dp"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:singleLine="true"
+
+            android:textSize="24sp"
+
+            android:background="@drawable/button_radius"
+
+            android:text="@string/back"
+            android:fontFamily="@font/kanit_medium"
+            android:textColor="@color/purple"
+            />
+    </LinearLayout>
+</RelativeLayout>

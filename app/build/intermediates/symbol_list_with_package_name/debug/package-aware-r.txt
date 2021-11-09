@@ -446,8 +446,10 @@ attr fontVariationSettings
 attr fontWeight
 attr foregroundInsidePadding
 attr framePosition
+attr freezesAnimation
 attr gapBetweenBars
 attr gestureInsetBottomIgnored
+attr gifSource
 attr goIcon
 attr haloColor
 attr haloRadius
@@ -490,6 +492,7 @@ attr initialActivityCount
 attr insetForeground
 attr isLightTheme
 attr isMaterialTheme
+attr isOpaque
 attr itemBackground
 attr itemFillColor
 attr itemHorizontalPadding
@@ -609,6 +612,7 @@ attr listPreferredItemPaddingRight
 attr listPreferredItemPaddingStart
 attr logo
 attr logoDescription
+attr loopCount
 attr materialAlertDialogBodyTextStyle
 attr materialAlertDialogTheme
 attr materialAlertDialogTitleIconStyle
@@ -1017,6 +1021,7 @@ color colorLightGreen
 color colorNightBlue
 color colorOrangeGrey
 color colorOrangeRed
+color colorOrangeYellow
 color colorPurpleLight
 color colorPurpleRed
 color colorWhite
@@ -1343,6 +1348,8 @@ dimen hint_alpha_material_dark
 dimen hint_alpha_material_light
 dimen hint_pressed_alpha_material_dark
 dimen hint_pressed_alpha_material_light
+dimen home_horizontal_button_width
+dimen home_vertical_button_width
 dimen item_touch_helper_max_drag_scroll_per_frame
 dimen item_touch_helper_swipe_escape_max_velocity
 dimen item_touch_helper_swipe_escape_velocity
@@ -1665,6 +1672,7 @@ drawable abc_textfield_search_activated_mtrl_alpha
 drawable abc_textfield_search_default_mtrl_alpha
 drawable abc_textfield_search_material
 drawable abc_vector_test
+drawable arrowup
 drawable avd_hide_password
 drawable avd_show_password
 drawable baseline_search_black_18
@@ -1690,6 +1698,7 @@ drawable design_ic_visibility
 drawable design_ic_visibility_off
 drawable design_password_eye
 drawable design_snackbar_background
+drawable giphy
 drawable ic_clock_black_24dp
 drawable ic_keyboard_black_24dp
 drawable ic_launcher
@@ -1698,6 +1707,7 @@ drawable ic_mtrl_chip_checked_black
 drawable ic_mtrl_chip_checked_circle
 drawable ic_mtrl_chip_close_circle
 drawable layout_border_radius
+drawable layout_border_radius_black
 drawable layout_border_radius_found
 drawable layout_border_radius_green
 drawable layout_border_radius_light_blue
@@ -1737,6 +1747,11 @@ drawable notification_template_icon_bg
 drawable notification_template_icon_low_bg
 drawable notification_tile_bg
 drawable notify_panel_notification_icon_bg
+drawable orbspin
+drawable readytoscan
+drawable scanfoundcloserange
+drawable scanfoundsomething
+drawable scannotfound
 drawable test_custom_background
 drawable tooltip_frame_dark
 drawable tooltip_frame_light
@@ -1774,6 +1789,7 @@ id LinearLayout8
 id LinearLayout__acce
 id LinearLayout_lock_mem
 id LinearLayouts1
+id LinearLayouts11
 id META
 id NO_DEBUG
 id SCROLLER_ID
@@ -1858,14 +1874,21 @@ id auto
 id autoComplete
 id autoCompleteToEnd
 id autoCompleteToStart
+id back_bulk_scan_button
 id back_byitemcode_button
 id back_byitemset_button
 id back_itemcode_info_result_button
 id back_itemset_info_result_button
 id back_playbox_button
 id back_read_single_tag_button
+id back_search_single_tag_3of3_button
 id back_shipbox_button
 id back_storagebox_button
+id back_view_bulk_scan_button
+id back_write_single_tag_1of4_button
+id back_write_single_tag_2of4_button
+id back_write_single_tag_3of4_button
+id back_write_single_tag_button
 id barrier
 id baseline
 id beginOnFirstDraw
@@ -1874,6 +1897,8 @@ id blocking
 id bottom
 id bounce
 id box_layout
+id bulk_scan_button
+id bulk_scan_layout
 id button4
 id button5
 id buttonPanel
@@ -1926,10 +1951,13 @@ id chip3
 id chip_group
 id chronometer
 id circle_center
+id clear_bulk_scan_button
 id clear_itemcode_info_result_button
 id clear_itemset_info_result_button
 id clear_read_single_tag_button
+id clear_search_single_tag_3of3_button
 id clear_text
+id clear_write_single_tag_3of4_button
 id clip_horizontal
 id clip_vertical
 id clockwise
@@ -1944,6 +1972,7 @@ id coordinator
 id cos
 id counterclockwise
 id current_box_textview
+id current_epc_caption_textview
 id custom
 id customPanel
 id cut
@@ -2008,6 +2037,7 @@ id fixed
 id flip
 id floating
 id forever
+id found_number_textview
 id fragment_container_view_tag
 id ghost_view
 id ghost_view_holder
@@ -2135,6 +2165,8 @@ id navigation_header_container
 id never
 id next_byitemcode_button
 id next_byitemset_button
+id next_write_single_tag_1of4_button
+id next_write_single_tag_2of4_button
 id noScroll
 id none
 id normal
@@ -2187,9 +2219,17 @@ id save_non_transition_alpha
 id save_overlay_view
 id sawtooth
 id scale
+id scan_area_message_textview
+id scan_area_title_textview
+id scan_bulk_scan_button
 id scan_itemcode_info_result_button
 id scan_itemset_info_result_button
+id scan_progress_gifview
 id scan_read_single_tag_button
+id scan_search_single_tag_3of3_button
+id scan_write_single_tag_3of4_button
+id scanned_epc_textview
+id scanned_rssi_textview
 id screen
 id scroll
 id scrollIndicatorDown
@@ -2204,6 +2244,18 @@ id search_edit_frame
 id search_go_btn
 id search_mag_icon
 id search_plate
+id search_single_tag_3of3_layout
+id search_single_tag_3of3_tag_detail_actor_textview
+id search_single_tag_3of3_tag_detail_actscene_textview
+id search_single_tag_3of3_tag_detail_code_textview
+id search_single_tag_3of3_tag_detail_current_box_textview
+id search_single_tag_3of3_tag_detail_epc_header_textview
+id search_single_tag_3of3_tag_detail_epc_run_textview
+id search_single_tag_3of3_tag_detail_number_textview
+id search_single_tag_3of3_tag_detail_rssi_textview
+id search_single_tag_3of3_tag_detail_size_textview
+id search_single_tag_3of3_tag_detail_type_textview
+id search_single_tag_button
 id search_src_text
 id search_voice_btn
 id searchandcheck_layout
@@ -2262,6 +2314,8 @@ id storagebox_type_button
 id stretch
 id submenuarrow
 id submit_area
+id suggested_epc_code_caption_textview
+id suggested_epc_code_edittext
 id tabMode
 id tableLayout11
 id tableLayout1s1
@@ -2272,6 +2326,9 @@ id tag_accessibility_pane_title
 id tag_detail_actor_textview
 id tag_detail_actscene_textview
 id tag_detail_code_textview
+id tag_detail_current_box_textview
+id tag_detail_epc_header_textview
+id tag_detail_epc_run_textview
 id tag_detail_number_textview
 id tag_detail_size_textview
 id tag_detail_type_textview
@@ -2354,6 +2411,10 @@ id viewUhfEpc
 id viewUhfLock
 id viewUhfMore
 id viewUhfSet
+id view_bulk_scan_button
+id view_bulk_scan_layout
+id view_bulk_scan_result_rvlist
+id view_found_number_textview
 id view_offset_helper
 id view_tree_lifecycle_owner
 id view_tree_saved_state_registry_owner
@@ -2365,7 +2426,30 @@ id withinBounds
 id wrap
 id wrap_content
 id write_read_single_tag_button
+id write_single_tag_1of4_actor_name_rvlist
+id write_single_tag_1of4_actscene_name_rvlist
+id write_single_tag_1of4_layout
+id write_single_tag_1of4_title_textview
+id write_single_tag_2of4_item_code_rvlist
+id write_single_tag_2of4_items_scanned_textview
+id write_single_tag_2of4_layout
+id write_single_tag_2of4_selected_actor_textview
+id write_single_tag_2of4_selected_actscene_textview
+id write_single_tag_2of4_title_textview
+id write_single_tag_2of4_total_items_textview
+id write_single_tag_3of4_layout
+id write_single_tag_3of4_read_single_tag_rvlist
+id write_single_tag_3of4_tag_detail_actor_textview
+id write_single_tag_3of4_tag_detail_actscene_textview
+id write_single_tag_3of4_tag_detail_code_textview
+id write_single_tag_3of4_tag_detail_current_box_textview
+id write_single_tag_3of4_tag_detail_epc_header_textview
+id write_single_tag_3of4_tag_detail_epc_run_textview
+id write_single_tag_3of4_tag_detail_number_textview
+id write_single_tag_3of4_tag_detail_size_textview
+id write_single_tag_3of4_tag_detail_type_textview
 id write_single_tag_button
+id write_write_single_tag_3of4_button
 id zero_corner_chip
 integer abc_config_activityDefaultDur
 integer abc_config_activityShortDur
@@ -2449,7 +2533,9 @@ layout dialog_check_type
 layout dialog_error_message
 layout dialog_success_message
 layout dialog_user_signin
+layout dialog_view_bulk_scan
 layout dialog_warning_message
+layout dialog_write_single_tag
 layout epctag_listview
 layout itemcode_filter_listview
 layout itemcode_listview
@@ -2709,6 +2795,8 @@ string bottom_sheet_behavior
 string bottomsheet_action_expand_halfway
 string box
 string buadrate
+string bulk_scan
+string bulk_scan_view
 string by_item_code_label
 string by_item_set_label
 string call_fail
@@ -2750,17 +2838,22 @@ string compare_success
 string compare_text
 string configs
 string connect
+string contact_tech_support
 string contentless_CPU_card
 string cos_cmd
 string costume_notfound
 string costume_notfound_solution
+string costume_notselected
+string costume_notselected_solution
 string count
 string create_EF01
 string create_EF02
 string create_MF
 string current_
+string current_epc_code_on_tag
 string current_setting
 string dakai_shebei
+string dash
 string data_area
 string database_manage_text
 string database_server_offline
@@ -2776,6 +2869,7 @@ string du_jishiben
 string edittext_sector_hint
 string edittext_wallet_add
 string edittext_wallet_redu
+string enter_epc_code_here
 string enter_username_here
 string epc
 string error
@@ -2800,6 +2894,7 @@ string fingerprint
 string fingerprint_1
 string fingerprint_2
 string fingerprint_big
+string found
 string found_tags
 string free_addressid_
 string freqNotNull
@@ -2855,6 +2950,7 @@ string itemcode
 string itemcode_notfound
 string itemcode_notfound_solution
 string itemcodes
+string items
 string items_scanned
 string itemset
 string jishiben_caozuo_text
@@ -2936,6 +3032,7 @@ string name
 string next_label
 string nfc_ul_card
 string not_find_finger
+string not_success
 string note_the_following_operation_may_lead_to_module_does_not_work_
 string now_get_fingerprint_chara_
 string now_match_fingerprint_chara_1_and_fingerprint_chara_2_
@@ -2949,6 +3046,7 @@ string open_device_success_
 string option_cancel
 string option_info
 string origin_image
+string overall_scan
 string parameterSetting
 string password
 string password_a
@@ -2970,7 +3068,9 @@ string please_open_serialport_first_
 string port
 string poweon_reset
 string power
+string power_status
 string poweroff
+string prepare_target_tag
 string productModel
 string psam_1iso15693
 string psam_card
@@ -3019,7 +3119,12 @@ string search_fail_
 string search_finger_print
 string search_fp
 string search_menu_title
+string search_select_act_1of3
+string search_select_act_2of3
+string search_single_tag_label
+string search_single_tag_settings_ready
 string search_success_addressid_
+string search_target_tag
 string search_this_fingerprint_chara_now_
 string sector
 string security_byte
@@ -3028,10 +3133,14 @@ string selectCard
 string selectCardUID
 string select_MF
 string select_MF_6117
+string select_act_1of4
+string select_by_item_filter
 string select_card
 string select_configs_
 string select_filter
+string select_item_2of4
 string select_psam_card
+string selected_an_itemcode
 string send
 string send_cmd
 string send_data
@@ -3055,6 +3164,7 @@ string shut_down_success_
 string singleBlockLen
 string single_compare
 string single_search
+string single_tag_settings_ready
 string spinnerPrompt
 string start
 string startArr
@@ -3069,13 +3179,18 @@ string stop_inventory
 string stop_operate_14443a
 string storage_box
 string success
+string suggested_writing_new_epc_code
 string sure
 string sure_kill
 string sure_to_delete_all_fingerprint_chara_
 string table_finish
 string tag_detail
+string target_scanned_tag_not_found
+string target_scanned_tag_not_found_solution
+string target_tag_to_write
 string tezheng_bidui_android
 string the_unit_is_word_1word_2bytes
+string the_unit_is_word_1word_2bytes_solution
 string times
 string tips_find_card
 string tips_init_serialport_fail
@@ -3093,10 +3208,13 @@ string usb_communication_type
 string usb_shuchu_text
 string user
 string username
+string verify_write_tag
+string view
 string wallet_initval_success
 string wallet_mode
 string warning
 string workArea
+string work_with_single_tag
 string write
 string writeData
 string write_74_EF01
@@ -3105,12 +3223,15 @@ string write_data_button
 string write_fail_
 string write_failue_
 string write_hex
+string write_hex_solution
 string write_label
 string write_page
 string write_single_tag_label
 string write_success_
 string write_successful_
+string write_tag_failed
 string writedata
+string writing_existing_epc_code
 string xiazai_muban
 string xie_jishiben
 string yulan_tuxiang
@@ -3897,6 +4018,8 @@ styleable FontFamilyFont android_font android_fontWeight android_fontStyle andro
 styleable ForegroundLinearLayout android_foreground android_foregroundGravity foregroundInsidePadding
 styleable Fragment android_name android_id android_tag
 styleable FragmentContainerView android_name android_tag
+styleable GifTextureView gifSource isOpaque
+styleable GifView freezesAnimation loopCount
 styleable GradientColor android_startColor android_endColor android_type android_centerX android_centerY android_gradientRadius android_tileMode android_centerColor android_startX android_startY android_endX android_endY
 styleable GradientColorItem android_color android_offset
 styleable ImageFilterView altSrc brightness contrast crossfade overlay round roundPercent saturation warmth

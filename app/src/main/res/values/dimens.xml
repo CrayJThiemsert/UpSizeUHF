@@ -4,4 +4,8 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
+    <dimen name="home_vertical_button_width">280dp</dimen>
+    <dimen name="home_horizontal_button_width">180dp</dimen>
+
 </resources>
+

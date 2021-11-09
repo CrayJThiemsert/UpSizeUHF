@@ -303,6 +303,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical" >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:textColor="@color/colorPurpleLight"
+                    android:fontFamily="@font/kanit_medium"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:text="@string/select_by_item_filter"/>
 
                 <LinearLayout
                     android:id="@+id/LinearLayouts1"
@@ -310,14 +319,16 @@
                     android:layout_height="wrap_content"
                     android:paddingTop="10dp"
                     android:paddingBottom="15dp"
+                    android:orientation="horizontal"
                     android:gravity="center">
 
                     <Button android:text="@string/by_item_set_label"
                         android:id="@+id/by_item_set_button"
                         android:enabled="false"
-                        android:layout_width="280dip"
+                        android:layout_width="0dp"
                         android:layout_height="100dip"
                         android:layout_gravity="center"
+                        android:layout_weight="0.3"
                         android:background="@drawable/button_radius"
                         android:textSize="24sp"
                         android:textColor="@color/purple"
@@ -326,22 +337,19 @@
                         android:paddingLeft="30dip"
                         android:paddingRight="26dip"
 
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+
                         android:singleLine="true"
                         android:gravity="center" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="15dp"
-                    android:gravity="center" >
 
                     <Button android:text="@string/by_item_code_label"
                         android:id="@+id/by_item_code_button"
                         android:enabled="false"
-                        android:layout_width="280dip"
+                        android:layout_width="0dp"
                         android:layout_height="100dip"
                         android:layout_gravity="center"
+                        android:layout_weight="0.3"
                         android:background="@drawable/button_radius"
                         android:textSize="24sp"
                         android:textColor="@color/purple"
@@ -349,6 +357,9 @@
 
                         android:paddingLeft="30dip"
                         android:paddingRight="26dip"
+
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
 
                         android:singleLine="true"
                         android:gravity="center" />
@@ -358,57 +369,71 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="15dp"
+                    android:orientation="vertical"
                     android:gravity="center" >
 
-                    <Button android:text="@string/read_single_tag_label"
-                        android:id="@+id/read_single_tag_button"
-                        android:enabled="false"
-                        android:layout_width="280dip"
-                        android:layout_height="100dip"
-                        android:layout_gravity="center"
-                        android:background="@drawable/button_radius"
-                        android:textSize="24sp"
-                        android:textColor="@color/purple"
-                        android:drawableLeft="@drawable/baseline_search_black_24"
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:textColor="@color/colorPurpleLight"
+                        android:fontFamily="@font/kanit_medium"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:text="@string/work_with_single_tag"/>
 
-                        android:paddingLeft="30dip"
-                        android:paddingRight="26dip"
+                    <LinearLayout
+                        android:id="@+id/LinearLayouts11"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="15dp"
+                        android:orientation="horizontal"
+                        android:gravity="center">
 
-                        android:singleLine="true"
-                        android:gravity="center" />
-                </LinearLayout>
+                        <Button android:text="@string/read_single_tag_label"
+                            android:id="@+id/read_single_tag_button"
+                            android:enabled="false"
+                            android:layout_width="0dip"
+                            android:layout_height="100dip"
+                            android:layout_gravity="center"
+                            android:layout_weight="0.3"
+                            android:background="@drawable/button_radius"
+                            android:textSize="24sp"
+                            android:textColor="@color/purple"
+                            android:drawableLeft="@drawable/baseline_search_black_24"
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="15dp"
-                    android:paddingBottom="15dp"
-                    android:gravity="center" >
+                            android:paddingLeft="8dip"
+                            android:paddingRight="8dip"
 
-                    <Button android:text="@string/write_single_tag_label"
-                        android:id="@+id/write_single_tag_button"
-                        android:enabled="false"
-                        android:layout_width="280dip"
-                        android:layout_height="100dip"
-                        android:layout_gravity="center"
-                        android:background="@drawable/button_radius"
-                        android:textSize="24sp"
-                        android:textColor="@color/purple"
-                        android:drawableLeft="@drawable/baseline_search_black_24"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginRight="8dp"
 
-                        android:paddingLeft="30dip"
-                        android:paddingRight="26dip"
+                            android:singleLine="true"
+                            android:gravity="center" />
 
-                        android:singleLine="true"
-                        android:gravity="center" />
-                </LinearLayout>
+                        <Button android:text="@string/write_single_tag_label"
+                            android:id="@+id/write_single_tag_button"
+                            android:enabled="false"
+                            android:layout_width="0dip"
+                            android:layout_height="100dip"
+                            android:layout_gravity="center"
+                            android:layout_weight="0.3"
+                            android:background="@drawable/button_radius"
+                            android:textSize="24sp"
+                            android:textColor="@color/purple"
+                            android:drawableLeft="@drawable/baseline_search_black_24"
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="15dp"
-                    android:paddingBottom="15dp"
-                    android:gravity="center" >
+                            android:paddingLeft="8dip"
+                            android:paddingRight="8dip"
+
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginRight="8dp"
+
+                            android:singleLine="true"
+                            android:gravity="center" />
+
+                    </LinearLayout>
 
                     <Button android:text="@string/search_single_tag_label"
                         android:id="@+id/search_single_tag_button"
@@ -426,6 +451,45 @@
 
                         android:singleLine="true"
                         android:gravity="center" />
+                </LinearLayout>
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingTop="15dp"
+                    android:paddingBottom="15dp"
+                    android:gravity="center" >
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:textColor="@color/colorPurpleLight"
+                        android:fontFamily="@font/kanit_medium"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:text="@string/overall_scan"/>
+
+                    <Button android:text="@string/bulk_scan"
+                        android:id="@+id/bulk_scan_button"
+                        android:enabled="false"
+                        android:layout_width="280dip"
+                        android:layout_height="100dip"
+                        android:layout_gravity="center"
+                        android:background="@drawable/button_radius"
+                        android:textSize="24sp"
+                        android:textColor="@color/purple"
+                        android:drawableLeft="@drawable/baseline_search_black_24"
+
+                        android:paddingLeft="30dip"
+                        android:paddingRight="26dip"
+
+                        android:singleLine="true"
+                        android:gravity="center" />
+
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
@@ -2728,6 +2792,147 @@
                         android:textColor="@color/purple"
                         android:singleLine="true"
                         android:gravity="center" />
+
+                </LinearLayout>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/bulk_scan_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="top"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="top"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:orientation="vertical"
+                    android:padding="8dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+
+                        android:paddingTop="8dp"
+                        android:background="@drawable/layout_border_radius"
+                        android:gravity="top" >
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorPurpleLight"
+                            android:fontFamily="@font/kanit_medium"
+                            android:textSize="48sp"
+                            android:textStyle="bold"
+                            android:text="@string/bulk_scan"
+                            android:gravity="center"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorGold"
+                            android:textSize="22sp"
+                            android:fontFamily="@font/kanit_light"
+                            android:text="@string/found"
+                            android:gravity="center"/>
+
+                        <TextView
+                            android:id="@+id/found_number_textview"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="72sp"
+                            android:textFontWeight="300"
+                            android:textColor="@color/colorWhite"
+                            android:text="0"
+                            android:gravity="center"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="48dp"
+                            android:textSize="22sp"
+                            android:textFontWeight="300"
+                            android:textColor="@color/colorWhite"
+                            android:text="@string/items"
+                            android:gravity="center"/>
+
+                        <Button android:text="@string/view"
+                            android:id="@+id/view_bulk_scan_button"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:layout_margin="8dp"
+                            android:layout_gravity="center"
+                            android:background="@drawable/button_radius"
+                            android:textSize="24sp"
+                            android:textColor="@color/purple"
+                            android:singleLine="true"
+                            android:gravity="center" />
+
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_alignParentBottom="true"
+                    android:gravity="center" >
+
+                    <Button android:text="@string/back_label"
+                        android:id="@+id/back_bulk_scan_button"
+                        android:layout_width="0dp"
+                        android:layout_height="100dp"
+                        android:layout_gravity="center"
+
+                        android:background="@drawable/button_radius"
+                        android:textSize="24sp"
+                        android:textColor="@color/purple"
+                        android:layout_weight="0.2"
+                        android:layout_margin="6dp"
+
+                        android:singleLine="true"
+                        android:gravity="center" />
+
+                    <Button android:text="@string/scan_label"
+                        android:id="@+id/scan_bulk_scan_button"
+                        android:layout_width="0dp"
+                        android:layout_height="100dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/button_radius"
+                        android:textSize="24sp"
+                        android:textColor="@color/purple"
+                        android:layout_weight="0.3"
+                        android:layout_margin="6dp"
+
+                        android:singleLine="true"
+                        android:gravity="center" />
+
+                    <Button android:text="@string/refresh"
+                        android:id="@+id/clear_bulk_scan_button"
+                        android:layout_width="0dp"
+                        android:layout_height="100dp"
+                        android:layout_weight="0.2"
+                        android:layout_margin="6dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/button_radius"
+                        android:textSize="24sp"
+                        android:textColor="@color/purple"
+                        android:singleLine="true"
+                        android:gravity="center" />
+
+
+
 
                 </LinearLayout>
             </RelativeLayout>
