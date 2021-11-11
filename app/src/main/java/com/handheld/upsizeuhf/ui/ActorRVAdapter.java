@@ -1,5 +1,6 @@
 package com.handheld.upsizeuhf.ui;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 
@@ -49,7 +50,7 @@ public class ActorRVAdapter extends RecyclerView.Adapter<ActorRVAdapter.ActorVie
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ActorRVAdapter.ActorViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ActorRVAdapter.ActorViewHolder holder, @SuppressLint("RecyclerView") int position) {
         Actor actor = mActorArrayList.get(position);
         holder.name.setText(actor.name);
 
@@ -137,14 +138,14 @@ public class ActorRVAdapter extends RecyclerView.Adapter<ActorRVAdapter.ActorVie
 
         @Override
         public void onAnimationStart(Animation animation) {
-            Log.d(TAG, "animation selected name=" + actor.name);
-            UHFActivity uhfActivity = (UHFActivity)mActivity;
-            uhfActivity.refreshActScene(actor.name, mScreenType);
+
         }
 
         @Override
         public void onAnimationEnd(Animation animation) {
-
+            Log.d(TAG, "animation selected name=" + actor.name);
+            UHFActivity uhfActivity = (UHFActivity)mActivity;
+            uhfActivity.refreshActScene(actor.name, mScreenType);
 
         }
 

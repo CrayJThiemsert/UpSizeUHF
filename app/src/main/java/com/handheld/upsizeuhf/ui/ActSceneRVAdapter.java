@@ -1,5 +1,6 @@
 package com.handheld.upsizeuhf.ui;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
@@ -20,6 +21,7 @@ import com.handheld.upsizeuhf.Util;
 import com.handheld.upsizeuhf.model.Actor;
 import com.handheld.upsizeuhf.model.Costume;
 import com.handheld.upsizeuhf.util.AnimationUtils;
+import com.handheld.upsizeuhf.util.Constants;
 
 import java.util.ArrayList;
 
@@ -27,6 +29,7 @@ public class ActSceneRVAdapter extends RecyclerView.Adapter<ActSceneRVAdapter.Ac
     private String TAG = this.getClass().getSimpleName();
     private Context mContext;
     private Activity mActivity;
+    private int mScreenType = Constants.SCREEN_TYPE_BY_ITEM_SET;
 
     private int lastPosition = -1;
     int row_index = -1;
@@ -42,14 +45,15 @@ public class ActSceneRVAdapter extends RecyclerView.Adapter<ActSceneRVAdapter.Ac
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ActSceneRVAdapter.ActorViewHolder holder, int position) {
-        Costume costume = mCostumeArrayList.get(position);
+    public void onBindViewHolder(@NonNull ActSceneRVAdapter.ActorViewHolder holder, @SuppressLint("RecyclerView") int position) {
+        int pos = holder.getAdapterPosition();
+        Costume costume = mCostumeArrayList.get(pos);
         holder.name.setText(costume.actScence);
 
         holder.name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "selected act scene name=" + costume.actScence + " position=" + position);
+                Log.d(TAG, "selected act scene name=" + costume.actScence + " position=" + pos);
 
                 Util.play(1, 0);
                 row_index=position;
@@ -105,10 +109,11 @@ public class ActSceneRVAdapter extends RecyclerView.Adapter<ActSceneRVAdapter.Ac
         }
     }
 
-    public ActSceneRVAdapter(Context context, Activity activity, ArrayList<Costume> costumes) {
+    public ActSceneRVAdapter(Context context, Activity activity, ArrayList<Costume> costumes, int screenType) {
         mContext = context;
         mActivity = activity;
         mCostumeArrayList = costumes;
+        mScreenType = screenType;
     }
 
     private class NameAnimationListener implements Animation.AnimationListener   {
@@ -119,15 +124,14 @@ public class ActSceneRVAdapter extends RecyclerView.Adapter<ActSceneRVAdapter.Ac
 
         @Override
         public void onAnimationStart(Animation animation) {
-            Log.d(TAG, "animation selected name=" + costume.actScence);
-//            UHFActivity uhfActivity = (UHFActivity)mActivity;
-//            uhfActivity.refreshActScene(costume.name);
+
         }
 
         @Override
         public void onAnimationEnd(Animation animation) {
-
-
+            Log.d(TAG, "animation selected name=" + costume.actScence);
+//            UHFActivity uhfActivity = (UHFActivity)mActivity;
+//            uhfActivity.refreshActScene(costume.actor, mScreenType);
         }
 
         @Override
