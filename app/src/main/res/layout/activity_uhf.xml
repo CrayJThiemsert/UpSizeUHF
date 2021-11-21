@@ -473,22 +473,60 @@
                         android:textStyle="bold"
                         android:text="@string/overall_scan"/>
 
-                    <Button android:text="@string/bulk_scan"
-                        android:id="@+id/bulk_scan_button"
-                        android:enabled="false"
-                        android:layout_width="280dip"
-                        android:layout_height="100dip"
-                        android:layout_gravity="center"
-                        android:background="@drawable/button_radius"
-                        android:textSize="24sp"
-                        android:textColor="@color/purple"
-                        android:drawableLeft="@drawable/baseline_search_black_24"
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="15dp"
+                        android:orientation="horizontal"
+                        android:gravity="center">
 
-                        android:paddingLeft="30dip"
-                        android:paddingRight="26dip"
+                        <Button android:text="@string/bulk_scan"
+                            android:id="@+id/bulk_scan_button"
+                            android:enabled="false"
+                            android:layout_width="0dip"
+                            android:layout_height="100dip"
+                            android:layout_gravity="center"
+                            android:layout_weight="0.3"
+                            android:background="@drawable/button_radius"
+                            android:textSize="24sp"
+                            android:textColor="@color/purple"
+                            android:drawableLeft="@drawable/baseline_search_black_24"
 
-                        android:singleLine="true"
-                        android:gravity="center" />
+                            android:paddingLeft="8dip"
+                            android:paddingRight="8dip"
+
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginRight="8dp"
+
+                            android:singleLine="true"
+                            android:gravity="center"
+                            android:visibility="gone"/>
+
+                        <Button android:text="@string/filter_bulk_scan"
+                            android:id="@+id/filter_bulk_scan_button"
+                            android:enabled="false"
+                            android:layout_width="280dip"
+                            android:layout_height="100dip"
+                            android:layout_gravity="center"
+
+                            android:background="@drawable/button_radius"
+                            android:textSize="24sp"
+                            android:textColor="@color/purple"
+                            android:drawableLeft="@drawable/baseline_search_black_24"
+
+                            android:paddingLeft="8dip"
+                            android:paddingRight="8dip"
+
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginRight="8dp"
+
+                            android:singleLine="true"
+                            android:gravity="center" />
+
+                    </LinearLayout>
+
+
 
                 </LinearLayout>
             </LinearLayout>
@@ -2934,6 +2972,719 @@
 
 
 
+                </LinearLayout>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/filter_bulk_scan_1of3_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="top"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="15dp"
+                    android:gravity="top"
+                    android:background="@drawable/layout_border_radius"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/filter_bulk_scan_1of3_title_textview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorPurpleLight"
+                        android:fontFamily="@font/kanit_medium"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:text="@string/filter_bulk_scan_select_act_1of3"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorGold"
+                        android:fontFamily="@font/kanit_light"
+                        android:text="@string/actor"/>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:layout_width="match_parent"
+                        android:layout_height="230dp"
+                        android:id="@+id/filter_bulk_scan_1of3_actor_name_rvlist"/>
+                </LinearLayout>
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="4dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="15dp"
+                    android:gravity="top"
+                    android:background="@drawable/layout_border_radius"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorGold"
+                        android:fontFamily="@font/kanit_light"
+                        android:text="@string/actscene"/>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:layout_width="match_parent"
+                        android:layout_height="230dp"
+                        android:id="@+id/filter_bulk_scan_1of3_actscene_name_rvlist"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_alignParentBottom="true"
+                    android:gravity="center" >
+
+                    <Button android:text="@string/back_label"
+                        android:id="@+id/back_filter_bulk_scan_1of3_button"
+                        android:layout_width="160dp"
+                        android:layout_height="100dp"
+                        android:layout_gravity="center"
+
+                        android:background="@drawable/button_radius"
+                        android:textSize="24sp"
+                        android:textColor="@color/purple"
+                        android:layout_weight="0.5"
+                        android:layout_margin="16dp"
+
+                        android:singleLine="true"
+                        android:gravity="center" />
+
+                    <Button android:text="@string/next_label"
+                        android:id="@+id/next_filter_bulk_scan_1of3_button"
+                        android:layout_width="160dp"
+                        android:layout_height="100dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/button_radius"
+                        android:textSize="24sp"
+                        android:textColor="@color/purple"
+
+                        android:layout_weight="0.5"
+                        android:layout_margin="16dp"
+
+                        android:singleLine="true"
+                        android:gravity="center" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/filter_bulk_scan_2of3_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="top"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="top"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:orientation="vertical"
+                    android:padding="0dp">
+
+                    <LinearLayout
+                        android:id="@+id/filter_bulk_scan_2of3_actor_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingBottom="8dp"
+                        android:background="@drawable/layout_border_radius"
+                        android:gravity="top" >
+
+                        <TextView
+                            android:id="@+id/filter_bulk_scan_2of3_title_textview"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorPurpleLight"
+                            android:fontFamily="@font/kanit_medium"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:text="@string/filter_bulk_scan_select_act_2of3"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorGold"
+                            android:fontFamily="@font/kanit_light"
+                            android:text="@string/actor"/>
+
+                        <TextView
+                            android:id="@+id/filter_bulk_scan_2of3_selected_actor_textview"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="22sp"
+                            android:textFontWeight="300"
+                            android:textColor="@color/colorWhite"
+                            android:text=""/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorGold"
+                            android:paddingTop="8dp"
+                            android:fontFamily="@font/kanit_light"
+                            android:text="@string/actscene"/>
+                        <TextView
+                            android:id="@+id/filter_bulk_scan_2of3_selected_actscene_textview"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="22sp"
+                            android:textFontWeight="300"
+                            android:textColor="@color/colorWhite"
+                            android:text=""/>
+
+                    </LinearLayout>
+
+                    <Space
+                        android:layout_width="match_parent"
+                        android:layout_height="4dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+
+                        android:paddingTop="8dp"
+                        android:background="@drawable/layout_border_radius"
+                        android:gravity="top" >
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorOrangeYellow"
+                            android:fontFamily="@font/kanit_medium"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:text="@string/selected_or_not_itemcode"/>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <Space
+                                android:layout_width="80dp"
+                                android:layout_height="15dp" />
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.25"
+                                    android:textColor="@color/colorOrangeGrey"
+                                    android:fontFamily="@font/kanit_light"
+                                    android:textSize="16sp"
+                                    android:text="code"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.25"
+                                    android:textColor="@color/colorOrangeGrey"
+                                    android:fontFamily="@font/kanit_light"
+                                    android:textSize="16sp"
+                                    android:text="type"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.25"
+                                    android:textColor="@color/colorOrangeGrey"
+                                    android:fontFamily="@font/kanit_light"
+                                    android:textSize="16sp"
+                                    android:text="size"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.25"
+                                    android:textColor="@color/colorOrangeGrey"
+                                    android:fontFamily="@font/kanit_light"
+                                    android:textSize="16sp"
+                                    android:text="number"/>
+
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:layout_width="match_parent"
+                            android:layout_height="310dp"
+                            android:id="@+id/filter_bulk_scan_2of3_item_code_rvlist"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <Space
+                                android:layout_width="80dp"
+                                android:layout_height="15dp" />
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/filter_bulk_scan_2of3_total_items_textview"
+                                    android:layout_weight="0.25"
+                                    android:textColor="@color/colorOrangeGrey"
+                                    android:fontFamily="@font/kanit_light"
+                                    android:textSize="16sp"
+                                    android:text="0"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.25"
+                                    android:textColor="@color/colorOrangeGrey"
+                                    android:fontFamily="@font/kanit_light"
+                                    android:textSize="16sp"
+                                    android:text="@string/total_items"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/filter_bulk_scan_2of3_items_scanned_textview"
+                                    android:layout_weight="0.25"
+                                    android:textColor="@color/colorOrangeGrey"
+                                    android:fontFamily="@font/kanit_light"
+                                    android:textSize="16sp"
+                                    android:text="0"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.25"
+                                    android:textColor="@color/colorOrangeGrey"
+                                    android:fontFamily="@font/kanit_light"
+                                    android:textSize="16sp"
+                                    android:text="@string/items_scanned"/>
+
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_alignParentBottom="true"
+                    android:gravity="center" >
+
+                    <Button android:text="@string/back_label"
+                        android:id="@+id/back_filter_bulk_scan_2of3_button"
+                        android:layout_width="160dp"
+                        android:layout_height="100dp"
+                        android:layout_gravity="center"
+
+                        android:background="@drawable/button_radius"
+                        android:textSize="24sp"
+                        android:textColor="@color/purple"
+                        android:layout_weight="0.5"
+                        android:layout_margin="16dp"
+
+                        android:singleLine="true"
+                        android:gravity="center" />
+
+                    <Button android:text="@string/next_label"
+                        android:id="@+id/next_filter_bulk_scan_2of3_button"
+                        android:layout_width="160dp"
+                        android:layout_height="100dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/button_radius"
+                        android:textSize="24sp"
+                        android:textColor="@color/purple"
+                        android:layout_weight="0.5"
+                        android:layout_margin="16dp"
+
+                        android:singleLine="true"
+                        android:gravity="center" />
+
+                </LinearLayout>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/filter_bulk_scan_3of3_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="top"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="top"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:orientation="vertical"
+                    android:padding="8dp">
+
+                    <LinearLayout
+                        android:id="@+id/filter_bulk_scan_3of3_tag_detail_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:orientation="vertical"
+
+                        android:paddingTop="8dp"
+                        android:background="@drawable/layout_border_radius"
+                        android:gravity="top" >
+                        <TextView
+                            android:id="@+id/filter_bulk_scan_3of3_title_textview"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorPurpleLight"
+                            android:fontFamily="@font/kanit_medium"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:text="@string/filter_bulk_scan_select_act_3of3"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorGold"
+                            android:fontFamily="@font/kanit_light"
+                            android:text="@string/actor"/>
+
+                        <TextView
+                            android:id="@+id/filter_bulk_scan_3of3_tag_detail_actor_textview"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="22sp"
+                            android:textFontWeight="300"
+                            android:textColor="@color/colorWhite"
+                            android:text=""/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorGold"
+                            android:paddingTop="8dp"
+                            android:fontFamily="@font/kanit_light"
+                            android:text="@string/actscene"/>
+                        <TextView
+                            android:id="@+id/filter_bulk_scan_3of3_tag_detail_actscene_textview"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="22sp"
+                            android:textFontWeight="300"
+                            android:textColor="@color/colorWhite"
+                            android:text=""/>
+
+                        <LinearLayout
+                            android:id="@+id/filter_bulk_scan_3of3_tag_detail_head_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <Space
+                                android:layout_width="80dp"
+                                android:layout_height="15dp" />
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.25"
+                                    android:textColor="@color/colorOrangeGrey"
+                                    android:fontFamily="@font/kanit_light"
+                                    android:textSize="16sp"
+                                    android:text="code"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.25"
+                                    android:textColor="@color/colorOrangeGrey"
+                                    android:fontFamily="@font/kanit_light"
+                                    android:textSize="16sp"
+                                    android:text="type"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.25"
+                                    android:textColor="@color/colorOrangeGrey"
+                                    android:fontFamily="@font/kanit_light"
+                                    android:textSize="16sp"
+                                    android:text="size"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.25"
+                                    android:textColor="@color/colorOrangeGrey"
+                                    android:fontFamily="@font/kanit_light"
+                                    android:textSize="16sp"
+                                    android:text="number"/>
+
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/filter_bulk_scan_3of3_tag_detail_content_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <Space
+                                android:layout_width="80dp"
+                                android:layout_height="15dp" />
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+                                <TextView
+                                    android:layout_width="25dp"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/filter_bulk_scan_3of3_tag_detail_code_textview"
+                                    android:layout_weight="0.25"
+                                    android:textColor="@color/colorWhite"
+                                    android:fontFamily="@font/kanit_lightitalic"
+                                    android:textSize="16sp"
+                                    android:text="code"/>
+                                <TextView
+                                    android:layout_width="25dp"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/filter_bulk_scan_3of3_tag_detail_type_textview"
+                                    android:layout_weight="0.25"
+                                    android:textColor="@color/colorWhite"
+                                    android:fontFamily="@font/kanit_lightitalic"
+                                    android:textSize="16sp"
+                                    android:text="type"/>
+                                <TextView
+                                    android:layout_width="25dp"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/filter_bulk_scan_3of3_tag_detail_size_textview"
+                                    android:layout_weight="0.25"
+                                    android:textColor="@color/colorWhite"
+                                    android:fontFamily="@font/kanit_lightitalic"
+                                    android:textSize="16sp"
+                                    android:text="size"/>
+                                <TextView
+                                    android:layout_width="25dp"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/filter_bulk_scan_3of3_tag_detail_number_textview"
+                                    android:layout_weight="0.25"
+                                    android:textColor="@color/colorWhite"
+                                    android:fontFamily="@font/kanit_lightitalic"
+                                    android:textSize="16sp"
+                                    android:text="number"/>
+
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/filter_bulk_scan_3of3_tag_detail_box_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:id="@+id/filter_bulk_scan_3of3_tag_detail_current_box_textview"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Storage Box by Cray"
+                                android:layout_gravity="bottom"
+                                android:textColor="@color/colorOrangeGrey"/>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="3"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/filter_bulk_scan_3of3_tag_detail_epc_header_textview"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/barcode"
+                                    android:textSize="20sp"
+                                    android:gravity="end"
+                                    android:textColor="@color/colorOrangeGrey"
+                                    android:textFontWeight="500"
+                                    android:fontFamily="@font/kanit_medium" />
+                                <TextView
+                                    android:id="@+id/filter_bulk_scan_3of3_tag_detail_epc_run_textview"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/barcode"
+                                    android:textSize="22sp"
+                                    android:gravity="end"
+                                    android:textColor="@color/colorWhite"
+                                    android:textFontWeight="600"
+                                    android:textStyle="bold"
+                                    android:fontFamily="@font/kanit_semibold" />
+
+                            </LinearLayout>
+                            <Space
+                                android:layout_width="55dp"
+                                android:layout_height="15dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <Space
+                        android:layout_width="match_parent"
+                        android:layout_height="4dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:orientation="vertical"
+                        android:padding="2dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+
+                            android:paddingTop="8dp"
+                            android:background="@drawable/layout_border_radius"
+                            android:gravity="top" >
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/colorGold"
+                                android:textSize="22sp"
+                                android:fontFamily="@font/kanit_light"
+                                android:text="@string/found"
+                                android:gravity="center"/>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+
+                                android:paddingTop="8dp"
+
+                                android:gravity="top" >
+                                <TextView
+                                    android:id="@+id/found_number_filter_bulk_scan_3of3_textview"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.5"
+                                    android:textSize="64sp"
+                                    android:textFontWeight="300"
+                                    android:textColor="@color/colorWhite"
+                                    android:text="0"
+                                    android:gravity="right"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.1"
+                                    android:textSize="64sp"
+                                    android:textFontWeight="300"
+                                    android:textColor="@color/colorWhite"
+                                    android:text="/"
+                                    android:gravity="center"/>
+                                <TextView
+                                    android:id="@+id/total_number_filter_bulk_scan_3of3_textview"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.5"
+                                    android:textSize="64sp"
+                                    android:textFontWeight="300"
+                                    android:textColor="@color/colorWhite"
+                                    android:text="0"
+                                    android:gravity="left"/>
+                            </LinearLayout>
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="8dp"
+                                android:textSize="22sp"
+                                android:textFontWeight="300"
+                                android:textColor="@color/colorWhite"
+                                android:text="@string/items"
+                                android:gravity="center"/>
+
+                            <Button android:text="@string/view"
+                                android:id="@+id/view_filter_bulk_scan_3of3_button"
+                                android:layout_width="100dp"
+                                android:layout_height="100dp"
+                                android:layout_margin="8dp"
+                                android:layout_gravity="center"
+                                android:background="@drawable/button_radius"
+                                android:textSize="24sp"
+                                android:textColor="@color/purple"
+                                android:singleLine="true"
+                                android:gravity="center" />
+
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_alignParentBottom="true"
+                    android:gravity="center" >
+
+                    <Button android:text="@string/back_label"
+                        android:id="@+id/back_filter_bulk_scan_3of3_button"
+                        android:layout_width="0dp"
+                        android:layout_height="100dp"
+                        android:layout_gravity="center"
+
+                        android:background="@drawable/button_radius"
+                        android:textSize="24sp"
+                        android:textColor="@color/purple"
+                        android:layout_weight="0.2"
+                        android:layout_margin="6dp"
+
+                        android:singleLine="true"
+                        android:gravity="center" />
+
+                    <Button android:text="@string/scan_label"
+                        android:id="@+id/scan_filter_bulk_scan_3of3_button"
+                        android:layout_width="0dp"
+                        android:layout_height="100dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/button_radius"
+                        android:textSize="24sp"
+                        android:textColor="@color/purple"
+                        android:layout_weight="0.3"
+                        android:layout_margin="6dp"
+
+                        android:singleLine="true"
+                        android:gravity="center" />
+
+                    <Button android:text="@string/refresh"
+                        android:id="@+id/clear_filter_bulk_scan_3of3_button"
+                        android:layout_width="0dp"
+                        android:layout_height="100dp"
+                        android:layout_weight="0.2"
+                        android:layout_margin="6dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/button_radius"
+                        android:textSize="24sp"
+                        android:textColor="@color/purple"
+                        android:singleLine="true"
+                        android:gravity="center" />
                 </LinearLayout>
             </RelativeLayout>
         </LinearLayout>

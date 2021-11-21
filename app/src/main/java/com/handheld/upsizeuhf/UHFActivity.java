@@ -5,6 +5,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +15,6 @@ import java.util.regex.Pattern;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -61,7 +62,6 @@ import androidx.annotation.NonNull;
 //import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.AutoSizeableTextView;
 import androidx.core.widget.TextViewCompat;
-import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -133,6 +133,12 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     private LinearLayout write_single_tag_3of4_layout;
     private LinearLayout search_single_tag_3of3_layout;
 
+    private LinearLayout filter_bulk_scan_1of3_layout;
+    private LinearLayout filter_bulk_scan_2of3_layout;
+    private LinearLayout filter_bulk_scan_3of3_layout;
+
+    private LinearLayout filter_bulk_scan_2of3_actor_layout;
+
     private LinearLayout bulk_scan_layout;
     
     private RelativeLayout l1epc;
@@ -167,6 +173,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     private boolean scanWriteSingleTagFlag = false;
     private boolean scanSearchSingleTagFlag = false;
     private boolean scanBulkScanFlag = false;
+    private boolean scanFilterBulkScanFlag = false;
     private UhfReader manager; // UHF manager,UHF Operating handle
 //	private ScreenStateReceiver screenReceiver;
     /******************************************/
@@ -200,6 +207,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     private Button write_single_tag_button;  // write single tag button
     private Button search_single_tag_button;  // search single tag button
     private Button bulk_scan_button;    //  bulk scan button
+    private Button filter_bulk_scan_button; // filter bulk scan button
 
 
     private Button back_byitemset_button;//set by back to item set button
@@ -285,6 +293,46 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     private Button clear_bulk_scan_button; // Clear query result list
     private Button view_bulk_scan_button; // View scaned result list
 
+    // Filter Bulk Scan
+    private TextView found_number_filter_bulk_scan_3of3_textview;
+    private TextView total_number_filter_bulk_scan_3of3_textview;
+    private Button scan_filter_bulk_scan_3of3_button; // set by next to search/scan button
+    private Button clear_filter_bulk_scan_3of3_button; // Clear query result list
+    private Button view_filter_bulk_scan_3of3_button; // View scaned result list
+
+    private TextView filter_bulk_scan_1of3_title_textview;
+    private TextView filter_bulk_scan_2of3_title_textview;
+    private TextView filter_bulk_scan_3of3_title_textview;
+
+    private TextView filter_bulk_scan_2of3_selected_actor_textview;
+    private TextView filter_bulk_scan_2of3_selected_actscene_textview;
+
+    private TextView filter_bulk_scan_3of3_tag_detail_actor_textview;
+    private TextView filter_bulk_scan_3of3_tag_detail_actscene_textview;
+
+    private TextView filter_bulk_scan_3of3_tag_detail_code_textview;
+    private TextView filter_bulk_scan_3of3_tag_detail_type_textview;
+    private TextView filter_bulk_scan_3of3_tag_detail_size_textview;
+    private TextView filter_bulk_scan_3of3_tag_detail_number_textview;
+
+    private Button back_filter_bulk_scan_1of3_button;
+    private Button next_filter_bulk_scan_1of3_button;
+    private Button back_filter_bulk_scan_2of3_button;
+    private Button next_filter_bulk_scan_2of3_button;
+    private Button back_filter_bulk_scan_3of3_button;
+
+    private TextView filter_bulk_scan_2of3_total_items_textview;
+    private TextView filter_bulk_scan_2of3_items_scanned_textview;
+
+    private TextView filter_bulk_scan_3of3_tag_detail_epc_header_textview;
+    private TextView filter_bulk_scan_3of3_tag_detail_epc_run_textview;
+    private TextView filter_bulk_scan_3of3_tag_detail_current_box_textview;
+
+    private LinearLayout filter_bulk_scan_3of3_tag_detail_layout;
+    private LinearLayout filter_bulk_scan_3of3_tag_detail_head_layout;
+    private LinearLayout filter_bulk_scan_3of3_tag_detail_content_layout;
+    private LinearLayout filter_bulk_scan_3of3_tag_detail_box_layout;
+
 
     private GifImageView scan_progress_gifview;
 
@@ -355,6 +403,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
 
     HashMap<String,Costume> mCostumeHashMap = new HashMap<String,Costume>();
     HashMap<String,Costume> mCountHashMap = new HashMap<String,Costume>();
+    HashMap<String,Costume> mFilterCostumeHashMap = new HashMap<String,Costume>();
 
     // For CheckTypeDialog
     ArrayList<Box> mShipBoxArrayList = new ArrayList<Box>();
@@ -382,6 +431,15 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
 
     private RecyclerView write_single_tag_2of4_item_code_rvlist;
     private ItemCodeRVAdapter writeSingleTag2of4_itemCodeRVAdapter;
+
+    private RecyclerView filter_bulk_scan_1of3_actor_name_rvlist;
+    private ActorRVAdapter actorFilterBulkScanRVAdapter;
+
+    private RecyclerView filter_bulk_scan_1of3_actscene_name_rvlist;
+    private ActSceneRVAdapter actsceneFilterBulkScanRVAdapter;
+
+    private RecyclerView filter_bulk_scan_2of3_item_code_rvlist;
+    private ItemCodeRVAdapter filterBulkScan2of3_itemCodeRVAdapter;
 
     private RecyclerView byitemset_item_code_rvlist;
     private ItemCodeRVAdapter byitemset_itemCodeRVAdapter;
@@ -551,6 +609,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         mScannedFoundItemArrayList = filterOnlyScannedFound(mItemCodeArrayList);
 
         Log.d(TAG, "Found mScannedFoundItemArrayList.size()="+mScannedFoundItemArrayList.size());
+        Log.d(TAG, "Found mCountHashMap.size()="+mCountHashMap.size());
 //        if(mScannedFoundItemArrayList.size() > 0) {
             if(isOnline) {
                 // Getting Collection of values from HashMap
@@ -558,8 +617,15 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
 
                 // Creating an ArrayList of values
                 ArrayList<Costume> countListOfValues = new ArrayList<Costume>(values);
+                Collections.sort(countListOfValues, new Comparator<Costume>(){
+                    public int compare(Costume o1, Costume o2){
+                        if(Integer.valueOf(o1.runningNo) == Integer.valueOf(o2.runningNo))
+                            return 0;
+                        return Integer.valueOf(o1.runningNo) < Integer.valueOf(o2.runningNo) ? -1 : 1;
+                    }
+                });
 
-                viewBulkScanDialogFragment = ViewBulkScanDialogFragment.Companion.newInstance("", "", countListOfValues);
+                viewBulkScanDialogFragment = ViewBulkScanDialogFragment.Companion.newInstance(String.valueOf(mFilterCostumeHashMap.size()), "", countListOfValues);
 
 
 
@@ -723,6 +789,9 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         scanBulkScanFlag = false;
         scan_bulk_scan_button.setText(R.string.scan);
 
+        scanFilterBulkScanFlag= false;
+        scan_filter_bulk_scan_3of3_button.setText(R.string.scan);
+
         manager.close();
         super.onPause();
         unregisterReceiver();
@@ -737,6 +806,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         scanWriteSingleTagFlag = false;
         scanSearchSingleTagFlag = false;
         scanBulkScanFlag = false;
+        scanFilterBulkScanFlag = false;
         runFlag = false;
         if (manager != null) {
             manager.close();
@@ -805,7 +875,19 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         write_single_tag_2of4_layout = (LinearLayout) findViewById(R.id.write_single_tag_2of4_layout);
         write_single_tag_3of4_layout = (LinearLayout) findViewById(R.id.write_single_tag_3of4_layout);
         search_single_tag_3of3_layout = (LinearLayout) findViewById(R.id.search_single_tag_3of3_layout);
+
         bulk_scan_layout = (LinearLayout) findViewById(R.id.bulk_scan_layout);
+        filter_bulk_scan_1of3_layout = (LinearLayout) findViewById(R.id.filter_bulk_scan_1of3_layout);
+        filter_bulk_scan_2of3_layout = (LinearLayout) findViewById(R.id.filter_bulk_scan_2of3_layout);
+        filter_bulk_scan_3of3_layout = (LinearLayout) findViewById(R.id.filter_bulk_scan_3of3_layout);
+
+        filter_bulk_scan_2of3_actor_layout = (LinearLayout) findViewById(R.id.filter_bulk_scan_2of3_actor_layout);
+        filter_bulk_scan_2of3_actor_layout.setOnClickListener(this);
+
+        filter_bulk_scan_3of3_tag_detail_layout = (LinearLayout) findViewById(R.id.filter_bulk_scan_3of3_tag_detail_layout);
+        filter_bulk_scan_3of3_tag_detail_head_layout = (LinearLayout) findViewById(R.id.filter_bulk_scan_3of3_tag_detail_head_layout);
+        filter_bulk_scan_3of3_tag_detail_content_layout = (LinearLayout) findViewById(R.id.filter_bulk_scan_3of3_tag_detail_content_layout);
+        filter_bulk_scan_3of3_tag_detail_box_layout = (LinearLayout) findViewById(R.id.filter_bulk_scan_3of3_tag_detail_box_layout);
         
         l1epc = (RelativeLayout) findViewById(R.id.l1epc);
         l2readandwrite = (LinearLayout) findViewById(R.id.l2read);
@@ -854,6 +936,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         buttonKill.setOnClickListener(this);
         buttonLock.setOnClickListener(this);
         buttonBack.setOnClickListener(this);
+
         spinnerMemBank.setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1,
@@ -1223,6 +1306,10 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         bulk_scan_button.setOnClickListener(this);
         bulk_scan_button.setBackgroundColor(getResources().getColor(R.color.colorGrey));
 
+        filter_bulk_scan_button = (Button) findViewById(R.id.filter_bulk_scan_button);
+        filter_bulk_scan_button.setOnClickListener(this);
+        filter_bulk_scan_button.setBackgroundColor(getResources().getColor(R.color.colorGrey));
+
         back_byitemset_button = (Button) findViewById(R.id.back_byitemset_button);
         back_byitemset_button.setOnClickListener(this);
 
@@ -1339,6 +1426,31 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         view_bulk_scan_button.setOnClickListener(this);
 
         found_number_textview = (TextView)findViewById(R.id.found_number_textview);
+
+
+        // Filter Bulk Scan
+        found_number_filter_bulk_scan_3of3_textview = (TextView)findViewById(R.id.found_number_filter_bulk_scan_3of3_textview);
+        total_number_filter_bulk_scan_3of3_textview = (TextView)findViewById(R.id.total_number_filter_bulk_scan_3of3_textview);
+
+        back_filter_bulk_scan_3of3_button = (Button) findViewById(R.id.back_filter_bulk_scan_3of3_button);
+        back_filter_bulk_scan_3of3_button.setOnClickListener(this);
+
+        scan_filter_bulk_scan_3of3_button = (Button) findViewById(R.id.scan_filter_bulk_scan_3of3_button);
+        scan_filter_bulk_scan_3of3_button.setOnClickListener(this);
+
+        clear_filter_bulk_scan_3of3_button = (Button) findViewById(R.id.clear_filter_bulk_scan_3of3_button);
+        clear_filter_bulk_scan_3of3_button.setOnClickListener(this);
+
+        view_filter_bulk_scan_3of3_button = (Button) findViewById(R.id.view_filter_bulk_scan_3of3_button);
+        view_filter_bulk_scan_3of3_button.setOnClickListener(this);
+
+        filter_bulk_scan_1of3_actor_name_rvlist = (RecyclerView)findViewById(R.id.filter_bulk_scan_1of3_actor_name_rvlist);
+        LinearLayoutManager filterBulkScan1of3linearLayoutManager = new LinearLayoutManager(this,RecyclerView.VERTICAL,false);
+        filter_bulk_scan_1of3_actor_name_rvlist.setLayoutManager(filterBulkScan1of3linearLayoutManager);
+
+        filter_bulk_scan_1of3_actscene_name_rvlist = (RecyclerView)findViewById(R.id.filter_bulk_scan_1of3_actscene_name_rvlist);
+        LinearLayoutManager filterBulkScan1of3ActscenelinearLayoutManager = new LinearLayoutManager(this,RecyclerView.VERTICAL,false);
+        filter_bulk_scan_1of3_actscene_name_rvlist.setLayoutManager(filterBulkScan1of3ActscenelinearLayoutManager);
 
         // Item Set Query Result Layout or Scan
         selected_actor_textview = (TextView)findViewById(R.id.selected_actor_textview);
@@ -1480,6 +1592,63 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         scan_area_title_textview = (TextView)findViewById(R.id.scan_area_title_textview);
         scan_area_title_textview.setTypeface(UhfUtils.Companion.getFontKanitMedium());
 
+        // Filter Bulk Scan
+        filter_bulk_scan_2of3_item_code_rvlist = (RecyclerView)findViewById(R.id.filter_bulk_scan_2of3_item_code_rvlist);
+        LinearLayoutManager filterBulkScan2of3ItemCodelinearLayoutManager = new LinearLayoutManager(this,RecyclerView.VERTICAL,false);
+        filter_bulk_scan_2of3_item_code_rvlist.setLayoutManager(filterBulkScan2of3ItemCodelinearLayoutManager);
+
+        filter_bulk_scan_1of3_title_textview = (TextView)findViewById(R.id.filter_bulk_scan_1of3_title_textview);
+        filter_bulk_scan_2of3_title_textview = (TextView)findViewById(R.id.filter_bulk_scan_2of3_title_textview);
+        filter_bulk_scan_3of3_title_textview = (TextView)findViewById(R.id.filter_bulk_scan_3of3_title_textview);
+
+        filter_bulk_scan_2of3_selected_actor_textview = (TextView)findViewById(R.id.filter_bulk_scan_2of3_selected_actor_textview);
+        filter_bulk_scan_2of3_selected_actscene_textview = (TextView)findViewById(R.id.filter_bulk_scan_2of3_selected_actscene_textview);
+
+        filter_bulk_scan_2of3_items_scanned_textview = (TextView)findViewById(R.id.filter_bulk_scan_2of3_items_scanned_textview);
+        filter_bulk_scan_2of3_total_items_textview = (TextView)findViewById(R.id.filter_bulk_scan_2of3_total_items_textview);
+
+        filter_bulk_scan_3of3_tag_detail_actor_textview = (TextView)findViewById(R.id.filter_bulk_scan_3of3_tag_detail_actor_textview);
+        filter_bulk_scan_3of3_tag_detail_actscene_textview = (TextView)findViewById(R.id.filter_bulk_scan_3of3_tag_detail_actscene_textview);
+
+        filter_bulk_scan_3of3_tag_detail_epc_header_textview = (TextView)findViewById(R.id.filter_bulk_scan_3of3_tag_detail_epc_header_textview);
+        filter_bulk_scan_3of3_tag_detail_epc_run_textview = (TextView)findViewById(R.id.filter_bulk_scan_3of3_tag_detail_epc_run_textview);
+        filter_bulk_scan_3of3_tag_detail_current_box_textview = (TextView)findViewById(R.id.filter_bulk_scan_3of3_tag_detail_current_box_textview);
+
+        filter_bulk_scan_3of3_tag_detail_actor_textview.setTypeface(UhfUtils.Companion.getFontKanitLightItalic());
+        filter_bulk_scan_3of3_tag_detail_actscene_textview.setTypeface(UhfUtils.Companion.getFontKanitLightItalic());
+
+        filter_bulk_scan_2of3_selected_actor_textview.setTypeface(UhfUtils.Companion.getFontKanitLightItalic());
+        filter_bulk_scan_2of3_selected_actscene_textview.setTypeface(UhfUtils.Companion.getFontKanitLightItalic());
+
+        filter_bulk_scan_1of3_title_textview.setTypeface(UhfUtils.Companion.getFontKanitMedium());
+        filter_bulk_scan_2of3_title_textview.setTypeface(UhfUtils.Companion.getFontKanitMedium());
+        filter_bulk_scan_3of3_title_textview.setTypeface(UhfUtils.Companion.getFontKanitMedium());
+
+        filter_bulk_scan_3of3_tag_detail_code_textview = (TextView)findViewById(R.id.filter_bulk_scan_3of3_tag_detail_code_textview);
+        filter_bulk_scan_3of3_tag_detail_type_textview = (TextView)findViewById(R.id.filter_bulk_scan_3of3_tag_detail_type_textview);
+        filter_bulk_scan_3of3_tag_detail_size_textview = (TextView)findViewById(R.id.filter_bulk_scan_3of3_tag_detail_size_textview);
+        filter_bulk_scan_3of3_tag_detail_number_textview = (TextView)findViewById(R.id.filter_bulk_scan_3of3_tag_detail_number_textview);
+
+        filter_bulk_scan_3of3_tag_detail_code_textview.setTypeface(UhfUtils.Companion.getFontKanitLightItalic());
+        filter_bulk_scan_3of3_tag_detail_type_textview.setTypeface(UhfUtils.Companion.getFontKanitLightItalic());
+        filter_bulk_scan_3of3_tag_detail_size_textview.setTypeface(UhfUtils.Companion.getFontKanitLightItalic());
+        filter_bulk_scan_3of3_tag_detail_number_textview.setTypeface(UhfUtils.Companion.getFontKanitLightItalic());
+
+        back_filter_bulk_scan_1of3_button = (Button) findViewById(R.id.back_filter_bulk_scan_1of3_button);
+        back_filter_bulk_scan_1of3_button.setOnClickListener(this);
+
+        next_filter_bulk_scan_1of3_button = (Button) findViewById(R.id.next_filter_bulk_scan_1of3_button);
+        next_filter_bulk_scan_1of3_button.setOnClickListener(this);
+
+        back_filter_bulk_scan_2of3_button = (Button) findViewById(R.id.back_filter_bulk_scan_2of3_button);
+        back_filter_bulk_scan_2of3_button.setOnClickListener(this);
+
+        next_filter_bulk_scan_2of3_button = (Button) findViewById(R.id.next_filter_bulk_scan_2of3_button);
+        next_filter_bulk_scan_2of3_button.setOnClickListener(this);
+
+        back_filter_bulk_scan_3of3_button = (Button) findViewById(R.id.back_filter_bulk_scan_3of3_button);
+        back_filter_bulk_scan_3of3_button.setOnClickListener(this);
+
         clearTagDetail();
 
     }
@@ -1604,6 +1773,27 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                 processDialog.dismiss();
                 break;
             }
+
+            case Constants.FILTER_BULK_SCAN_MODE: {
+                actsceneWriteSingleTagRVAdapter = new ActSceneRVAdapter(mContext, mActivity, mActSceneArrayList, mCurrentSearchMode);
+                filter_bulk_scan_1of3_actscene_name_rvlist.setAdapter(actsceneWriteSingleTagRVAdapter);
+                actsceneWriteSingleTagRVAdapter.notifyDataSetChanged();
+
+                if(mActSceneArrayList.size() == 1) {
+                    Costume costume = (Costume) mActSceneArrayList.get(0);
+                    addSelectedActScene(costume.actScence);
+
+                    filter_bulk_scan_2of3_selected_actscene_textview.setText(costume.actScence);
+                    filter_bulk_scan_3of3_tag_detail_actscene_textview.setText(costume.actScence);
+
+                } else {
+                    filter_bulk_scan_2of3_selected_actscene_textview.setText("");
+                    filter_bulk_scan_3of3_tag_detail_actscene_textview.setText("");
+                }
+
+                processDialog.dismiss();
+                break;
+            }
         }
 
     }
@@ -1716,6 +1906,11 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                 actScene = write_single_tag_2of4_selected_actscene_textview.getText().toString();
                 break;
             }
+            case Constants.FILTER_BULK_SCAN_MODE:{
+                actor = filter_bulk_scan_2of3_selected_actor_textview.getText().toString();
+                actScene = filter_bulk_scan_2of3_selected_actscene_textview.getText().toString();
+                break;
+            }
         }
         Log.d(TAG, "query ItemCodes by actor=" + actor + " : act, scene=" + actScene);
 
@@ -1726,11 +1921,18 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
 
         mItemCodeArrayList = new ArrayList<Costume>();
         mItemCodeArrayList.clear();
+        mFilterCostumeHashMap.clear();
         for (int i = 0; i < mCostumeArrayList.size(); i++) {
             Costume costume = mCostumeArrayList.get(i);
             costume.isFound = false;
             if (costume.actor.equals(actor) && costume.actScence.equals(actScene)) {
                 mItemCodeArrayList.add(costume);
+
+                if(mCurrentSearchMode == Constants.FILTER_BULK_SCAN_MODE) {
+                    // Add selected filter bulk scan
+                    String key = costume.epcHeader + costume.epcRun;
+                    mFilterCostumeHashMap.put(key, costume);
+                }
             }
         }
 
@@ -1755,8 +1957,18 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
 
                 break;
             }
-        }
 
+            case Constants.FILTER_BULK_SCAN_MODE: {
+                filterBulkScan2of3_itemCodeRVAdapter = new ItemCodeRVAdapter(mContext, mActivity, mItemCodeArrayList, mCurrentSearchMode);
+                filter_bulk_scan_2of3_item_code_rvlist.setAdapter(filterBulkScan2of3_itemCodeRVAdapter);
+                filterBulkScan2of3_itemCodeRVAdapter.notifyDataSetChanged();
+
+                filter_bulk_scan_2of3_items_scanned_textview.setText(Integer.toString(0));
+                filter_bulk_scan_2of3_total_items_textview.setText(Integer.toString(mItemCodeArrayList.size()));
+
+                break;
+            }
+        }
 
         processDialog.dismiss();
     }
@@ -1828,6 +2040,38 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
 
                 String currentBox = getCurrentBoxString(mSelectedCostumeToWrite);
                 search_single_tag_3of3_tag_detail_current_box_textview.setText(currentBox);
+                break;
+            }
+            case Constants.FILTER_BULK_SCAN_MODE: {
+                if(mSelectedCostumeToWrite.epcHeader.trim().equals("")) {
+                    mEPCSelected = new com.handheld.upsizeuhf.model.EPC();
+                    filter_bulk_scan_3of3_tag_detail_epc_header_textview.setText("");
+                    filter_bulk_scan_3of3_tag_detail_epc_run_textview.setText("");
+
+                    filter_bulk_scan_3of3_tag_detail_current_box_textview.setText("");
+                } else {
+                    String epcRaw = mSelectedCostumeToWrite.epcHeader + mSelectedCostumeToWrite.epcRun;
+                    String epcTop = UhfUtils.Companion.separateEPCTopString(epcRaw, " ", 4, 16);
+                    String epcBottom = UhfUtils.Companion.separateEPCBottomString(epcRaw, " ", 4, 16);
+
+                    mEPCSelected.setEpcRaw(epcRaw);
+                    mEPCSelected.setEpcHeader(mSelectedCostumeToWrite.epcHeader);
+                    mEPCSelected.setEpcRun(mSelectedCostumeToWrite.epcRun);
+
+                    filter_bulk_scan_3of3_tag_detail_epc_header_textview.setText(epcTop);
+                    filter_bulk_scan_3of3_tag_detail_epc_run_textview.setText(epcBottom);
+
+                    String currentBox = getCurrentBoxString(mSelectedCostumeToWrite);
+                    filter_bulk_scan_3of3_tag_detail_current_box_textview.setText(currentBox);
+                }
+
+
+                filter_bulk_scan_3of3_tag_detail_code_textview.setText(!mSelectedCostumeToWrite.code.trim().equals("") ? mSelectedCostumeToWrite.code : "");
+                filter_bulk_scan_3of3_tag_detail_type_textview.setText(!mSelectedCostumeToWrite.type.trim().equals("") ? mSelectedCostumeToWrite.type : "");
+                filter_bulk_scan_3of3_tag_detail_size_textview.setText(!mSelectedCostumeToWrite.size.trim().equals("") ? mSelectedCostumeToWrite.size : "");
+                filter_bulk_scan_3of3_tag_detail_number_textview.setText(!mSelectedCostumeToWrite.codeNo.trim().equals("") ? mSelectedCostumeToWrite.codeNo : "");
+
+
                 break;
             }
         }
@@ -1923,6 +2167,40 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                             search_single_tag_3of3_tag_detail_actor_textview.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
                         } else {
                             search_single_tag_3of3_tag_detail_actor_textview.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
+                        }
+                    }
+                }
+                break;
+            }
+
+            case Constants.FILTER_BULK_SCAN_MODE: {
+                filter_bulk_scan_2of3_selected_actor_textview.setText(mSelectedActorArray.get(0).toString());
+
+                if (filter_bulk_scan_2of3_selected_actor_textview.getText().toString().length() > 76) {
+                    filter_bulk_scan_2of3_selected_actor_textview.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+                } else {
+                    if (filter_bulk_scan_2of3_selected_actor_textview.getText().toString().length() > 55) {
+                        filter_bulk_scan_2of3_selected_actor_textview.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                    } else {
+                        if (filter_bulk_scan_2of3_selected_actor_textview.getText().toString().length() > 28) {
+                            filter_bulk_scan_2of3_selected_actor_textview.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                        } else {
+                            filter_bulk_scan_2of3_selected_actor_textview.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
+                        }
+                    }
+                }
+
+                filter_bulk_scan_3of3_tag_detail_actor_textview.setText(mSelectedActorArray.get(0).toString());
+                if (filter_bulk_scan_3of3_tag_detail_actor_textview.getText().toString().length() > 76) {
+                    filter_bulk_scan_3of3_tag_detail_actor_textview.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+                } else {
+                    if (filter_bulk_scan_3of3_tag_detail_actor_textview.getText().toString().length() > 55) {
+                        filter_bulk_scan_3of3_tag_detail_actor_textview.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                    } else {
+                        if (filter_bulk_scan_3of3_tag_detail_actor_textview.getText().toString().length() > 28) {
+                            filter_bulk_scan_3of3_tag_detail_actor_textview.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                        } else {
+                            filter_bulk_scan_3of3_tag_detail_actor_textview.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
                         }
                     }
                 }
@@ -2112,7 +2390,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         public void run() {
             super.run();
             while (runFlag) {
-                if (startFlag || scanItemSetFlag || scanItemCodeFlag || scanSingleTagFlag || scanWriteSingleTagFlag || scanSearchSingleTagFlag || scanBulkScanFlag) {
+                if (startFlag || scanItemSetFlag || scanItemCodeFlag || scanSingleTagFlag || scanWriteSingleTagFlag || scanSearchSingleTagFlag || scanBulkScanFlag || scanFilterBulkScanFlag) {
                     tagList = manager.inventoryRealTime(); //实时盘存
                     if (tagList != null && !tagList.isEmpty()) {
                         //播放提示音
@@ -2232,6 +2510,16 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                                 new CountBulkScanThread().start();
                             }
                         }
+                    } else if(scanFilterBulkScanFlag) {
+                        if(mFilterCostumeHashMap.containsKey(epcdata.getEpc())) {
+                            if(!mCountHashMap.containsKey(epcdata.getEpc())) {
+                                Log.d(TAG, "epcdata.getEpc()=" + epcdata.getEpc());
+                                Costume matchCostume = mFilterCostumeHashMap.get(epcdata.getEpc());
+                                matchCostume.runningNo = String.valueOf(mCountHashMap.size() + 1);
+                                mCountHashMap.put(epcdata.getEpc(), matchCostume);
+                                new CountBulkScanThread().start();
+                            }
+                        }
                     }
                 }
 //                Log.d(TAG, "list.size()=" + list.size());
@@ -2325,47 +2613,6 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                     item_info_result_rvlist.setAdapter(itemInfoResultRVAdapter);
                     itemInfoResultRVAdapter.notifyDataSetChanged();
                     item_info_scanned_textview.setText(Integer.toString(mScannedCount));
-                } else if(scanBulkScanFlag) {
-////                    Log.d(TAG, "scanItemSetFlag listMap.size()=" + listMap.size());
-//
-//                    mScannedCount = 0;
-////                    for(int i = 0; i < mItemCodeArrayList.size(); i++) {
-////                        Costume costume = mItemCodeArrayList.get(i);
-////                        String epcBase = costume.epcHeader + costume.epcRun;
-//////                        Log.d(TAG, "epcBase=" + epcBase);
-//                        for (int m = 0; m < listMap.size(); m++) {
-//                            Map map = listMap.get(m);
-//
-//                            for (Object entry : map.entrySet()) {
-//                                String key = ((Map.Entry<String, Object>) entry).getKey();
-//                                Object value = ((Map.Entry<String, Object>) entry).getValue();
-//                                // do something with key and/or tab
-////                                Log.d(TAG, "key=" + key + " : value=" + value);
-////                                if (key.equals("EPCRaw") && value.equals(epcBase)) {
-//////                                    Log.d(TAG, "isFound=true");
-////                                    costume.isFound = true;
-////                                    mItemCodeArrayList.set(i, costume);
-//
-//                                    mScannedCount++;
-//                                    found_number_textview.setText(String.valueOf(mScannedCount));
-//
-//                                    Util.play(1, 0);
-//
-////                                }
-//                            }
-//                        }
-
-//                        if(costume.isFound) {
-
-//                        }
-
-//                    }
-
-//                    byitemset_itemCodeRVAdapter = new ItemCodeRVAdapter(mContext, mActivity, mItemCodeArrayList, Constants.ITEM_SET_MODE);
-//                    byitemset_item_code_rvlist.setAdapter(byitemset_itemCodeRVAdapter);
-//                    byitemset_itemCodeRVAdapter.notifyDataSetChanged();
-//                    items_scanned_textview.setText(Integer.toString(mScannedCount));
-
                 } else if(scanSingleTagFlag || scanWriteSingleTagFlag || scanSearchSingleTagFlag) {
 //                    Log.d(TAG, "scanSingleTagFlag || scanWriteSingleTagFlag || scanSearchSingleTagFlag listMap.size()=" + listMap.size());
 
@@ -2817,6 +3064,14 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
             }
             break;
 
+            case R.id.filter_bulk_scan_button: {
+                Util.play(1, 0);
+                Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
+                animate.setAnimationListener(new FilterBulkScanButtonAnimationListener());
+                filter_bulk_scan_button.startAnimation(animate);
+            }
+            break;
+
             // Item Set Filter =================
             case R.id.back_byitemset_button: {
                 Util.play(1, 0);
@@ -3071,6 +3326,83 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                 Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
                 animate.setAnimationListener(new ViewBulkScanButtonAnimationListener());
                 view_bulk_scan_button.startAnimation(animate);
+            }
+            break;
+
+            // Filter Bulk Scan
+            // Filter Bulk Scan 1of3
+            case R.id.back_filter_bulk_scan_1of3_button: {
+                Util.play(1, 0);
+                Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
+                animate.setAnimationListener(new BackFilterBulkScan1of3ButtonAnimationListener());
+                back_filter_bulk_scan_1of3_button.startAnimation(animate);
+            }
+            break;
+
+            case R.id.next_filter_bulk_scan_1of3_button: {
+                Util.play(1, 0);
+                Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
+                animate.setAnimationListener(new NextFilterBulkScan1of3ButtonAnimationListener());
+                next_filter_bulk_scan_1of3_button.startAnimation(animate);
+            }
+            break;
+
+            // Filter Bulk Scan 2of3
+            case R.id.filter_bulk_scan_2of3_actor_layout: {
+                Util.play(1, 0);
+                Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
+                animate.setAnimationListener(new ActorFilterBulkScan2of3LayoutAnimationListener());
+                filter_bulk_scan_2of3_actor_layout.startAnimation(animate);
+            }
+            break;
+
+            case R.id.back_filter_bulk_scan_2of3_button: {
+                Util.play(1, 0);
+                Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
+                animate.setAnimationListener(new BackFilterBulkScan2of3ButtonAnimationListener());
+                back_filter_bulk_scan_2of3_button.startAnimation(animate);
+            }
+            break;
+
+            case R.id.next_filter_bulk_scan_2of3_button: {
+                Util.play(1, 0);
+                Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
+                animate.setAnimationListener(new NextFilterBulkScan2of3ButtonAnimationListener());
+                next_filter_bulk_scan_2of3_button.startAnimation(animate);
+            }
+            break;
+
+            // Filter Bulk Scan 3of3
+            case R.id.back_filter_bulk_scan_3of3_button: {
+                Util.play(1, 0);
+                Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
+                animate.setAnimationListener(new BackFilterBulkScan3of3ButtonAnimationListener());
+                back_filter_bulk_scan_3of3_button.startAnimation(animate);
+            }
+            break;
+
+            case R.id.scan_filter_bulk_scan_3of3_button: {
+                Util.play(1, 0);
+                Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
+                animate.setAnimationListener(new ScanFilterBulkScanButtonAnimationListener());
+                scan_filter_bulk_scan_3of3_button.startAnimation(animate);
+            }
+            break;
+
+            case R.id.clear_filter_bulk_scan_3of3_button: {
+                clearData();
+                Util.play(1, 0);
+                Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
+                animate.setAnimationListener(new ClearFilterBulkScanButtonAnimationListener());
+                clear_filter_bulk_scan_3of3_button.startAnimation(animate);
+            }
+            break;
+
+            case R.id.view_filter_bulk_scan_3of3_button: {
+                Util.play(1, 0);
+                Animation animate = AnimationUtils.Companion.getBounceAnimation(getApplicationContext());
+                animate.setAnimationListener(new ViewFilterBulkScanButtonAnimationListener());
+                view_filter_bulk_scan_3of3_button.startAnimation(animate);
             }
             break;
 
@@ -3349,6 +3681,39 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         }
     }
 
+    private class FilterBulkScanButtonAnimationListener implements Animation.AnimationListener   {
+
+        @Override
+        public void onAnimationStart(Animation animation) {
+            if(isOnline) {
+                filter_bulk_scan_1of3_title_textview.setText(getString(R.string.filter_bulk_scan_select_act_1of3));
+
+                // Clear select actor
+                mSelectedActorFilter = "";
+                mCurrentSearchMode = Constants.FILTER_BULK_SCAN_MODE;
+
+                SetVisible(filter_bulk_scan_1of3_layout, textViewS1, viewS1);
+
+                // Load Actor List
+                new LoadActorThread(filter_bulk_scan_1of3_layout).start();
+            } else {
+                loadWarningDialog("", getString(R.string.database_server_offline), getString(R.string.database_server_offline_solution));
+
+                filter_bulk_scan_button.setEnabled(false);
+            }
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    }
+
     private class BulkScanButtonAnimationListener implements Animation.AnimationListener   {
         View view;
         public BulkScanButtonAnimationListener(View v) {
@@ -3363,8 +3728,6 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
 
                 SetVisible(bulk_scan_layout, textViewS1, viewS1);
 
-//                // Load Actor List
-//                new LoadActorThread(bulk_scan_layout).start();
             } else {
                 loadWarningDialog("", getString(R.string.database_server_offline), getString(R.string.database_server_offline_solution));
 
@@ -3651,6 +4014,31 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         }
     }
 
+    private class BackFilterBulkScan1of3ButtonAnimationListener implements Animation.AnimationListener   {
+        @Override
+        public void onAnimationStart(Animation animation) {
+            mEPCSelected = new com.handheld.upsizeuhf.model.EPC();
+            mSelectedCostumeToWrite = new Costume();
+
+            filter_bulk_scan_2of3_selected_actor_textview.setText("");
+            selected_actscene_textview.setText("");
+            filter_bulk_scan_2of3_selected_actscene_textview.setText("");
+
+            SetVisible(searchandcheck_layout, textViewS1, viewS1);
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    }
+
     private class NextWriteSingleTag1of4ButtonAnimationListener implements Animation.AnimationListener   {
         View view;
         public NextWriteSingleTag1of4ButtonAnimationListener(View v) {
@@ -3683,6 +4071,41 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                 loadWarningDialog("", getString(R.string.actor_actscene_notfound), getString(R.string.actor_actscene_notfound_solution));
             } else {
                 SetVisible(write_single_tag_2of4_layout, textViewS1, viewS1);
+                queryItemCodesBySelectedActorActScene();
+
+            }
+
+
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    }
+
+    private class NextFilterBulkScan1of3ButtonAnimationListener implements Animation.AnimationListener   {
+
+        @Override
+        public void onAnimationStart(Animation animation) {
+
+            mEPCSelected = new com.handheld.upsizeuhf.model.EPC();
+            mSelectedCostumeToWrite = new Costume();
+
+            String actor = filter_bulk_scan_2of3_selected_actor_textview.getText().toString();
+            String actScene = selected_actscene_textview.getText().toString();
+            filter_bulk_scan_2of3_selected_actscene_textview.setText(selected_actscene_textview.getText());
+            Log.d(TAG, "query ItemCodes by actor=" + actor + " : act, scene=" + actScene);
+
+            if(actor.equalsIgnoreCase("") && actScene.equalsIgnoreCase("")) {
+                loadWarningDialog("", getString(R.string.actor_actscene_notfound), getString(R.string.actor_actscene_notfound_solution));
+            } else {
+                SetVisible(filter_bulk_scan_2of3_layout, textViewS1, viewS1);
                 queryItemCodesBySelectedActorActScene();
 
             }
@@ -3745,6 +4168,72 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         }
     }
 
+    public static int dpToPx(int dp, Context context) {
+        float density = context.getResources().getDisplayMetrics().density;
+        return Math.round((float) dp * density);
+    }
+
+    private class NextFilterBulkScan2of3ButtonAnimationListener implements Animation.AnimationListener   {
+        @Override
+        public void onAnimationStart(Animation animation) {
+
+            String actor = filter_bulk_scan_2of3_selected_actor_textview.getText().toString();
+            String actScence = filter_bulk_scan_2of3_selected_actscene_textview.getText().toString();
+            Log.d(TAG, "query ItemCodes by actor=" + actor + " : act, scene=" + actScence);
+            filter_bulk_scan_3of3_tag_detail_actscene_textview.setText(actScence);
+
+            found_number_filter_bulk_scan_3of3_textview.setText(String.valueOf(0));
+
+            if(!mSelectedCostumeToWrite.code.equals("")) {
+                // Gets the layout params that will allow you to resize the layout
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) filter_bulk_scan_3of3_tag_detail_layout.getLayoutParams();
+                // Changes the height and width to the specified *pixels*
+                params.height = dpToPx(290, mContext);
+                filter_bulk_scan_3of3_tag_detail_layout.setLayoutParams(params);
+
+                filter_bulk_scan_3of3_tag_detail_head_layout.setVisibility(View.VISIBLE);
+                filter_bulk_scan_3of3_tag_detail_content_layout.setVisibility(View.VISIBLE);
+                filter_bulk_scan_3of3_tag_detail_box_layout.setVisibility(View.VISIBLE);
+
+                // Re costume selected
+                mFilterCostumeHashMap.clear();
+                String key = mSelectedCostumeToWrite.epcHeader + mSelectedCostumeToWrite.epcRun;
+                mFilterCostumeHashMap.put(key, mSelectedCostumeToWrite);
+
+                total_number_filter_bulk_scan_3of3_textview.setText(String.valueOf(mFilterCostumeHashMap.size()));
+
+            } else {
+                // Gets the layout params that will allow you to resize the layout
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) filter_bulk_scan_3of3_tag_detail_layout.getLayoutParams();
+                // Changes the height and width to the specified *pixels*
+                params.height = dpToPx(180, mContext);
+                filter_bulk_scan_3of3_tag_detail_layout.setLayoutParams(params);
+
+                filter_bulk_scan_3of3_tag_detail_head_layout.setVisibility(View.GONE);
+                filter_bulk_scan_3of3_tag_detail_content_layout.setVisibility(View.GONE);
+                filter_bulk_scan_3of3_tag_detail_box_layout.setVisibility(View.GONE);
+
+                total_number_filter_bulk_scan_3of3_textview.setText(String.valueOf(mFilterCostumeHashMap.size()));
+            }
+                
+            SetVisible(filter_bulk_scan_3of3_layout, textViewS1, viewS1);
+
+            // do no clear scan single rv list
+            new RefreshEPCSingleTagThread().start();
+
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    }
+
     private class BackWriteSingleTag2of4ButtonAnimationListener implements Animation.AnimationListener   {
         @Override
         public void onAnimationStart(Animation animation) {
@@ -3753,6 +4242,88 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
             mSelectedCostumeToWrite = new Costume();
 
             SetVisible(write_single_tag_1of4_layout, textViewS1, viewS1);
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    }
+
+
+    private class ActorFilterBulkScan2of3LayoutAnimationListener implements Animation.AnimationListener   {
+        @Override
+        public void onAnimationStart(Animation animation) {
+            // Clear selected costume item
+            queryItemCodesBySelectedActorActScene();
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    }
+
+    private class BackFilterBulkScan2of3ButtonAnimationListener implements Animation.AnimationListener   {
+        @Override
+        public void onAnimationStart(Animation animation) {
+            // Clear selected costume item
+            mEPCSelected = new com.handheld.upsizeuhf.model.EPC();
+            mSelectedCostumeToWrite = new Costume();
+
+            SetVisible(filter_bulk_scan_1of3_layout, textViewS1, viewS1);
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    }
+
+    private class BackFilterBulkScan3of3ButtonAnimationListener implements Animation.AnimationListener   {
+        @Override
+        public void onAnimationStart(Animation animation) {
+            // Clear selected costume item
+            mEPCSelected = new com.handheld.upsizeuhf.model.EPC();
+            mSelectedCostumeToWrite = new Costume();
+            mCountHashMap.clear();
+
+            filter_bulk_scan_3of3_tag_detail_code_textview.setText("");
+            filter_bulk_scan_3of3_tag_detail_type_textview.setText("");
+            filter_bulk_scan_3of3_tag_detail_size_textview.setText("");
+            filter_bulk_scan_3of3_tag_detail_number_textview.setText("");
+
+            filter_bulk_scan_3of3_tag_detail_epc_header_textview.setText("");
+            filter_bulk_scan_3of3_tag_detail_epc_run_textview.setText("");
+            filter_bulk_scan_3of3_tag_detail_current_box_textview.setText("");
+
+            filter_bulk_scan_3of3_tag_detail_head_layout.setVisibility(View.GONE);
+            filter_bulk_scan_3of3_tag_detail_content_layout.setVisibility(View.GONE);
+            filter_bulk_scan_3of3_tag_detail_box_layout.setVisibility(View.GONE);
+
+            scanFilterBulkScanFlag = false;
+            scan_filter_bulk_scan_3of3_button.setText(R.string.scan);
+
+            SetVisible(filter_bulk_scan_2of3_layout, textViewS1, viewS1);
+            queryItemCodesBySelectedActorActScene();
         }
 
         @Override
@@ -3964,10 +4535,36 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         }
     }
 
+    private class ClearFilterBulkScanButtonAnimationListener implements Animation.AnimationListener   {
+        @Override
+        public void onAnimationStart(Animation animation) {
+            thread.interrupt();
+            scanFilterBulkScanFlag = false;
+            scan_filter_bulk_scan_3of3_button.setText(R.string.scan);
+
+            clearBulkScanCountNumber();
+
+//            queryItemCodesBySelectedActorActScene();
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    }
+
     private void clearBulkScanCountNumber() {
         mScannedCount = 0;
         mCountHashMap.clear();
         found_number_textview.setText(String.valueOf(mScannedCount));
+
+        found_number_filter_bulk_scan_3of3_textview.setText(String.valueOf(mScannedCount));
     }
 
     private class ViewBulkScanButtonAnimationListener implements Animation.AnimationListener   {
@@ -3976,6 +4573,28 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
             thread.interrupt();
             scanItemCodeFlag = false;
             scan_bulk_scan_button.setText(R.string.scan);
+
+            loadViewBulkScanDialog();
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    }
+
+    private class ViewFilterBulkScanButtonAnimationListener implements Animation.AnimationListener   {
+        @Override
+        public void onAnimationStart(Animation animation) {
+            thread.interrupt();
+            scanFilterBulkScanFlag = false;
+            scan_filter_bulk_scan_3of3_button.setText(R.string.scan);
 
             loadViewBulkScanDialog();
         }
@@ -4084,6 +4703,35 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                 thread.interrupt();
                 scanBulkScanFlag = false;
                 scan_bulk_scan_button.setText(R.string.scan);
+            }
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    }
+
+    private class ScanFilterBulkScanButtonAnimationListener implements Animation.AnimationListener   {
+        @Override
+        public void onAnimationStart(Animation animation) {
+            if (!scanFilterBulkScanFlag) {
+                thread.start();
+                mScannedCount = 0;
+                mCountHashMap.clear();
+                scanFilterBulkScanFlag = true;
+
+                scan_filter_bulk_scan_3of3_button.setText(R.string.stop);
+            } else {
+                thread.interrupt();
+                scanFilterBulkScanFlag = false;
+                scan_filter_bulk_scan_3of3_button.setText(R.string.scan);
             }
         }
 
@@ -4306,6 +4954,9 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         
         search_single_tag_3of3_layout.setVisibility(View.GONE);
         bulk_scan_layout.setVisibility(View.GONE);
+        filter_bulk_scan_1of3_layout.setVisibility(View.GONE);
+        filter_bulk_scan_2of3_layout.setVisibility(View.GONE);
+        filter_bulk_scan_3of3_layout.setVisibility(View.GONE);
 
         l1epc.setVisibility(View.GONE);
         l2readandwrite.setVisibility(View.GONE);
@@ -4788,10 +5439,12 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                         write_single_tag_button.setBackgroundColor(getResources().getColor(R.color.colorWhite));
                         search_single_tag_button.setBackgroundColor(getResources().getColor(R.color.colorWhite));
                         bulk_scan_button.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+                        filter_bulk_scan_button.setBackgroundColor(getResources().getColor(R.color.colorWhite));
                         read_single_tag_button.setEnabled(true);
                         write_single_tag_button.setEnabled(true);
                         search_single_tag_button.setEnabled(true);
                         bulk_scan_button.setEnabled(true);
+                        filter_bulk_scan_button.setEnabled(true);
 
                         isOnline = true;
                         showAppTitle();
@@ -4962,7 +5615,18 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                     public void run() {
                         mScannedCount++;
                         Log.d(TAG, "mScannedCount=" + mScannedCount);
-                        found_number_textview.setText(String.valueOf(mScannedCount));
+                        if(mCurrentSearchMode == Constants.FILTER_BULK_SCAN_MODE) {
+                            found_number_filter_bulk_scan_3of3_textview.setText(String.valueOf(mScannedCount));
+                        } else {
+                            found_number_textview.setText(String.valueOf(mScannedCount));
+                        }
+
+                        // play sound
+                        if((mScannedCount % 2) == 0 || mScannedCount == 1) {
+                            Util.play(1, 0);
+                        }
+//                        MediaUtils.playOneBeepSoundNoMediaPlayer();
+                        
                     }
                 });
 
@@ -5062,9 +5726,11 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                             write_single_tag_button.setBackgroundColor(getResources().getColor(R.color.colorWhite));
                             search_single_tag_button.setBackgroundColor(getResources().getColor(R.color.colorWhite));
                             bulk_scan_button.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+                            filter_bulk_scan_button.setBackgroundColor(getResources().getColor(R.color.colorWhite));
                             read_single_tag_button.setEnabled(true);
                             search_single_tag_button.setEnabled(true);
                             bulk_scan_button.setEnabled(true);
+                            filter_bulk_scan_button.setEnabled(true);
                         }
                     });
 
@@ -5175,6 +5841,19 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                                 actsceneWriteSingleTagRVAdapter = new ActSceneRVAdapter(mContext, mActivity, mActSceneArrayList, mCurrentSearchMode);
                                 write_single_tag_1of4_actscene_name_rvlist.setAdapter(actsceneWriteSingleTagRVAdapter);
                                 actsceneWriteSingleTagRVAdapter.notifyDataSetChanged();
+                                break;
+                            }
+
+                            case R.id.filter_bulk_scan_1of3_layout: {
+                                actorFilterBulkScanRVAdapter = new ActorRVAdapter(mContext, mActivity, mActorArrayList, mCurrentSearchMode);
+                                filter_bulk_scan_1of3_actor_name_rvlist.setAdapter(actorFilterBulkScanRVAdapter);
+                                actorFilterBulkScanRVAdapter.notifyDataSetChanged();
+
+                                // Clear act, scence list
+                                mActSceneArrayList = new ArrayList<Costume>();
+                                actsceneFilterBulkScanRVAdapter = new ActSceneRVAdapter(mContext, mActivity, mActSceneArrayList, mCurrentSearchMode);
+                                filter_bulk_scan_1of3_actscene_name_rvlist.setAdapter(actsceneFilterBulkScanRVAdapter);
+                                actsceneFilterBulkScanRVAdapter.notifyDataSetChanged();
                                 break;
                             }
 

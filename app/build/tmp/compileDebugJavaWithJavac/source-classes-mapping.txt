@@ -8,23 +8,27 @@ com/handheld/upsizeuhf/ui/EPCTagRVAdapter.java
  com.handheld.upsizeuhf.ui.EPCTagRVAdapter$NameAnimationListener
 com/handheld/upsizeuhf/Util.java
  com.handheld.upsizeuhf.Util
+com/handheld/upsizeuhf/model/QueryService.java
+ com.handheld.upsizeuhf.model.QueryService
 com/handheld/upsizeuhf/model/Costume.java
  com.handheld.upsizeuhf.model.Costume
+com/handheld/upsizeuhf/util/MediaUtils.java
+ com.handheld.upsizeuhf.util.MediaUtils
 com/handheld/upsizeuhf/model/Box.java
  com.handheld.upsizeuhf.model.Box
 com/handheld/upsizeuhf/util/UpsizeUhfUtils.java
  com.handheld.upsizeuhf.util.UpsizeUhfUtils
 com/handheld/upsizeuhf/EPC.java
  com.handheld.upsizeuhf.EPC
-com/handheld/upsizeuhf/model/Actor.java
- com.handheld.upsizeuhf.model.Actor
+com/handheld/upsizeuhf/util/HttpConnectionService.java
+ com.handheld.upsizeuhf.util.HttpConnectionService
 com/handheld/upsizeuhf/BuildConfig.java
  com.handheld.upsizeuhf.BuildConfig
 com/handheld/upsizeuhf/database/CostumeRoomDatabase_Impl.java
  com.handheld.upsizeuhf.database.CostumeRoomDatabase_Impl
  com.handheld.upsizeuhf.database.CostumeRoomDatabase_Impl$1
-com/handheld/upsizeuhf/model/QueryService.java
- com.handheld.upsizeuhf.model.QueryService
+com/handheld/upsizeuhf/model/Actor.java
+ com.handheld.upsizeuhf.model.Actor
 com/handheld/upsizeuhf/dao/CostumeDao_Impl.java
  com.handheld.upsizeuhf.dao.CostumeDao_Impl
  com.handheld.upsizeuhf.dao.CostumeDao_Impl$1
@@ -47,8 +51,6 @@ com/handheld/upsizeuhf/dao/CostumeDao_Impl.java
  com.handheld.upsizeuhf.dao.CostumeDao_Impl$7
  com.handheld.upsizeuhf.dao.CostumeDao_Impl$8
  com.handheld.upsizeuhf.dao.CostumeDao_Impl$9
-com/handheld/upsizeuhf/util/HttpConnectionService.java
- com.handheld.upsizeuhf.util.HttpConnectionService
 com/handheld/upsizeuhf/ui/ItemCodeFilterRVAdapter.java
  com.handheld.upsizeuhf.ui.ItemCodeFilterRVAdapter
  com.handheld.upsizeuhf.ui.ItemCodeFilterRVAdapter$ItemCodeFilterOnClickListener
@@ -72,6 +74,14 @@ com/handheld/upsizeuhf/ui/BoxRVAdapter.java
  com.handheld.upsizeuhf.ui.BoxRVAdapter$BoxViewHolder
  com.handheld.upsizeuhf.ui.BoxRVAdapter$ItemInfoOnClickListener
  com.handheld.upsizeuhf.ui.BoxRVAdapter$NameAnimationListener
+com/handheld/upsizeuhf/ui/ViewItemCodeRVAdapter.java
+ com.handheld.upsizeuhf.ui.ViewItemCodeRVAdapter
+ com.handheld.upsizeuhf.ui.ViewItemCodeRVAdapter$1
+ com.handheld.upsizeuhf.ui.ViewItemCodeRVAdapter$2
+ com.handheld.upsizeuhf.ui.ViewItemCodeRVAdapter$3
+ com.handheld.upsizeuhf.ui.ViewItemCodeRVAdapter$4
+ com.handheld.upsizeuhf.ui.ViewItemCodeRVAdapter$ItemCodeViewHolder
+ com.handheld.upsizeuhf.ui.ViewItemCodeRVAdapter$NameAnimationListener
 com/handheld/upsizeuhf/UHFActivity.java
  com.handheld.upsizeuhf.UHFActivity
  com.handheld.upsizeuhf.UHFActivity$1
@@ -80,6 +90,7 @@ com/handheld/upsizeuhf/UHFActivity.java
  com.handheld.upsizeuhf.UHFActivity$12
  com.handheld.upsizeuhf.UHFActivity$13
  com.handheld.upsizeuhf.UHFActivity$14
+ com.handheld.upsizeuhf.UHFActivity$15
  com.handheld.upsizeuhf.UHFActivity$2
  com.handheld.upsizeuhf.UHFActivity$3
  com.handheld.upsizeuhf.UHFActivity$4
@@ -88,11 +99,15 @@ com/handheld/upsizeuhf/UHFActivity.java
  com.handheld.upsizeuhf.UHFActivity$7
  com.handheld.upsizeuhf.UHFActivity$8
  com.handheld.upsizeuhf.UHFActivity$9
+ com.handheld.upsizeuhf.UHFActivity$ActorFilterBulkScan2of3LayoutAnimationListener
  com.handheld.upsizeuhf.UHFActivity$BackBulkScanButtonAnimationListener
  com.handheld.upsizeuhf.UHFActivity$BackByItemCodeFilterButtonAnimationListener
  com.handheld.upsizeuhf.UHFActivity$BackByItemCodeInfoResultButtonAnimationListener
  com.handheld.upsizeuhf.UHFActivity$BackByItemSetFilterButtonAnimationListener
  com.handheld.upsizeuhf.UHFActivity$BackByItemSetInfoResultButtonAnimationListener
+ com.handheld.upsizeuhf.UHFActivity$BackFilterBulkScan1of3ButtonAnimationListener
+ com.handheld.upsizeuhf.UHFActivity$BackFilterBulkScan2of3ButtonAnimationListener
+ com.handheld.upsizeuhf.UHFActivity$BackFilterBulkScan3of3ButtonAnimationListener
  com.handheld.upsizeuhf.UHFActivity$BackReadSingleTagButtonAnimationListener
  com.handheld.upsizeuhf.UHFActivity$BackWriteSingleTag1of4ButtonAnimationListener
  com.handheld.upsizeuhf.UHFActivity$BackWriteSingleTag2of4ButtonAnimationListener
@@ -103,6 +118,7 @@ com/handheld/upsizeuhf/UHFActivity.java
  com.handheld.upsizeuhf.UHFActivity$CheckItemCodeButtonAnimationListener
  com.handheld.upsizeuhf.UHFActivity$CheckItemSetButtonAnimationListener
  com.handheld.upsizeuhf.UHFActivity$ClearBulkScanButtonAnimationListener
+ com.handheld.upsizeuhf.UHFActivity$ClearFilterBulkScanButtonAnimationListener
  com.handheld.upsizeuhf.UHFActivity$ClearItemCodeButtonAnimationListener
  com.handheld.upsizeuhf.UHFActivity$ClearItemSetButtonAnimationListener
  com.handheld.upsizeuhf.UHFActivity$ClearSearchSingleTag3of3ButtonAnimationListener
@@ -110,6 +126,7 @@ com/handheld/upsizeuhf/UHFActivity.java
  com.handheld.upsizeuhf.UHFActivity$ClearWriteSingleTag3of4ButtonAnimationListener
  com.handheld.upsizeuhf.UHFActivity$CountBulkScanThread
  com.handheld.upsizeuhf.UHFActivity$CountBulkScanThread$1
+ com.handheld.upsizeuhf.UHFActivity$FilterBulkScanButtonAnimationListener
  com.handheld.upsizeuhf.UHFActivity$ImportLocalCostumeThread
  com.handheld.upsizeuhf.UHFActivity$ImportLocalCostumeThread$1
  com.handheld.upsizeuhf.UHFActivity$ImportLocalCostumeThread$2
@@ -130,6 +147,8 @@ com/handheld/upsizeuhf/UHFActivity.java
  com.handheld.upsizeuhf.UHFActivity$LoadLocalStorageBoxThread
  com.handheld.upsizeuhf.UHFActivity$NextByItemCodeFilterButtonAnimationListener
  com.handheld.upsizeuhf.UHFActivity$NextByItemSetFilterButtonAnimationListener
+ com.handheld.upsizeuhf.UHFActivity$NextFilterBulkScan1of3ButtonAnimationListener
+ com.handheld.upsizeuhf.UHFActivity$NextFilterBulkScan2of3ButtonAnimationListener
  com.handheld.upsizeuhf.UHFActivity$NextWriteSingleTag1of4ButtonAnimationListener
  com.handheld.upsizeuhf.UHFActivity$NextWriteSingleTag2of4ButtonAnimationListener
  com.handheld.upsizeuhf.UHFActivity$ReadSingleTagButtonAnimationListener
@@ -145,6 +164,7 @@ com/handheld/upsizeuhf/UHFActivity.java
  com.handheld.upsizeuhf.UHFActivity$RefreshItemSetResultThread$1
  com.handheld.upsizeuhf.UHFActivity$ReloadDataAsyncTask
  com.handheld.upsizeuhf.UHFActivity$ScanBulkScanButtonAnimationListener
+ com.handheld.upsizeuhf.UHFActivity$ScanFilterBulkScanButtonAnimationListener
  com.handheld.upsizeuhf.UHFActivity$ScanItemCodeButtonAnimationListener
  com.handheld.upsizeuhf.UHFActivity$ScanItemSetButtonAnimationListener
  com.handheld.upsizeuhf.UHFActivity$ScanSearchSingleTag3of3ButtonAnimationListener
@@ -152,6 +172,7 @@ com/handheld/upsizeuhf/UHFActivity.java
  com.handheld.upsizeuhf.UHFActivity$ScanWriteSingleTag3of4ButtonAnimationListener
  com.handheld.upsizeuhf.UHFActivity$ServiceQueryAsyncTask
  com.handheld.upsizeuhf.UHFActivity$ViewBulkScanButtonAnimationListener
+ com.handheld.upsizeuhf.UHFActivity$ViewFilterBulkScanButtonAnimationListener
  com.handheld.upsizeuhf.UHFActivity$WriteReadSingleTagButtonAnimationListener
  com.handheld.upsizeuhf.UHFActivity$WriteSingleTagButtonAnimationListener
  com.handheld.upsizeuhf.UHFActivity$WriteWriteSingleTag3of4ButtonAnimationListener

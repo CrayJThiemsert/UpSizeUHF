@@ -574,4 +574,9 @@
 	<string name="view">View</string>
     <string name="found">found</string>
     <string name="bulk_scan_view">Bulk Scan View</string>
+    <string name="filter_bulk_scan">Filter Bulk Scan</string>
+	<string name="filter_bulk_scan_select_act_1of3">Bulk Scan - 1 of 3 - Select Act</string>
+	<string name="filter_bulk_scan_select_act_2of3">Bulk Scan - 2 of 3 - Select Item</string>
+	<string name="filter_bulk_scan_select_act_3of3">Bulk Scan - 3 of 3 - Scanning</string>
+	<string name="selected_or_not_itemcode">Please beware the selection or not selected item. If not selected, means selected all items in this actor and act, scence.</string>
 </resources>

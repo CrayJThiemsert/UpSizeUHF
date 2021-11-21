@@ -22,7 +22,7 @@ import com.handheld.upsizeuhf.model.Box
 import com.handheld.upsizeuhf.model.Costume
 import com.handheld.upsizeuhf.model.QueryService
 import com.handheld.upsizeuhf.ui.BoxRVAdapter
-import com.handheld.upsizeuhf.ui.ItemCodeRVAdapter
+import com.handheld.upsizeuhf.ui.ViewItemCodeRVAdapter
 import com.handheld.upsizeuhf.util.AnimationUtils
 import com.handheld.upsizeuhf.util.Constants
 import com.handheld.upsizeuhf.util.Constants.Companion.getCheckedHistoryProcedure
@@ -49,8 +49,9 @@ class ViewBulkScanDialogFragment : DialogFragment() {
     private lateinit var view_bulk_scan_layout: LinearLayout
 
     private var view_bulk_scan_result_rvlist: RecyclerView? = null
-    private var viewBulkScanRVAdapter: ItemCodeRVAdapter? = null
+    private var viewBulkScanRVAdapter: ViewItemCodeRVAdapter? = null
     private lateinit var found_number_textview: TextView
+    private lateinit var total_number_textview: TextView
 
     private var mBoxArrayList = ArrayList<Box>()
 
@@ -65,8 +66,10 @@ class ViewBulkScanDialogFragment : DialogFragment() {
     lateinit var mByUser: String
     lateinit var mCheckedBox: Box
 
+
     companion object {
         private var costumeCheckedList: MutableList<Costume> = mutableListOf<Costume>()
+        lateinit var mTotal: String
 
         /**
          * Use this factory method to create a new instance of
@@ -95,6 +98,7 @@ class ViewBulkScanDialogFragment : DialogFragment() {
             args.putString("email", "")
             fragment.arguments = args
 
+            mTotal = param1
             costumeCheckedList = costumeCheckedListParam
             return fragment
         }
@@ -146,6 +150,7 @@ class ViewBulkScanDialogFragment : DialogFragment() {
 
         dialog_title = view.findViewById<TextView>(R.id.dialog_title)
         found_number_textview = view.findViewById<TextView>(R.id.view_found_number_textview)
+        total_number_textview = view.findViewById<TextView>(R.id.total_number_textview)
         mProgressBar = view.findViewById(R.id.progressBar)
 
         back_view_bulk_scan_button = view.findViewById(R.id.back_view_bulk_scan_button)
@@ -157,12 +162,13 @@ class ViewBulkScanDialogFragment : DialogFragment() {
         view_bulk_scan_result_rvlist!!.setLayoutManager(viewBulkScanLinearLayoutManager)
 
         viewBulkScanRVAdapter =
-            ItemCodeRVAdapter(mActivity!!.applicationContext, mActivity,
+            ViewItemCodeRVAdapter(mActivity!!.applicationContext, mActivity,
                 costumeCheckedList as ArrayList<Costume>?, Constants.ITEM_SET_MODE)
         view_bulk_scan_result_rvlist!!.adapter = viewBulkScanRVAdapter
         viewBulkScanRVAdapter!!.notifyDataSetChanged()
 
         found_number_textview.setText(costumeCheckedList.size.toString())
+        total_number_textview.setText(mTotal)
 
         setEvents()
     }

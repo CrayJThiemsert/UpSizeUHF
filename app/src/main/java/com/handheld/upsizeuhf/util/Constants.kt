@@ -113,6 +113,7 @@ class Constants {
         const val READ_SINGLE_TAG_MODE = 3
         const val WRITE_SINGLE_TAG_MODE = 4
         const val SEARCH_SINGLE_TAG_MODE = 5
+        const val FILTER_BULK_SCAN_MODE = 6
 
         const val READYTOSCAN_SEARCH_RESULT = 0
         const val SCANNOTFOUND_SEARCH_RESULT = 1
@@ -147,6 +148,7 @@ class Constants {
         const val SCREEN_TYPE_BY_ITEM_CODE = 2
         const val SCREEN_TYPE_READ_SINGLE_TAG = 3
         const val SCREEN_TYPE_WRITE_SINGLE_TAG = 4
+
 
         fun getCostumeAllQuery() : QueryService {
             return COSTUME_All_QUERY
