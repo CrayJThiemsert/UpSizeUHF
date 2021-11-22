@@ -94,16 +94,24 @@ public class ItemCodeRVAdapter extends RecyclerView.Adapter<ItemCodeRVAdapter.It
         holder.current_box_textview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Util.play(1, 0);
                 row_index=position;
                 notifyDataSetChanged();
+
+                UHFActivity uhfActivity = (UHFActivity)mActivity;
+                uhfActivity.addSelectedCostumeToWriteTag(costume, mScreenType);
             }
         });
 
         holder.item_code_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Util.play(1, 0);
                 row_index=position;
                 notifyDataSetChanged();
+
+                UHFActivity uhfActivity = (UHFActivity)mActivity;
+                uhfActivity.addSelectedCostumeToWriteTag(costume, mScreenType);
             }
         });
 

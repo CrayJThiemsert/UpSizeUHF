@@ -486,6 +486,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     private TextView item_info_scanned_textview;
 
     Thread thread = new InventoryThread();
+    FilterBulkScanThread filterBulkScanThread = new FilterBulkScanThread();
 
     private SharedPreferences shared;
     private SharedPreferences.Editor editor;
@@ -568,7 +569,11 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         //start inventory thread
         thread = new InventoryThread();
 
-        thread.start();
+        filterBulkScanThread = new FilterBulkScanThread();
+
+//        thread.start();
+        filterBulkScanThread.start();
+
         // init sound pool
         Util.initSoundPool(this);
 
@@ -755,7 +760,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
 
         registerReceiver();
 
-//		Log.e("", "value" + power);
+		Log.d("", "0 power value" + power);
         if (manager == null) {
             manager.setOutputPower(power);
             manager.setWorkArea(area);
@@ -2395,7 +2400,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                     if (tagList != null && !tagList.isEmpty()) {
                         //播放提示音
 //                        Util.play(1, 0);
-                        try{
+                        try {
                             for (TagModel tag : tagList) {
                                 if (tag == null) {
                                     String epcStr = "";
@@ -2412,21 +2417,21 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-
-                    } else {
-                        try {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if(mSearchResult != Constants.READYTOSCAN_SEARCH_RESULT) {
-                                        displayScanResultGif(0);
-                                    }
-                                }
-                            });
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
                     }
+//                    } else {
+//                        try {
+//                            runOnUiThread(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    if(mSearchResult != Constants.READYTOSCAN_SEARCH_RESULT) {
+//                                        displayScanResultGif(0);
+//                                    }
+//                                }
+//                            });
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
                     tagList = null;
                     try {
                         Thread.sleep(20);
@@ -2512,6 +2517,8 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                         }
                     } else if(scanFilterBulkScanFlag) {
                         if(mFilterCostumeHashMap.containsKey(epcdata.getEpc())) {
+                            // play sound
+                            Util.play(1, 0);
                             if(!mCountHashMap.containsKey(epcdata.getEpc())) {
                                 Log.d(TAG, "epcdata.getEpc()=" + epcdata.getEpc());
                                 Costume matchCostume = mFilterCostumeHashMap.get(epcdata.getEpc());
@@ -2704,7 +2711,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                                 search_single_tag_3of3_tag_detail_rssi_textview.setText(singleScannedTag.size);
                                 scanned_epc_textview.setText(UhfUtils.Companion.separateEPCString(epcRaw, " ", 4, 16));
                                 scanned_rssi_textview.setText(singleScannedTag.size);
-                                displayScanResultGif(Integer.parseInt(singleScannedTag.size));
+//                                displayScanResultGif(Integer.parseInt(singleScannedTag.size));
                                 Util.play(1, 0);
                             }
                         } else {
@@ -2713,12 +2720,92 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                             scanned_rssi_textview.setText(getString(R.string.dash));
                             mSearchFound = Constants.SEARCH_NOT_FOUND;
                             mSearchResult = Constants.SCANNOTFOUND_SEARCH_RESULT;
-                            displayScanResultGif(0);
+//                            displayScanResultGif(0);
                         }
                     }
                 }
             }
         });
+    }
+
+    class FilterBulkScanThread extends Thread {
+        private List<TagModel> tagList;
+        byte[] accessPassword = Tools.HexString2Bytes("00000000");
+
+        @Override
+        public void run() {
+            super.run();
+            while (runFlag) {
+                if (startFlag || scanFilterBulkScanFlag) {
+                    // manager.stopInventoryMulti()
+					tagList = manager.inventoryRealTime(); // inventory real time
+//                    tagList = manager.inventoryMulti();
+                    if (tagList != null && !tagList.isEmpty()) {
+                        try{
+//                            // play sound
+//                            Util.play(1, 0);
+    //                        for (byte[] epc : tagList) {
+                            for (TagModel tag : tagList) {
+    //                            String epcStr = Tools.Bytes2HexString(tag,
+    //                                    tag.length);
+    //                            addToList(listEPC, epcStr);
+
+                                if (tag == null) {
+                                    String epcStr = "";
+                                    addToList(listEPC, epcStr, (byte) -1);
+                                } else {
+                                    String epcStr = Tools.Bytes2HexString(tag.getmEpcBytes(), tag.getmEpcBytes().length);
+                                    byte rssi = tag.getmRssi();
+                                    addToList(listEPC, epcStr, rssi);
+                                }
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    tagList = null;
+                    try {
+                        Thread.sleep( 40);
+                    } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
+//                if (startFlag || scanItemSetFlag || scanItemCodeFlag || scanSingleTagFlag || scanWriteSingleTagFlag || scanSearchSingleTagFlag || scanBulkScanFlag || scanFilterBulkScanFlag) {
+//                    tagList = manager.inventoryRealTime(); //实时盘存
+//                    if (tagList != null && !tagList.isEmpty()) {
+//                        //播放提示音
+////                        Util.play(1, 0);
+//                        try{
+//                            for (TagModel tag : tagList) {
+//                                if (tag == null) {
+//                                    String epcStr = "";
+////								String epcStr = new String(epc);
+//                                    addToList(listEPC, epcStr, (byte) -1);
+//                                } else {
+//                                    String epcStr = Tools.Bytes2HexString(tag.getmEpcBytes(), tag.getmEpcBytes().length);
+////								String epcStr = new String(epc);
+//                                    byte rssi = tag.getmRssi();
+//                                    addToList(listEPC, epcStr, rssi);
+//                                }
+//
+//                            }
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//
+//                    }
+//
+//                    tagList = null;
+//                    try {
+//                        Thread.sleep(20);
+//                    } catch (InterruptedException e) {
+//                        // TODO Auto-generated catch block
+//                        e.printStackTrace();
+//                    }
+//                }
+            }
+        }
     }
 
     private void displayScanResultGif(int rssi) {
@@ -2778,6 +2865,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                                 scan_area_message_textview.setText("is setting...");
                                 mSearchFound = Constants.SEARCH_NOT_FOUND;
 
+                                Log.d("", "mCurrentSearchPower value=" + mCurrentSearchPower);
                                 if (manager.setOutputPower(mCurrentSearchPower)) {
                                     scan_area_title_textview.setText("Power " + mCurrentSearchPower + "dBm");
                                     scan_area_message_textview.setText("ready!");
@@ -4301,6 +4389,9 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     private class BackFilterBulkScan3of3ButtonAnimationListener implements Animation.AnimationListener   {
         @Override
         public void onAnimationStart(Animation animation) {
+//            thread.interrupt();
+            filterBulkScanThread.interrupt();
+
             // Clear selected costume item
             mEPCSelected = new com.handheld.upsizeuhf.model.EPC();
             mSelectedCostumeToWrite = new Costume();
@@ -4443,6 +4534,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                 scanned_epc_textview.setText(getString(R.string.dash));
                 scanned_rssi_textview.setText(getString(R.string.dash));
                 mCurrentSearchPower = listSearchPower.get(mCurrentSearchPowerIndex).intValue();
+                Log.d("", "2 mCurrentSearchPower value=" + mCurrentSearchPower);
                 if (manager.setOutputPower(mCurrentSearchPower)) {
                     scan_area_title_textview.setText("Power " + mCurrentSearchPower + "dBm");
                     scan_area_message_textview.setText("ready!");
@@ -4592,7 +4684,8 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
     private class ViewFilterBulkScanButtonAnimationListener implements Animation.AnimationListener   {
         @Override
         public void onAnimationStart(Animation animation) {
-            thread.interrupt();
+//            thread.interrupt();
+            filterBulkScanThread.interrupt();
             scanFilterBulkScanFlag = false;
             scan_filter_bulk_scan_3of3_button.setText(R.string.scan);
 
@@ -4722,14 +4815,16 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         @Override
         public void onAnimationStart(Animation animation) {
             if (!scanFilterBulkScanFlag) {
-                thread.start();
+//                thread.start();
+                filterBulkScanThread.start();
                 mScannedCount = 0;
                 mCountHashMap.clear();
                 scanFilterBulkScanFlag = true;
 
                 scan_filter_bulk_scan_3of3_button.setText(R.string.stop);
             } else {
-                thread.interrupt();
+//                thread.interrupt();
+                filterBulkScanThread.interrupt();
                 scanFilterBulkScanFlag = false;
                 scan_filter_bulk_scan_3of3_button.setText(R.string.scan);
             }
@@ -4977,12 +5072,13 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
         textView.setTextColor(getResources().getColor(R.color.tabSelect));
         view.setBackgroundColor(getResources().getColor(R.color.tabSelect));
         if (layout == null) {
-            // change sensitive back to normal setting
-            manager.setSensitivity(sensitive);
-
-            if (!manager.setOutputPower(power)) {
-                showToast(getString(R.string.not_success));
-            }
+//            // change sensitive back to normal setting
+//            manager.setSensitivity(sensitive);
+//
+//            Log.d("", "3 power value=" + power);
+//            if (!manager.setOutputPower(power)) {
+//                showToast(getString(R.string.not_success));
+//            }
 
 
             l1epc.setVisibility(View.VISIBLE);
@@ -4990,42 +5086,59 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
             buttonStart.setText(R.string.inventory);
         } else {
 
-            if(layout == searchandcheck_layout ||
-                    layout == l2readandwrite ||
-                    layout == l3lockandkill ||
-                    layout == l4settings
-            ) {
-                // change sensitive back to normal setting
-                manager.setSensitivity(sensitive);
-                if (!manager.setOutputPower(power)) {
-                    showToast(getString(R.string.not_success));
-                }
-            }
+//            if(layout == searchandcheck_layout ||
+//                    layout == l2readandwrite ||
+//                    layout == l3lockandkill ||
+//                    layout == l4settings
+//            ) {
+//                // change sensitive back to normal setting
+//                manager.setSensitivity(sensitive);
+//                Log.d("", "5 power value=" + power);
+//                if (!manager.setOutputPower(power)) {
+//                    showToast(getString(R.string.not_success));
+//                }
+//            }
 
-            if(layout == byitemset_queryresult_layout) {
-                scanItemSetFlag = false;
-                scan_itemset_info_result_button.setText(R.string.scan);
-            }
+//            if(layout == byitemset_queryresult_layout) {
+//                scanItemSetFlag = false;
+//                scan_itemset_info_result_button.setText(R.string.scan);
+//            }
+//
+//            if(layout == byitemcode_queryresult_layout) {
+//                scanItemSetFlag = false;
+//                scan_itemcode_info_result_button.setText(R.string.scan);
+//            }
+//
+//            if(layout == bulk_scan_layout || layout == filter_bulk_scan_1of3_layout) {
+//                manager.setSensitivity(Constants.HIGH);
+//
+//                scanBulkScanFlag = false;
+//                scanFilterBulkScanFlag = false;
+//                scan_bulk_scan_button.setText(R.string.scan);
+//                scan_filter_bulk_scan_3of3_button.setText(R.string.scan);
+//            }
+//
+//            if(layout == read_single_tag_layout) {
+//                scanSingleTagFlag = false;
+//                scan_read_single_tag_button.setText(R.string.scan);
+//            }
+//
+//            if(layout == search_single_tag_3of3_layout) {
+//                scanSearchSingleTagFlag = false;
+//                scan_search_single_tag_3of3_button.setText(R.string.scan);
+//            }
 
-            if(layout == byitemcode_queryresult_layout) {
-                scanItemSetFlag = false;
-                scan_itemcode_info_result_button.setText(R.string.scan);
-            }
-
-            if(layout == bulk_scan_layout) {
-                scanItemSetFlag = false;
-                scan_bulk_scan_button.setText(R.string.scan);
-            }
-
-            if(layout == read_single_tag_layout ||
-                    layout == write_single_tag_3of4_layout ||
-                    layout == search_single_tag_3of3_layout) {
-                // change sensitive to Very Low
+//            if(layout == read_single_tag_layout ||
+//                    layout == write_single_tag_3of4_layout ||
+//                    layout == search_single_tag_3of3_layout) {
+            if(layout == write_single_tag_3of4_layout) {
+//                // change sensitive to Very Low
                 manager.setSensitivity(Constants.VERY_LOW);
 
                 if(layout == search_single_tag_3of3_layout) {
                     Log.d(TAG, "Search single tag...");
                 } else {
+                    Log.d("", "6 power value=" + Constants.POWER_16);
                     if (manager.setOutputPower(Constants.POWER_16)) {
                         showToast(getString(R.string.single_tag_settings_ready));
                     } else {
@@ -5033,20 +5146,20 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                     }
                 }
 
-                if(layout == read_single_tag_layout) {
-                    scanSingleTagFlag = false;
-                    scan_read_single_tag_button.setText(R.string.scan);
-                }
+//                if(layout == read_single_tag_layout) {
+//                    scanSingleTagFlag = false;
+//                    scan_read_single_tag_button.setText(R.string.scan);
+//                }
 
                 if(layout == write_single_tag_3of4_layout) {
                     scanWriteSingleTagFlag = false;
                     scan_write_single_tag_3of4_button.setText(R.string.scan);
                 }
 
-                if(layout == search_single_tag_3of3_layout) {
-                    scanSearchSingleTagFlag = false;
-                    scan_search_single_tag_3of3_button.setText(R.string.scan);
-                }
+//                if(layout == search_single_tag_3of3_layout) {
+//                    scanSearchSingleTagFlag = false;
+//                    scan_search_single_tag_3of3_button.setText(R.string.scan);
+//                }
 
             }
 
@@ -5297,7 +5410,7 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                                     new LoadLocalCostumeThread().start();
                                 }
 
-                                if(mSelectedCostumeToWrite.uid > -1 && (mCurrentSearchMode == Constants.WRITE_SINGLE_TAG_MODE || mCurrentSearchMode == Constants.SEARCH_SINGLE_TAG_MODE)) {
+                                if(mSelectedCostumeToWrite.uid > -1 && (mCurrentSearchMode == Constants.WRITE_SINGLE_TAG_MODE || mCurrentSearchMode == Constants.SEARCH_SINGLE_TAG_MODE) || mCurrentSearchMode == Constants.FILTER_BULK_SCAN_MODE) {
                                     addSelectedCostumeToWriteTag(mSelectedCostumeToWrite, mCurrentSearchMode);
                                 }
 
@@ -5622,9 +5735,9 @@ public class UHFActivity extends Activity implements OnClickListener, CheckTypeD
                         }
 
                         // play sound
-                        if((mScannedCount % 2) == 0 || mScannedCount == 1) {
+//                        if((mScannedCount % 2) == 0 || mScannedCount == 1) {
                             Util.play(1, 0);
-                        }
+//                        }
 //                        MediaUtils.playOneBeepSoundNoMediaPlayer();
                         
                     }

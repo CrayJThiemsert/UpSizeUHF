@@ -288,6 +288,10 @@
         "source": "C:\\Users\\crayj\\StudioProjects\\UpSizeUHF\\app\\src\\main\\res\\drawable\\layout_border_radius_green.xml"
     },
     {
+        "merged": "C:\\Users\\crayj\\StudioProjects\\UpSizeUHF\\app\\build\\intermediates\\res\\merged\\debug\\layout_view_itemcode_listview.xml.flat",
+        "source": "C:\\Users\\crayj\\StudioProjects\\UpSizeUHF\\app\\src\\main\\res\\layout\\view_itemcode_listview.xml"
+    },
+    {
         "merged": "C:\\Users\\crayj\\StudioProjects\\UpSizeUHF\\app\\build\\intermediates\\res\\merged\\debug\\font_kanit_semibold.ttf.flat",
         "source": "C:\\Users\\crayj\\StudioProjects\\UpSizeUHF\\app\\src\\main\\res\\font\\kanit_semibold.ttf"
     },
